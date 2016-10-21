@@ -54,7 +54,7 @@ Event.destroy_all
 
 venue.events.create!({
   name: 'Spring Split',
-  sport_id: 1,
+  sport: sport,
   team1_id: 1,
   team2_id: 2,
   event_datetime: DateTime.now
@@ -69,11 +69,11 @@ Review.create!({
   rating: 4
 })
 
-# Review.create!({
-#   venue_id: 1,
-#   user_id: 1,
-#   description: 'Not so good.',
-#   rating: 2
-# })
+Review.create!({
+  venue: venue,
+  user: user,
+  description: 'Not so good.',
+  rating: 2
+})
 
 puts 'DONE!'
