@@ -51,6 +51,13 @@ ActiveRecord::Schema.define(version: 20161021010018) do
   end
 
   create_table "users", force: :cascade do |t|
+<<<<<<< HEAD
+    t.string   "email"
+    t.string   "password_digest"
+    t.string   "name"
+    t.datetime "created_at",      null: false
+    t.datetime "updated_at",      null: false
+=======
     t.string   "provider"
     t.string   "uid"
     t.string   "name"
@@ -58,6 +65,7 @@ ActiveRecord::Schema.define(version: 20161021010018) do
     t.datetime "oauth_expires_at"
     t.datetime "created_at",       null: false
     t.datetime "updated_at",       null: false
+>>>>>>> e3c3f4641bfd0fd9578f3839598c9f4afd2a3374
   end
 
   create_table "venues", force: :cascade do |t|
