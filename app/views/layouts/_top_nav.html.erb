@@ -10,7 +10,7 @@
 
       <ul class="nav navbar-nav navbar-right">
         <% if current_user %>
-          Signed in as <%= current_user %> | <%= link_to "Logout", '/logout' %>
+          Signed in as <%= current_user.name %> | <%= link_to "Logout", '/logout' %>
         <% else %>
           <%= link_to "Sign in with Facebook", "/auth/facebook", id: "sign_in" %>
         <% end %>

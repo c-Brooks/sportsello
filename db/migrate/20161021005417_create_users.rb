@@ -5,7 +5,7 @@ class CreateUsers < ActiveRecord::Migration
       t.string :uid
       t.string :name
       t.string :oauth_token
-      t.datetime :oath_expires_at
+      t.datetime :oauth_expires_at
 
       t.timestamps null: false
     end

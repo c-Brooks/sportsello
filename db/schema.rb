@@ -55,9 +55,9 @@ ActiveRecord::Schema.define(version: 20161021010018) do
     t.string   "uid"
     t.string   "name"
     t.string   "oauth_token"
-    t.datetime "oath_expires_at"
-    t.datetime "created_at",      null: false
-    t.datetime "updated_at",      null: false
+    t.datetime "oauth_expires_at"
+    t.datetime "created_at",       null: false
+    t.datetime "updated_at",       null: false
   end
 
   create_table "venues", force: :cascade do |t|
