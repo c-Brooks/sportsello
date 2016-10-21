@@ -1,3 +1,4 @@
+require 'date'
 # This file should contain all the record creation needed to seed the database with its default values.
 # The data can then be loaded with the rake db:seed (or created alongside the db with db:setup).
 #
@@ -35,14 +36,16 @@ venue = Venue.create!({
   description: 'A cool bar with cool people looking to sit back and cool.'
 })
 
-Event.destroy_all
-
-Event.create({
-
+sport = Sport.create!({
+  name: 'League of Legends'
 })
 
-venue.events.create!({
+Event.destroy_all
 
+venue.events.create!({
+  name: 'Spring Split',
+  sport_id: 1,
+  event_datetime: Date.today + 1
 })
 
 Review.destroy_all

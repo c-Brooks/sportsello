@@ -1,5 +1,7 @@
 class Event < ActiveRecord::Base
-  has_many :venues
+  # has_and_belongs_to_many :venues
+  has_many :can_hosts
+  has_many :venues, through :can_hosts
   belongs_to :sport
 
   validates :name, presence: true
