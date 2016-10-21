@@ -3,8 +3,6 @@ class Event < ActiveRecord::Base
   has_one :sport
 
   validates :name, presence: true
-  validates :vanue_id, presence: true, numericality: { only_integer: true }
-  validates :sport_id, presence: true, numericality: { only_integer: true }
   validates :event_datetime, presence: true
   validates :team1_id, numericality: { only_integer: true }
   validates :team2_id, numericality: { only_integer: true }
