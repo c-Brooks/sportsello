@@ -34,6 +34,7 @@ gem 'sdoc', '~> 0.4.0', group: :doc
 
 gem 'omniauth-facebook'
 gem 'gmaps4rails'
+gem 'geocoder'
 gem 'bootstrap-sass', '~> 3.3.6'
 
 group :development, :test do
