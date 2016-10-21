@@ -1,6 +1,6 @@
 class Event < ActiveRecord::Base
   has_many :venues
-  has_one :sport
+  belongs_to :sport
 
   validates :name, presence: true
   validates :event_datetime, presence: true
