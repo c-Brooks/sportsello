@@ -21,7 +21,7 @@ raise "Development seeds only (for now)!" unless Rails.env.development?
 # Users
 User.destroy_all
 
-User.create!({
+user = User.create!({
   provider: 'facebook',
   uid: 10202288529331229,
   name: 'Corey Brooks',
@@ -40,26 +40,40 @@ sport = Sport.create!({
   name: 'League of Legends'
 })
 
+Team.destroy_all
+
+Team.create!({
+  name: 'SKT'
+})
+
+Team.create!({
+  name: 'H2K'
+})
+
 Event.destroy_all
 
 venue.events.create!({
   name: 'Spring Split',
   sport_id: 1,
-  event_datetime: Date.today + 1
+  team1_id: 1,
+  team2_id: 2,
+  event_datetime: DateTime.now
 })
 
 Review.destroy_all
 
 Review.create!({
-  venue_id: 1,
-  user_id: 1,
+  venue: venue,
+  user: user,
   description: 'Fantastic!',
   rating: 4
 })
 
-Review.create!({
-  venue_id: 1,
-  user_id: 1,
-  description: 'Not so good.',
-  rating: 2
-})
+# Review.create!({
+#   venue_id: 1,
+#   user_id: 1,
+#   description: 'Not so good.',
+#   rating: 2
+# })
+
+puts 'DONE!'
