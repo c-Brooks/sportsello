@@ -16,6 +16,5 @@
 !/log/.keep
 /tmp
 
-
-# DON'T COMMIT THE KEYS!!!
+# Ignore environment files
 .env
