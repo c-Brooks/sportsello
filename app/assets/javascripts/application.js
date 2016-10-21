@@ -14,3 +14,7 @@
 //= require jquery_ujs
 //= require turbolinks
 //= require_tree .
+
+// Dependencies for Google maps
+//= require underscore
+//= require gmaps/google
