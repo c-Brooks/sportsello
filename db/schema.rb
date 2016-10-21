@@ -51,7 +51,6 @@ ActiveRecord::Schema.define(version: 20161021010018) do
   end
 
   create_table "users", force: :cascade do |t|
-
     t.string   "provider"
     t.string   "uid"
     t.string   "name"
@@ -59,7 +58,6 @@ ActiveRecord::Schema.define(version: 20161021010018) do
     t.datetime "oauth_expires_at"
     t.datetime "created_at",       null: false
     t.datetime "updated_at",       null: false
-
   end
 
   create_table "venues", force: :cascade do |t|
