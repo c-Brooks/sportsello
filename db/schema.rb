@@ -11,10 +11,20 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161021203555) do
+ActiveRecord::Schema.define(version: 20161021232335) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "can_hosts", force: :cascade do |t|
+    t.integer  "venue_id"
+    t.integer  "event_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  add_index "can_hosts", ["event_id"], name: "index_can_hosts_on_event_id", using: :btree
+  add_index "can_hosts", ["venue_id"], name: "index_can_hosts_on_venue_id", using: :btree
 
   create_table "events", force: :cascade do |t|
     t.string   "name"
@@ -23,14 +33,22 @@ ActiveRecord::Schema.define(version: 20161021203555) do
     t.datetime "event_datetime"
     t.datetime "created_at",     null: false
     t.datetime "updated_at",     null: false
+    t.integer  "sport_id"
   end
+
+  add_index "events", ["sport_id"], name: "index_events_on_sport_id", using: :btree
 
   create_table "reviews", force: :cascade do |t|
     t.integer  "rating"
     t.text     "description"
     t.datetime "created_at",  null: false
     t.datetime "updated_at",  null: false
+    t.integer  "user_id"
+    t.integer  "venue_id"
   end
+
+  add_index "reviews", ["user_id"], name: "index_reviews_on_user_id", using: :btree
+  add_index "reviews", ["venue_id"], name: "index_reviews_on_venue_id", using: :btree
 
   create_table "sports", force: :cascade do |t|
     t.string   "name"
@@ -61,6 +79,14 @@ ActiveRecord::Schema.define(version: 20161021203555) do
     t.text     "description"
     t.datetime "created_at",  null: false
     t.datetime "updated_at",  null: false
+    t.float    "longitude"
+    t.float    "latitiude"
+    t.text     "address"
   end
 
+  add_foreign_key "can_hosts", "events"
+  add_foreign_key "can_hosts", "venues"
+  add_foreign_key "events", "sports"
+  add_foreign_key "reviews", "users"
+  add_foreign_key "reviews", "venues"
 end
