@@ -25,5 +25,38 @@ User.create!({
   uid: 10202288529331229,
   name: 'Corey Brooks',
   oauth_token: 'EAADzQ4vKSEgBADtIN8mT8d5D5lGZAZChZAc60ZCPT63mPru24ZBTQ4zklkqingfqQYMnZBTKEJh5FuuFTYg4uH7dNwACDZAK4OHPkXJ1ZALW6UZC7b3WYXCeSZAa5r7mLRlEk4HK5tI5vZBXGRJbtqStPHRO0P4uFqVaVsZD',
-  # oauth_expires_at: 2016-12-20 18:21:51
+})
+
+Venue.destroy_all
+
+venue = Venue.create!({
+  name: 'Lighthouse',
+  website: 'https://www.lighthouselabs.ca/?gclid=CjwKEAjw-abABRDquOTJi8qdojwSJABt1S1ONBGfRHFbKdKdEdWPwj6GkAMjhkXtv2qW3SbljLtAJBoCyBjw_wcB',
+  description: 'A cool bar with cool people looking to sit back and cool.'
+})
+
+Event.destroy_all
+
+Event.create({
+
+})
+
+venue.events.create!({
+
+})
+
+Review.destroy_all
+
+Review.create!({
+  venue_id: 1,
+  user_id: 1,
+  description: 'Fantastic!',
+  rating: 4
+})
+
+Review.create!({
+  venue_id: 1,
+  user_id: 1,
+  description: 'Not so good.',
+  rating: 2
 })
