@@ -18,3 +18,4 @@
 
 # Ignore environment files
 .env
+Gemfile.lock
