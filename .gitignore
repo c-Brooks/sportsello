@@ -18,4 +18,7 @@
 
 # Ignore environment files
 .env
+
+# Ignore the Gemfile.lock
+
 Gemfile.lock
