@@ -8,8 +8,10 @@
   var handler = Gmaps.build('Google');
   handler.buildMap({ internal: {id: 'map'} }, function() {
     // be aware chrome >= 50 requires https for geolocation to work
-    if(navigator.geolocation)
-      navigator.geolocation.getCurrentPosition(displayOnMap);
+     if(navigator.geolocation)
+       navigator.geolocation.getCurrentPosition(displayOnMap);
+    markers = handler.addMarkers(<%=raw @hash.to_json %>);
+    handler.bounds.extendWith(markers);
   });
 
 
