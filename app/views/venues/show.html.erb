@@ -1,0 +1,28 @@
+<section class="venues-show">
+<article class="venue">
+  <header>
+    <h3><%= @venue.name %></h3>
+  </header>
+
+  <p class="description">
+    <%= @venue.description %>
+  </p>
+  <p class="location">
+    <%= @venue.address %>
+  </p>
+
+  <div class="reviews">
+    <% @reviews.each do |review| %>
+      <h4> Review from: <%= User.find(review.user_id).name %> </h5>
+      <p class>
+        Description: <%= review.description %>
+      </p>
+      <p class>
+        Rating: <%= review.rating %>
+      </p>
+    <% end %>
+  </div>
+
+</article>
+
+</section>

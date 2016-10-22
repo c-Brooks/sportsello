@@ -9,6 +9,12 @@ class VenuesController < ApplicationController
     end
   end
 
+  def show
+    @venue = Venue.find(params[:id])
+    @review = Review.new
+    @reviews = Review.where(venue_id: params[:id]).order(created_at: :desc)
+  end
+
   # I don't know where to put this so it lives here for now
   # It's a method for generating the on-click info on the map markers
   def gmaps4rails_infowindow(venue)
