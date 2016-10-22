@@ -3,23 +3,30 @@
 </div>
 
 <script type="text/javascript">
+// NOTE:
+// I think the map loads at lat:0, lng:0, which is the
+//   middle of the Gulf of Guinea.
+// To speed this up, I hardcoded Vancouver's coords.  This is something
+//  we should change eventually, but I'm going to leave it for now.
   let handler = Gmaps.build('Google');
-  handler.buildMap({ internal: {id: 'map'} }, () => {
-    // be aware chrome >= 50 requires https for geolocation to work
-     if (navigator.geolocation) {
-       navigator.geolocation.getCurrentPosition(displayOnMap);
-     }
+  handler.buildMap( { internal: {id: 'map'} }, () => {
+    // Hardcoded co-ordinates for Vancouver for speed
+    handler.map.centerOn({ lat: 49.28, lng: -123.1 });
+    // This code centers on user's location but takes a while
+    //  if (navigator.geolocation) {
+    //    navigator.geolocation.getCurrentPosition(displayOnMap);
+    //  }
     markers = handler.addMarkers(<%=raw @venue_markers.to_json %>);
-    handler.bounds.extendWith(markers);
+    handler.getMap().setZoom(12);
   });
 
 
-
-  function displayOnMap(position) {
-    let marker = handler.addMarker({
-      lat: position.coords.latitude,
-      lng: position.coords.longitude
-    });
-    handler.map.centerOn(marker);
-  };
+// Not used currently
+  // function displayOnMap(position) {
+  //   let marker = {
+  //     lat: position.coords.latitude,
+  //     lng: position.coords.longitude
+  //   };
+  //   handler.map.centerOn(marker);
+  // };
 </script>
