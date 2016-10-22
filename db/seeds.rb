@@ -30,14 +30,36 @@ user = User.create!({
 
 Venue.destroy_all
 
-venue = Venue.create!({
+venue1 = Venue.create!({
   name: 'Lighthouse',
   website: 'https://www.lighthouselabs.ca/?gclid=CjwKEAjw-abABRDquOTJi8qdojwSJABt1S1ONBGfRHFbKdKdEdWPwj6GkAMjhkXtv2qW3SbljLtAJBoCyBjw_wcB',
   description: 'A cool bar with cool people looking to sit back and cool.'
 })
 
-sport = Sport.create!({
+venue2 = Venue.create!({
+  name: 'Moms Basement',
+  website: 'https://spencertranter.github.io',
+  description: 'Stay away'
+})
+
+venue3 = Venue.create!({
+  name: 'Middle Earth',
+  website: 'http://lotrproject.com/map/',
+  description: 'Vegans only.'
+})
+
+Sport.destroy_all
+
+sport1 = Sport.create!({
   name: 'League of Legends'
+})
+
+sport2 = Sport.create!({
+  name: 'Soccer aka Not League'
+})
+
+sport3 = Sport.create!({
+  name: 'Tennis (Should be league)'
 })
 
 Team.destroy_all
@@ -50,30 +72,76 @@ Team.create!({
   name: 'H2K'
 })
 
+Team.create!({
+  name: 'EDG'
+})
+
+Team.create!({
+  name: 'TSM'
+})
+
 Event.destroy_all
 
-venue.events.create!({
+venue1.events.create!({
   name: 'Spring Split',
-  sport: sport,
+  sport: sport1,
   team1_id: 1,
   team2_id: 2,
   event_datetime: DateTime.now
 })
 
+venue1.events.create!({
+  name: 'LCS',
+  sport: sport2,
+  team1_id: 3,
+  team2_id: 4,
+  event_datetime: DateTime.now + 1
+})
+
+venue2.events.create!({
+  name: 'Mid Season Invitational',
+  sport: sport2,
+  team1_id: 3,
+  team2_id: 2,
+  event_datetime: DateTime.now + 1
+})
+
+venue3.events.create!({
+  name: 'Friyay',
+  sport: sport3,
+  team1_id: 1,
+  team2_id: 4,
+  event_datetime: DateTime.now + 5
+})
+
 Review.destroy_all
 
 Review.create!({
-  venue: venue,
+  venue: venue1,
   user: user,
-  description: 'Fantastic!',
+  description: 'I like turtles.',
   rating: 4
 })
 
 Review.create!({
-  venue: venue,
+  venue: venue1,
   user: user,
-  description: 'Not so good.',
+  description: 'The sorbe at this place is middle class shit.',
+  rating: 3
+})
+
+Review.create!({
+  venue: venue2,
+  user: user,
+  description: 'Human garbage.',
   rating: 2
+})
+
+Review.create!({
+  venue: venue3,
+  user: user,
+  description: 'The tv here is a toaster.',
+  rating: 1
 })
 
 puts 'DONE!'
