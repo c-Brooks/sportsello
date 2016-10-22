@@ -1,4 +1,4 @@
-class NbaCrawler
+class MlbCrawler
   include Wombat::Crawler
 
   def initialize(date)
@@ -6,14 +6,15 @@ class NbaCrawler
   end
 
   def crawl
-    get_this_path = "/nba/scoreboard/?date=#{@date}"
+    get_this_path = "/mlb/scoreboard/?date=#{@date}"
 
     Wombat.crawl do
       base_url "https://ca.sports.yahoo.com/"
       path get_this_path
       games "css=.game", :iterator do
         date "css=.time"
-        team1 "css=.away .team"
+        # TO-DO GET RID OF JUNK ON TEAM1
+        team1 "css=.away"
         team2 "css=.home"
       end
     end
