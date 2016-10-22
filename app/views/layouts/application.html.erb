@@ -5,31 +5,13 @@
   <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track' => true %>
   <%= javascript_include_tag 'application', 'data-turbolinks-track' => true %>
   <%= csrf_meta_tags %>
+  <script src="//maps.google.com/maps/api/js?key=<%=ENV['MAPS_KEY']%>"></script>
+  <script src="//cdn.rawgit.com/mahnunchik/markerclustererplus/master/dist/markerclusterer.min.js"></script>
 </head>
 <body>
 
 <%= yield %>
 
-  <div style='width: 800px;'>
-    <div id="map" style='width: 800px; height: 400px;'></div>
-  </div>
-
-  <script type="text/javascript">
-    var handler = Gmaps.build('Google');
-    handler.buildMap({ internal: {id: 'map'} }, function() {
-      // be aware chrome >= 50 requires https for geolocation to work
-      if(navigator.geolocation)
-        navigator.geolocation.getCurrentPosition(displayOnMap);
-    });
-
-    function displayOnMap(position){
-      var marker = handler.addMarker({
-        lat: position.coords.latitude,
-        lng: position.coords.longitude
-      });
-      handler.map.centerOn(marker);
-    };
-  </script>
 
 </body>
 </html>
