@@ -1,7 +1,9 @@
 class NhlCrawler
   include Wombat::Crawler
 
-  @date = Date.today
+  def initialize(date)
+    @date = date
+  end
 
   base_url "https://ca.sports.yahoo.com/"
   path "/nhl/scoreboard/?date=#{@date}"
