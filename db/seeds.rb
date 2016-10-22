@@ -60,15 +60,15 @@ venue3 = Venue.create!({
 Sport.destroy_all
 
 sport1 = Sport.create!({
-  name: 'League of Legends'
+  name: 'NHL'
 })
 
 sport2 = Sport.create!({
-  name: 'Soccer aka Not League'
+  name: 'MLB'
 })
 
 sport3 = Sport.create!({
-  name: 'Tennis (Should be league)'
+  name: 'NBA'
 })
 
 Team.destroy_all
