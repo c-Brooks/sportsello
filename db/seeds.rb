@@ -33,19 +33,28 @@ Venue.destroy_all
 venue1 = Venue.create!({
   name: 'Lighthouse',
   website: 'https://www.lighthouselabs.ca/?gclid=CjwKEAjw-abABRDquOTJi8qdojwSJABt1S1ONBGfRHFbKdKdEdWPwj6GkAMjhkXtv2qW3SbljLtAJBoCyBjw_wcB',
-  description: 'A cool bar with cool people looking to sit back and cool.'
+  description: 'A cool bar with cool people looking to sit back and cool.',
+  longitude: 123.1058901,
+  latitude: 49.2831424,
+  address: '12 Powell St, Vancouver, BC'
 })
 
 venue2 = Venue.create!({
   name: 'Moms Basement',
   website: 'https://spencertranter.github.io',
-  description: 'Stay away'
+  description: 'Stay away',
+  longitude: 123.1451002,
+  latitude: 49.2911695,
+  address: '1885 Barclay St, Vancouver, BC'
 })
 
 venue3 = Venue.create!({
   name: 'Middle Earth',
   website: 'http://lotrproject.com/map/',
-  description: 'Vegans only.'
+  description: 'Vegans only.',
+  longitude: 123.1237845,
+  latitude: 49.2841426,
+  address: '701 W Georgia St, Vancouver'
 })
 
 Sport.destroy_all
