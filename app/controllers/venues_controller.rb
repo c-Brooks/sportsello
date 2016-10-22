@@ -3,7 +3,7 @@ class VenuesController < ApplicationController
   def index
     @venues = Venue.all
     @venue_markers = Gmaps4rails.build_markers(@venues) do |venue, marker|
-      marker.lat venue.latitiude
+      marker.lat venue.latitude
       marker.lng venue.longitude
       marker.infowindow gmaps4rails_infowindow(venue)
     end
