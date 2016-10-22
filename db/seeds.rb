@@ -42,41 +42,33 @@ venue1 = Venue.create!({
 venue2 = Venue.create!({
   name: 'Moms Basement',
   website: 'https://spencertranter.github.io',
-<<<<<<< HEAD
-  description: 'Stay away'
-=======
   description: 'Stay away',
   longitude: 123.1451002,
   latitude: 49.2911695,
   address: '1885 Barclay St, Vancouver, BC'
->>>>>>> b940120dcd7dafa8b228f926d24f2e72e6885a6e
 })
 
 venue3 = Venue.create!({
   name: 'Middle Earth',
   website: 'http://lotrproject.com/map/',
-<<<<<<< HEAD
-  description: 'Vegans only.'
-=======
   description: 'Vegans only.',
   longitude: 123.1237845,
   latitude: 49.2841426,
   address: '701 W Georgia St, Vancouver'
->>>>>>> b940120dcd7dafa8b228f926d24f2e72e6885a6e
 })
 
 Sport.destroy_all
 
 sport1 = Sport.create!({
-  name: 'League of Legends'
+  name: 'NHL'
 })
 
 sport2 = Sport.create!({
-  name: 'Soccer aka Not League'
+  name: 'MLB'
 })
 
 sport3 = Sport.create!({
-  name: 'Tennis (Should be league)'
+  name: 'NBA'
 })
 
 Team.destroy_all
