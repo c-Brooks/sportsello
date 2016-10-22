@@ -1,9 +1,11 @@
-== README
+== SPORTSELLO
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+Sportsello is a social platform to connect sports fans with sports bars and other venues.
 
-Things you may want to cover:
+To set up the app on your machine, please create a .env file following the .env.example
+and set up your own PostgreSQL database
+
+Things we may want to cover:
 
 * Ruby version
 
