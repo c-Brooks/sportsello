@@ -7,6 +7,7 @@ class NhlCrawler
 
   def crawl
     get_this_path = "/nhl/scoreboard/?date=#{@date}"
+
     Wombat.crawl do
       base_url "https://ca.sports.yahoo.com/"
       path get_this_path
