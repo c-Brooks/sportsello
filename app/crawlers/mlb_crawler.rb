@@ -1,4 +1,5 @@
 class MlbCrawler
+  # USES YAHOO SPORTS
   include Wombat::Crawler
 
   def initialize(date)
