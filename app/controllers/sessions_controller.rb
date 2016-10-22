@@ -1,5 +1,6 @@
 class SessionsController < ApplicationController
-  
+  # This controller takes care of user signin/signout
+  # Right now, only deals with FANS signing in/out thru FACEBOOK
   def create
     user = User.from_omniauth(env["omniauth.auth"])
     session[:user_id] = user.id
