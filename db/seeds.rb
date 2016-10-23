@@ -98,30 +98,29 @@ Game.create!({
   sport_id: sport1.id,
   team1_id: 1,
   team2_id: 2,
-  event_datetime: DateTime.now
+  game_datetime: DateTime.now
 })
 
 Game.create!({
   sport_id: sport2.id,
   team1_id: 3,
   team2_id: 4,
-  event_datetime: DateTime.now + 1
+  game_datetime: DateTime.now + 1
 })
 
 Game.create!({
   sport_id: sport3.id,
   team1_id: 3,
   team2_id: 4,
-  event_datetime: DateTime.now + 2
+  game_datetime: DateTime.now + 2
 })
 
 Game.create!({
   sport_id: sport1.id,
   team1_id: 1,
   team2_id: 4,
-  event_datetime: DateTime.now + 3
+  game_datetime: DateTime.now + 3
 })
-
 
 # Setup events...
 Event.destroy_all
