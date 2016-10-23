@@ -32,8 +32,11 @@ gem 'sdoc', '~> 0.4.0', group: :doc
 # Use Capistrano for deployment
 # gem 'capistrano-rails', group: :development
 
-# Use WOMBAT for scraping websites
+# Use Wombat for scraping websites
 gem 'wombat'
+
+# Use Whenever for scheduling scraping sports data
+gem 'whenever'
 
 gem 'omniauth-facebook'
 gem 'gmaps4rails'

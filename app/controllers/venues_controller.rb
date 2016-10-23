@@ -54,7 +54,7 @@ class VenuesController < ApplicationController
 
   # Select next 3 upcoming events
   def upcoming_events(venue)
-    venue.events.all.order(:event_datetime).limit(3)
+    venue.events.all.limit(3)
   end
 
 end
