@@ -19,10 +19,12 @@ class VenuesController < ApplicationController
   # It's a method for generating the on-click info on the map markers
   def gmaps4rails_infowindow(venue)
     upcoming_events_string = ""
+    # NOTE: The 'Join' button doesn't do anything yet
     upcoming_events(venue).each do |e|
       upcoming_events_string += "<tr>
         <td>#{e.name}</td>
         <td>#{e.event_datetime.strftime("%m/%d at %I:%M%p")}</td>
+        <td><button class='btn btn-info btn-sm map-rsvp-btn'>Join!</td>
       </tr>"
     end
       "
