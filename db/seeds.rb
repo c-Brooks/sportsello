@@ -94,28 +94,28 @@ Team.create!({
 # Setup games...
 Game.destroy_all
 
-Game.create!({
+game1 = Game.create!({
   sport_id: sport1.id,
   team1_id: 1,
   team2_id: 2,
   game_datetime: DateTime.now
 })
 
-Game.create!({
+game2 = Game.create!({
   sport_id: sport2.id,
   team1_id: 3,
   team2_id: 4,
   game_datetime: DateTime.now + 1
 })
 
-Game.create!({
+game3 = Game.create!({
   sport_id: sport3.id,
   team1_id: 3,
   team2_id: 4,
   game_datetime: DateTime.now + 2
 })
 
-Game.create!({
+game4 = Game.create!({
   sport_id: sport1.id,
   team1_id: 1,
   team2_id: 4,
@@ -127,34 +127,27 @@ Event.destroy_all
 
 venue1.events.create!({
   name: 'Spring Split',
-  sport: sport1,
-  team1_id: 1,
-  team2_id: 2,
-  event_datetime: DateTime.now
+  game_id: game1.id
 })
 
 venue1.events.create!({
   name: 'LCS',
-  sport: sport2,
-  team1_id: 3,
-  team2_id: 4,
-  event_datetime: DateTime.now + 1
+  game_id: game2.id
 })
 
 venue2.events.create!({
   name: 'Mid Season Invitational',
-  sport: sport2,
-  team1_id: 3,
-  team2_id: 2,
-  event_datetime: DateTime.now + 1
+  game_id: game1.id
 })
 
 venue3.events.create!({
   name: 'Friyay',
-  sport: sport3,
-  team1_id: 1,
-  team2_id: 4,
-  event_datetime: DateTime.now + 5
+  game_id: game3.id
+})
+
+venue3.events.create!({
+  name: 'Wet T-Shirt Contests + Sports',
+  game_id: game4.id
 })
 
 # Setup reviews...

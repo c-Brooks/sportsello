@@ -44,15 +44,6 @@ ActiveRecord::Schema.define(version: 20161023204330) do
     t.datetime "updated_at",    null: false
   end
 
-  create_table "games_tables", force: :cascade do |t|
-    t.integer  "sport_id"
-    t.integer  "team1_id"
-    t.integer  "team2_id"
-    t.datetime "event_datetime"
-    t.datetime "created_at",     null: false
-    t.datetime "updated_at",     null: false
-  end
-
   create_table "reviews", force: :cascade do |t|
     t.integer  "rating"
     t.text     "description"
