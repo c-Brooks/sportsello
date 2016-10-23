@@ -8,7 +8,15 @@ class Scheduler
   mlb_games = MlbCrawler.new(tomorrow).crawl
 
   # Put the data into the database
-  nhl_games.each do |game|
-    puts game
+  nhl_games['games'].each do |game|
+    sport = Sport.find_by_name 'NHL'
+  end
+
+  nba_games['games'].each do |game|
+    sport = Sport.find_by_name 'NBA'
+  end  n
+
+  mlb_games['games'].each do |game|
+    sport = Sport.find_by_name 'MLB'
   end
 end
