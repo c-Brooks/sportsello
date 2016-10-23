@@ -46,6 +46,7 @@ class VenuesController < ApplicationController
         #{venue.description}
       </p>
       <table class='table'>
+      <h5>Upcoming: </h5>
         #{upcoming_events_string}
       </table>
       "
