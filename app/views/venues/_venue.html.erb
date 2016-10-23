@@ -1,0 +1,14 @@
+<article class="venue">
+  <header>
+    <%= link_to venue do %>
+      <h4><%= venue.name %></h4>
+    <% end %>
+
+  </header>
+  <p class="description">
+    <%= venue.description %>
+  </p>
+  <p class="location">
+    <%= venue.address %>
+  </p>
+</article>

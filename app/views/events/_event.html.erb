@@ -1,0 +1,11 @@
+<article class="event">
+  <header>
+    <%= link_to event do %>
+      <h4><%= event.name %></h4>
+    <% end %>
+
+  </header>
+  <p class="sport">
+    <%= Sport.find(event.sport_id).name %>
+  </p>
+</article>
