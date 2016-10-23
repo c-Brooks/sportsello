@@ -19,7 +19,7 @@
 
 # Learn more: http://github.com/javan/whenever
 
-set :output, "/log/scheduler.log"
+set :output, "./log/scheduler.log"
 
 every 1.day do
   runner "Scheduler.new"
