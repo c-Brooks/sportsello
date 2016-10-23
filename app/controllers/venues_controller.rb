@@ -10,7 +10,14 @@ class VenuesController < ApplicationController
     end
   end
 
-  # Filter by DAY, EVENT, SPORT, LOCATION (dist. from pt.)
+
+  def show
+    @venue = Venue.find(params[:id])
+    @review = Review.new
+    @reviews = Review.where(venue_id: params[:id]).order(created_at: :desc)
+  end
+
+  # Filter by (DAY, EVENT, SPORT), LOCATION (dist. from pt.)
   def filter(query)
     Venue.near([query[:lat], query[:lng]], 100)#.where("DATE(event_datetime) = Date.today")
   end
