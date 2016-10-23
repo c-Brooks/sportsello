@@ -17,8 +17,7 @@ puts "Seeding Data ..."
 # Only run on development (local) instances not on production, etc.
 raise "Development seeds only (for now)!" unless Rails.env.development?
 
-# Let's do this ...
-# Users
+# Setup users...
 User.destroy_all
 
 user = User.create!({
@@ -28,6 +27,7 @@ user = User.create!({
   oauth_token: 'EAADzQ4vKSEgBADtIN8mT8d5D5lGZAZChZAc60ZCPT63mPru24ZBTQ4zklkqingfqQYMnZBTKEJh5FuuFTYg4uH7dNwACDZAK4OHPkXJ1ZALW6UZC7b3WYXCeSZAa5r7mLRlEk4HK5tI5vZBXGRJbtqStPHRO0P4uFqVaVsZD',
 })
 
+# Setup venues...
 Venue.destroy_all
 
 venue1 = Venue.create!({
@@ -57,6 +57,7 @@ venue3 = Venue.create!({
   address: '701 W Georgia St, Vancouver'
 })
 
+# Setup sports...
 Sport.destroy_all
 
 sport1 = Sport.create!({
@@ -71,6 +72,7 @@ sport3 = Sport.create!({
   name: 'NBA'
 })
 
+# Setup teams...
 Team.destroy_all
 
 Team.create!({
@@ -89,6 +91,39 @@ Team.create!({
   name: 'TSM'
 })
 
+# Setup games...
+Game.destroy_all
+
+Game.create!({
+  sport_id: sport1.id,
+  team1_id: 1,
+  team2_id: 2,
+  event_datetime: DateTime.now
+})
+
+Game.create!({
+  sport_id: sport2.id,
+  team1_id: 3,
+  team2_id: 4,
+  event_datetime: DateTime.now + 1
+})
+
+Game.create!({
+  sport_id: sport3.id,
+  team1_id: 3,
+  team2_id: 4,
+  event_datetime: DateTime.now + 2
+})
+
+Game.create!({
+  sport_id: sport1.id,
+  team1_id: 1,
+  team2_id: 4,
+  event_datetime: DateTime.now + 3
+})
+
+
+# Setup events...
 Event.destroy_all
 
 venue1.events.create!({
@@ -123,6 +158,7 @@ venue3.events.create!({
   event_datetime: DateTime.now + 5
 })
 
+# Setup reviews...
 Review.destroy_all
 
 Review.create!({
