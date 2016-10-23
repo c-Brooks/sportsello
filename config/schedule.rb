@@ -19,8 +19,18 @@
 
 # Learn more: http://github.com/javan/whenever
 
-set :output, "./log/scheduler.log"
+# RUN THESE COMMANDS IF YOU MAKE CHANGES
 
-every 1.day do
-  runner "Scheduler.new"
+# UPDATE CRON
+# whenever --update-crontab
+
+# RESTART CRON
+# sudo service cron restart
+
+set :output, "/vagrant/projects/sportsello/log/scheduler.log"
+set :environment, 'development'
+
+# Run frequently in case of mistakes
+every 5.hours do
+  runner 'Scheduler.new'
 end

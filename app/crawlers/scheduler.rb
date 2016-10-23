@@ -40,12 +40,18 @@ class Scheduler
     team1 = Team.find_or_create_by name: game['team1']
     team2 = Team.find_or_create_by name: game['team2']
 
-    Game.create({
-      sport_id: sport.id,
-      team1_id: team1.id,
-      team2_id: team2.id,
-      game_datetime: game['date']
-    })
+    begin
+      Game.create({
+        sport_id: sport.id,
+        team1_id: team1.id,
+        team2_id: team2.id,
+        game_datetime: game['date']
+      })
+    rescue => e
+      puts e.message
+      puts "Ignoring existing game..."
+    end
+
   end
 
 end
