@@ -15,10 +15,10 @@
 /log/*
 !/log/.keep
 /tmp
+.byebug_history
 
 # Ignore environment files
 .env
 
 # Ignore the Gemfile.lock
-
 Gemfile.lock
