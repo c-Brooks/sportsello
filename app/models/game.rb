@@ -1,8 +1,7 @@
 class Game < ActiveRecord::Base
   belongs_to :sport
 
-  validates :name, presence: true
-  validates :event_datetime, presence: true
+  validates :game_datetime, presence: true
   validates :team1_id, numericality: { only_integer: true }
   validates :team2_id, numericality: { only_integer: true }
 
