@@ -19,8 +19,11 @@ class VenuesController < ApplicationController
 
   def filter
     nearby_venues = Venue.near([@query[:lat], @query[:lng]], @query[:dist])
+
     nearby_venues.includes(events: [:game])
-    .where("sport_id = ?", @query[:sport_id]).references(:events)
+    .where( "sport_id = ? AND game_datetime > ? AND game_datetime < ?",
+          @query[:sport_id],   @query[:day],        @query[:day]+1 )
+    .references(:events)
   end
 
   # I don't know where to put this so it lives here for now
