@@ -1,8 +1,8 @@
 class VenuesController < ApplicationController
 # This controller deals with putting VENUES on the MAP
   def index
-    @query = { day: Date.today, lat: 49.28, lng: -123.1 }
-    @venues = filter(@query)
+    @query = { day: Date.today, lat: 49.28, lng: -123.1, dist: 1, sport_id: 1 }
+    @venues = filter
     @venue_markers = Gmaps4rails.build_markers(@venues) do |venue, marker|
       marker.lat venue.latitude
       marker.lng venue.longitude
@@ -17,9 +17,13 @@ class VenuesController < ApplicationController
     @reviews = Review.where(venue_id: params[:id]).order(created_at: :desc)
   end
 
-  # Filter by (DAY, EVENT, SPORT), LOCATION (dist. from pt.)
-  def filter(query)
-    Venue.near([query[:lat], query[:lng]], 100)#.where("DATE(event_datetime) = Date.today")
+  def filter
+    nearby_venues = Venue.near([@query[:lat], @query[:lng]], @query[:dist])
+
+    nearby_venues.includes(events: [:game])
+    .where( "sport_id = ? AND game_datetime > ? AND game_datetime < ?",
+          @query[:sport_id],   @query[:day],        @query[:day]+1 )
+    .references(:events)
   end
 
   # I don't know where to put this so it lives here for now
@@ -54,8 +58,7 @@ class VenuesController < ApplicationController
 
   # Select next 3 upcoming events
   def upcoming_events(venue)
-    ev = venue.events
-    ev.each do |e|
+    venue.events.each do |e|
       e.game
     end
   end
