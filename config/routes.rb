@@ -9,10 +9,10 @@ Rails.application.routes.draw do
     resources :sessions, only: [:create, :destroy]
     resources :reviews, only:[:delete]
     resources :events, only: [:index, :show]
-    resources :venues, only: [:index, :create, :show, :destroy] do
+    resources :venues, only: [:create, :show, :destroy] do
       resources :reviews, only: [:create]
     end
-
+    get 'map', to: 'venues#index', as: :map;
 
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
