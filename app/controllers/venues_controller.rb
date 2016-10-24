@@ -30,7 +30,7 @@ class VenuesController < ApplicationController
     upcoming_events(venue).each do |e|
       upcoming_events_string += "<tr>
         <td>#{e.name}</td>
-        <td>#{e.event_datetime.strftime("%m/%d at %I:%M%p")}</td>
+        <td>#{e.game.game_datetime.strftime("%m/%d at %I:%M%p")}</td>
         <td><button class='btn btn-info btn-sm map-rsvp-btn'>Join!</td>
       </tr>"
     end
@@ -54,7 +54,10 @@ class VenuesController < ApplicationController
 
   # Select next 3 upcoming events
   def upcoming_events(venue)
-    venue.events.all.limit(3)
+    ev = venue.events
+    ev.each do |e|
+      e.game
+    end
   end
 
 end
