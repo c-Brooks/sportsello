@@ -38,6 +38,9 @@ gem 'wombat'
 # Use Whenever for scheduling scraping sports data
 gem 'whenever'
 
+# Use VueJS for the front end
+gem 'vuejs-rails'
+
 gem 'omniauth-facebook'
 gem 'gmaps4rails'
 gem 'geocoder'
