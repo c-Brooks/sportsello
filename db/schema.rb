@@ -11,29 +11,21 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161023214458) do
+ActiveRecord::Schema.define(version: 20161024182842) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
-
-  create_table "can_hosts", force: :cascade do |t|
-    t.integer  "venue_id"
-    t.integer  "event_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-  end
-
-  add_index "can_hosts", ["event_id"], name: "index_can_hosts_on_event_id", using: :btree
-  add_index "can_hosts", ["venue_id"], name: "index_can_hosts_on_venue_id", using: :btree
 
   create_table "events", force: :cascade do |t|
     t.string   "name"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer  "game_id"
+    t.integer  "venue_id"
   end
 
   add_index "events", ["game_id"], name: "index_events_on_game_id", using: :btree
+  add_index "events", ["venue_id"], name: "index_events_on_venue_id", using: :btree
 
   create_table "games", force: :cascade do |t|
     t.integer  "sport_id"
@@ -92,8 +84,6 @@ ActiveRecord::Schema.define(version: 20161023214458) do
     t.float    "latitude"
   end
 
-  add_foreign_key "can_hosts", "events"
-  add_foreign_key "can_hosts", "venues"
   add_foreign_key "events", "games"
   add_foreign_key "reviews", "users"
   add_foreign_key "reviews", "venues"
