@@ -1,4 +1,4 @@
 class Event < ActiveRecord::Base
   belongs_to :venues
-  belongs_to :game
+  has_one :game
 end

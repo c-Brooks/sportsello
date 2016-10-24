@@ -1,4 +1,5 @@
-class Scheduler
+class GetGames
+
   def initialize
     # Start crawling games a day in advance
     # up to 30 days

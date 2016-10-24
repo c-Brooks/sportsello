@@ -38,6 +38,15 @@ ActiveRecord::Schema.define(version: 20161024182842) do
 
   add_index "games", ["team1_id", "team2_id", "game_datetime"], name: "index_games_on_team1_id_and_team2_id_and_game_datetime", unique: true, using: :btree
 
+  create_table "games_tables", force: :cascade do |t|
+    t.integer  "sport_id"
+    t.integer  "team1_id"
+    t.integer  "team2_id"
+    t.datetime "event_datetime"
+    t.datetime "created_at",     null: false
+    t.datetime "updated_at",     null: false
+  end
+
   create_table "reviews", force: :cascade do |t|
     t.integer  "rating"
     t.text     "description"
