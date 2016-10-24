@@ -30,7 +30,12 @@
 set :output, "/vagrant/projects/sportsello/log/scheduler.log"
 set :environment, 'development'
 
-# Run frequently in case of mistakes
+# Download games frequently in case of mistakes
 every 5.hours do
-  runner 'Scheduler.new'
+  runner 'GetGames.new'
+end
+
+# Clean up expired games
+every 1.day do
+  runner 'CleanGames.new'
 end
