@@ -1,6 +1,6 @@
 class Game < ActiveRecord::Base
   belongs_to :sport
-  has_one :event
+  has_one :event, dependent: :destroy
   validates :game_datetime, presence: true
   validates :team1_id, numericality: { only_integer: true }
   validates :team2_id, numericality: { only_integer: true }
