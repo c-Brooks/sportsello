@@ -1,7 +1,13 @@
 class VenuesController < ApplicationController
 # This controller deals with putting VENUES on the MAP
   def index
-    @query = { day: Date.today, lat: 49.28, lng: -123.1, dist: 1, sport_id: 1 }
+    @query = {
+      day: params[:day] ? Date.parse(params[:day]) : Date.today,
+      lat: 49.28,
+      lng: -123.1,
+      dist: 5,
+      sport_id: params[:sport_id] || 1
+    }
     @venues = filter
     @venue_markers = Gmaps4rails.build_markers(@venues) do |venue, marker|
       marker.lat venue.latitude
