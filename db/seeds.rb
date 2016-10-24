@@ -122,6 +122,7 @@ game4 = Game.create!({
   game_datetime: DateTime.now + 3
 })
 
+
 # Setup events...
 Event.destroy_all
 
