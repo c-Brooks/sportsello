@@ -14,7 +14,7 @@
   <div class="reviews">
     <% if @reviews.length != 0 %>
       <% @reviews.each do |review| %>
-        <h4> Review from: <%= User.find(review.user_id).name %> </h5>
+        <h4> Review from: <%= User.find(review.user_id).name %> </h4>
         <p class>
           Description: <%= review.description %>
         </p>
