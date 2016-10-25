@@ -42,6 +42,7 @@ gem 'omniauth-facebook'
 gem 'gmaps4rails'
 gem 'geocoder'
 gem 'bootstrap-sass', '~> 3.3.6'
+gem "rails-erd"
 
 
 group :development, :test do
