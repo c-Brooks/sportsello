@@ -46,6 +46,7 @@ gem 'gmaps4rails'
 gem 'geocoder'
 gem 'bootstrap-sass', '~> 3.3.6'
 gem 'will_paginate', '~> 3.1.0'
+gem "rails-erd"
 
 
 group :development, :test do
