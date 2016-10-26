@@ -1,7 +1,6 @@
 
 $(document).ready(function() {
-  Vue.use(infiniteScroll);
-console.log(infiniteScroll);
+
   var games = new Vue({
     el: '#games',
     data: {
@@ -12,8 +11,7 @@ console.log(infiniteScroll);
       var that = this;
       var lastDateTimeString = getLastDateTime(this.games)
       var lock = true;
-      window.addEventListener('scroll', function () {
-        if (endOfPage() && lock) {
+
           $.ajax({
             url: `/games.json?game_datetime=${lastDateTimeString}`,
             success: function(res) {
@@ -22,8 +20,7 @@ console.log(infiniteScroll);
               lock = false;
             }
           });
-        }
-      });
+
     }
   });
 

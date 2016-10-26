@@ -2,7 +2,7 @@
 
 <!-- <div id="games" v-infinite-scroll="loadMore()" infinite-scroll-disabled="busy" infinite-scroll-distance="10"> -->
     <div id="games">
-      <div v-for="game in games">
+      <div class="game" v-for="game in games">
         <span v-text="game.sport.name"></span>
         <span v-text="game.team1.name"></span>
         <span v-text="game.team2.name"></span>
