@@ -12,10 +12,10 @@
 
         <ul class="nav navbar-nav navbar-right">
           <% if current_user %>
-            Signed in as <b><%= current_user.name %></b>
-            | <%= link_to "Sign out", signout_path, id: 'sign_out' %>
+            <strong><%= current_user.name %></strong>
+            | <%= link_to "SIGN OUT", signout_path, id: 'sign_out' %>
           <% else %>
-            <%= link_to "Sign in with Facebook", "/auth/facebook", id: "sign_in" %>
+            <%= link_to "SIGN IN", "/auth/facebook", id: "sign_in" %>
           <% end %>
         </ul>
 
