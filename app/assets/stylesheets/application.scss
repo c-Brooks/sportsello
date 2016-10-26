@@ -17,8 +17,11 @@
 @import "bootstrap-sprockets";
 @import "bootstrap";
 
-$dark-gray: #212225;
-$light-gray: #5F5F60;
+$ui-dark-gray: #212225;
+$ui-pale-gray: #5F5F60;
+$ui-dark-blue: #363A44;
+$ui-light-gray: #BCC4CA;
+$ui-blue: #5A82A5;
 
 $brand-dark-red: #9f111b;
 $brand-light-red: #b11623;
@@ -28,8 +31,16 @@ $brand-light-gray: #cccccc;
 body {
   font-family: 'Open Sans', sans-serif;
   padding-top: 70px;
-  background: $dark-gray url("./bg-noise.png");
-  color: $light-gray;
+  background: $ui-dark-gray url("./bg-noise.png");
+  color: $ui-light-gray;
+
+  a {
+    color: $brand-dark-red;
+  }
+
+  a:hover {
+    color: $brand-light-red;
+  }
 }
 
 .navbar {
@@ -46,7 +57,7 @@ body {
   background: linear-gradient(to bottom, rgba(95,95,96,1) 0%, rgba(51,51,51,1) 100%);
   filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#5f5f60', endColorstr='#333333', GradientType=0 );
 
-  border-bottom: 1px solid $light-gray;
+  border-bottom: 1px solid $ui-pale-gray;
 
   text-shadow: 0px 1px 2px rgba(0, 0, 0, 1);
   font-weight: 600;
