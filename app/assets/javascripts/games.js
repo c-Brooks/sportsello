@@ -1,24 +1,12 @@
 
 $(document).ready(function() {
-
+  Vue.use(infiniteScroll);
+console.log(infiniteScroll);
   var games = new Vue({
     el: '#games',
     data: {
-      games: []
-    },
-    created: function() {
-      console.log('creating');
-      var that;
-      var dateTimeString;
-      dateTimeString = getDateTime();
-      that = this;
-      $.ajax({
-        url: `/games.json?game_datetime=${dateTimeString}`,
-        success: function(res) {
-          that.games = res.games;
-          that.busy = false;
-        }
-      });
+      games: [],
+      busy: true
     },
     methods: {
       loadMore: function() {
@@ -32,8 +20,8 @@ $(document).ready(function() {
         $.ajax({
           url: `/games.json?game_datetime=${lastDateTimeString}`,
           success: function(res) {
-            that.games.push = res.games;
-            that.busy = false;
+            that.games = res.games;
+            // that.busy = false;
           }
         });
       }
