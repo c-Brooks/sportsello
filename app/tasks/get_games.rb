@@ -1,12 +1,14 @@
 class GetGames
 
   def initialize
-    # Start crawling games a day in advance
-    # up to 30 days
-    tomorrow = Date.tomorrow
-    future = tomorrow + 30.days
+    @tomorrow = Date.tomorrow
+    # Set future to 30 days in advance
+    @future = tomorrow + 30.days
+  end
 
-    tomorrow.upto(future) do |date|
+  def crawl
+    # Start crawling games a day in advance
+    @tomorrow.upto(@future) do |date|
       # Crawl the all the sports
       nhl_games = NhlCrawler.new(date).crawl
       nba_games = NbaCrawler.new(date).crawl
