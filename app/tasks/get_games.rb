@@ -1,12 +1,14 @@
 class GetGames
 
   def initialize
-    # Start crawling games a day in advance
-    # up to 30 days
-    tomorrow = Date.tomorrow
-    future = tomorrow + 30.days
+    @tomorrow = Date.tomorrow
+    # Set future to 30 days in advance
+    @future = @tomorrow + 30.days
+  end
 
-    tomorrow.upto(future) do |date|
+  def crawl
+    # Start crawling games a day in advance
+    @tomorrow.upto(@future) do |date|
       # Crawl the all the sports
       nhl_games = NhlCrawler.new(date).crawl
       nba_games = NbaCrawler.new(date).crawl
@@ -15,20 +17,17 @@ class GetGames
       # Go through each group of games
       nhl_games['games'].each do |game|
         sport = Sport.find_by_name 'NHL'
-        game['date'] = date.to_s + ' ' + game['date']
-        add_game(game, sport)
+        add_game(game, sport, date)
       end
 
       nba_games['games'].each do |game|
         sport = Sport.find_by_name 'NBA'
-        game['date'] = date.to_s + ' ' + game['date']
-        add_game(game, sport)
+        add_game(game, sport, date)
       end
 
       mlb_games['games'].each do |game|
         sport = Sport.find_by_name 'MLB'
-        game['date'] = date.to_s + ' ' + game['date']
-        add_game(game, sport)
+        add_game(game, sport, date)
       end
     end
   end
@@ -36,8 +35,11 @@ class GetGames
   private
 
   # Add game to database
-  def add_game(game, sport)
-    # Find teams or creat them if they don't exist
+  def add_game(game, sport, date)
+    # Format date
+    game['date'] = date.to_s + ' ' + game['date']
+
+    # Find teams or create them if they don't exist
     team1 = Team.find_or_create_by name: game['team1']
     team2 = Team.find_or_create_by name: game['team2']
 

@@ -32,10 +32,10 @@ set :environment, 'development'
 
 # Download games frequently in case of mistakes
 every 5.hours do
-  runner 'GetGames.new'
+  runner 'GetGames.new.crawl'
 end
 
 # Clean up expired games
 every 1.day do
-  runner 'CleanGames.new'
+  runner 'CleanGames.new.clean'
 end
