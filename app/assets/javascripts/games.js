@@ -7,36 +7,22 @@ $(document).ready(function() {
       games: []
     },
     created: function() {
-      console.log('creating');
-      var that;
-      var dateTimeString;
-      dateTimeString = getDateTime();
-      that = this;
-      $.ajax({
-        url: `/games.json?game_datetime=${dateTimeString}`,
-        success: function(res) {
-          that.games = res.games;
-          that.busy = false;
+      console.log('Loading');
+      var that = this;
+      var lastDateTimeString = getLastDateTime(this.games)
+      var lock = true;
+      window.addEventListener('scroll', function () {
+        if (endOfPage() && lock) {
+          $.ajax({
+            url: `/games.json?game_datetime=${lastDateTimeString}`,
+            success: function(res) {
+              console.log('Scroll loading');
+              that.games = res.games;
+              lock = false;
+            }
+          });
         }
       });
-    },
-    methods: {
-      loadMore: function() {
-        console.log('Loading');
-        var that;
-        that = this;
-        var lastDateTimeString = getLastDateTime(this.games)
-        console.log(lastDateTimeString)
-        this.busy = true;
-
-        $.ajax({
-          url: `/games.json?game_datetime=${lastDateTimeString}`,
-          success: function(res) {
-            that.games.push = res.games;
-            that.busy = false;
-          }
-        });
-      }
     }
   });
 
