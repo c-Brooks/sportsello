@@ -1,6 +1,6 @@
 <h1>Games</h1>
 
-<div id="games">
+<div id="games" v-infinite-scroll="loadMore()" infinite-scroll-disabled="busy" infinite-scroll-distance="10">
   <table>
     <thead>
       <tr>
@@ -17,8 +17,4 @@
       </tr>
     </tbody>
   </table>
-</div>
-
-<div id="infinite-scrolling">
-  <%= will_paginate %>
 </div>
