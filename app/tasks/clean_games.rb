@@ -1,8 +1,12 @@
 class CleanGames
 
-  # Remove games older than x days
   def initialize
-    Game.where("game_datetime < ?", 2.days.ago).destroy_all
+    # Remove games older than x days
+    @days_ago = 2.days.ago
+  end
+
+  def clean
+    Game.where("game_datetime < ?", @days_ago).destroy_all
   end
 
 end
