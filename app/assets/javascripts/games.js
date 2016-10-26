@@ -5,26 +5,25 @@ console.log(infiniteScroll);
   var games = new Vue({
     el: '#games',
     data: {
-      games: [],
-      busy: true
+      games: []
     },
-    methods: {
-      loadMore: function() {
-        console.log('Loading');
-        var that;
-        that = this;
-        var lastDateTimeString = getLastDateTime(this.games)
-        console.log(lastDateTimeString)
-        this.busy = true;
-
-        $.ajax({
-          url: `/games.json?game_datetime=${lastDateTimeString}`,
-          success: function(res) {
-            that.games = res.games;
-            // that.busy = false;
-          }
-        });
-      }
+    created: function() {
+      console.log('Loading');
+      var that = this;
+      var lastDateTimeString = getLastDateTime(this.games)
+      var lock = true;
+      window.addEventListener('scroll', function () {
+        if (endOfPage() && lock) {
+          $.ajax({
+            url: `/games.json?game_datetime=${lastDateTimeString}`,
+            success: function(res) {
+              console.log('Scroll loading');
+              that.games = res.games;
+              lock = false;
+            }
+          });
+        }
+      });
     }
   });
 

@@ -1,19 +1,12 @@
 <h1>Games</h1>
-<div id="games" v-infinite-scroll="loadMore()" infinite-scroll-disabled="busy" infinite-scroll-distance="10">
-  <table>
-    <thead>
-      <tr>
-        <th>Sport</th>
-        <th>Team 1</th>
-        <th>Team 2</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr v-for="game in games">
-        <td>{{ game.sport.name }}</td>
-        <td>{{ game.team1.name }}</td>
-        <td>{{ game.team2.name }}</td>
-      </tr>
-    </tbody>
-  </table>
-</div>
+
+<!-- <div id="games" v-infinite-scroll="loadMore()" infinite-scroll-disabled="busy" infinite-scroll-distance="10"> -->
+    <div id="games">
+      <div v-for="game in games">
+        <span v-text="game.sport.name"></span>
+        <span v-text="game.team1.name"></span>
+        <span v-text="game.team2.name"></span>
+      </div>
+    </div>
+
+<!-- </div> -->
