@@ -3,7 +3,7 @@ class GetGames
   def initialize
     @tomorrow = Date.tomorrow
     # Set future to 30 days in advance
-    @future = tomorrow + 30.days
+    @future = @tomorrow + 30.days
   end
 
   def crawl
