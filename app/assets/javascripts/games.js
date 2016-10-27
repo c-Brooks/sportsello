@@ -1,7 +1,5 @@
-
 $(document).ready(function() {
-  Vue.use(infiniteScroll);
-console.log(infiniteScroll);
+
   var games = new Vue({
     el: '#games',
     data: {
@@ -12,10 +10,14 @@ console.log(infiniteScroll);
       this.scroll();
       var that = this;
       var lastDateTimeString = getLastDateTime(this.games)
+      var lock = true;
+
       $.ajax({
         url: `/games.json?game_datetime=${lastDateTimeString}`,
         success: function(res) {
+          console.log('Scroll loading');
           that.games = res.games;
+          lock = false;
         }
       });
     },
@@ -26,6 +28,14 @@ console.log(infiniteScroll);
             console.log('end of page');
           }
         })
+      },
+      viewGame: function(event) {
+        var target = event.currentTarget;
+        $(target).addClass('game-click');
+
+        setTimeout(function() {
+          $(target).removeClass('game-click');
+        }, 400);
       }
     }
   });

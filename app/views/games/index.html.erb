@@ -1,11 +1,16 @@
-<h1>Games</h1>
 
 <!-- <div id="games" v-infinite-scroll="loadMore()" infinite-scroll-disabled="busy" infinite-scroll-distance="10"> -->
     <div id="games">
-      <div v-for="game in games" >
-        <span v-text="game.sport.name"></span>
-        <span v-text="game.team1.name"></span>
-        <span v-text="game.team2.name"></span>
+      <div class="game" v-for="game in games" v-on:click="viewGame">
+        <div class="time-container col-sm-3">
+          <p class="time alt-text">7:00 PM</p>
+        </div>
+        <div class="info-container col-sm-9">
+          <p class="sport alt-text" v-text="game.sport.name"></p>
+          <div class="team1 col-sm-3" v-text="game.team1.name"></div>
+          <div class="vs col-sm-3">VS</div>
+          <div class="team2 col-sm-3" v-text="game.team2.name"></div>
+        </div>
       </div>
     </div>
 
