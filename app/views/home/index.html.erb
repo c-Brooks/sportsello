@@ -1,6 +1,24 @@
 <div id="home">
-  <game-info></game-info>
-  <div class="home-container">
-    <games :games_list="games_list"></games>
+
+  <transition name="component-slide" mode="out-in">
+    <!-- render page here -->
+    <component
+      :is="view"
+      :game_info="game_info">
+    </component>
+  </transition>
+
+  <div class="app-container">
+    <div class="games">
+      <game-box
+        v-for="game in games_list"
+        :id="game.id"
+        :datetime="game.datetime"
+        :sport="game.sport.name"
+        :team1="game.team1.name"
+        :team2="game.team2.name">
+      </game-box>
+    </div>
   </div>
+
 </div>

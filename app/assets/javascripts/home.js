@@ -1,16 +1,39 @@
 $(document).ready(function() {
 
-  Vue.component('game-info', {
-    data: function () {
-      return {
-        message: 'Hey there!',
+  Vue.component('vue-panel', {
+    template:
+      `<div class="close-panel" v-on:click="closePanel">
+        &times;
+      </div>`,
+    methods: {
+      closePanel: function() {
+        home.view = 'empty';
+        // Enable the scroll for the body
+        $('body').css('overflow', 'scroll');
       }
-    },
-    template: '<div class="game-info">{{ message }}</div>'
+    }
   });
 
+  var gameInfo = {
+    props: ['game_info'],
+    template:
+    `<div class="vue-panel">
+      <vue-panel/>
+      <div class="app-container">
+        <div class="game-info">
+          <game-box
+            :datetime="game_info.datetime"
+            :sport="game_info.sport"
+            :team1="game_info.team1"
+            :team2="game_info.team2">
+          </game-box>
+        </div>
+      </div>
+    </div>`
+  };
+
   Vue.component('game-box', {
-    props: ['datetime', 'sport', 'team1', 'team2'],
+    props: ['id', 'datetime', 'sport', 'team1', 'team2'],
     template:
       `<div class="game" v-on:click="viewGame">
         <div class="time-container col-sm-3">
@@ -25,34 +48,46 @@ $(document).ready(function() {
       </div>`,
     methods: {
       viewGame: function(event) {
+        home.view = 'game-info';
+
+        // Hide the scroll for the body
+        $('body').css('overflow', 'hidden');
+
         var target = event.currentTarget;
         $(target).addClass('game-click');
-        $('.game-info').show();
         setTimeout(function() {
           $(target).removeClass('game-click');
         }, 400);
+
+        $.ajax({
+          url: `/games/${this.id}`,
+          success: function(res) {
+            home.game_info = {
+              datetime: res.datetime,
+              sport: res.sport.name,
+              team1: res.team1.name,
+              team2: res.team2.name
+            };
+          }
+        });
       }
     },
   });
 
-  Vue.component('games', {
-    props: ['games_list'],
-    template:
-      `<div id="games">
-        <game-box
-          v-for="game in games_list"
-          :datetime="game.datetime"
-          :sport="game.sport.name"
-          :team1="game.team1.name"
-          :team2="game.team2.name">
-        </game-box>
-      </div>`
-  });
+  var empty = {
+    template: '<div></div>'
+  }
 
-  new Vue({
+  var home = new Vue({
     el: '#home',
+    components: {
+      'empty': empty,
+      'game-info': gameInfo
+    },
     data: {
+      view: 'empty',
       games_list: [],
+      game_info: {}
     },
     created: function() {
       this.scroll();
@@ -70,7 +105,6 @@ $(document).ready(function() {
       getGames: function() {
         var that = this;
         var lastDateTimeString = getLastDateTime(this.games_list)
-        var lock = true;
 
         $.ajax({
           url: `/games.json?game_datetime=${lastDateTimeString}`,
@@ -78,7 +112,6 @@ $(document).ready(function() {
             res.games.forEach(function(game) {
               that.games_list.push(game);
             });
-            lock = false;
           }
         });
       }
