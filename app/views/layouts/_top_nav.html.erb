@@ -15,7 +15,12 @@
             <strong><%= current_user.name %></strong>
             | <%= link_to "SIGN OUT", signout_path, id: 'sign_out' %>
           <% else %>
-            <%= link_to "SIGN IN", "/auth/facebook", id: "sign_in" %>
+        <button class="btn btn-block btn-social btn-facebook"
+          onclick="window.location.href='/auth/facebook'">
+          <span class="fa fa-facebook"></span>
+           Sign in with Facebook
+         </button>
+
           <% end %>
         </ul>
 

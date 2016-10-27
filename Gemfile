@@ -39,6 +39,7 @@ gem 'whenever'
 # Use VueJS for the front end
 gem 'vuejs-rails'
 
+gem 'font-awesome-sass', '~> 4.7.0'
 gem 'omniauth-facebook'
 gem 'gmaps4rails'
 gem 'geocoder'

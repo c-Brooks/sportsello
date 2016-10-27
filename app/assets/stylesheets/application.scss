@@ -16,6 +16,8 @@
 
 @import "bootstrap-sprockets";
 @import "bootstrap";
+@import "font-awesome-sprockets";
+@import "font-awesome";
 
 $ui-dark-gray: #212225;
 $ui-pale-gray: #5F5F60;
@@ -65,6 +67,10 @@ body {
 
   line-height: 50px;
 
+  .btn-facebook {
+    padding-left: 40px;
+    margin-top: 8px;
+  }
   a {
     color: white;
   }
