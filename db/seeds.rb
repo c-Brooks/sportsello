@@ -36,7 +36,8 @@ venue1 = Venue.create!({
   description: 'A cool bar with cool people looking to sit back and cool.',
   longitude: 123.1058901,
   latitude: 49.2831424,
-  address: '12 Powell St, Vancouver, BC'
+  address: '12 Powell St, Vancouver, BC',
+  user_id: 1
 })
 
 venue2 = Venue.create!({
@@ -45,7 +46,8 @@ venue2 = Venue.create!({
   description: 'Stay away',
   longitude: 123.1451002,
   latitude: 49.2911695,
-  address: '1885 Barclay St, Vancouver, BC'
+  address: '1885 Barclay St, Vancouver, BC',
+  user_id: 1
 })
 
 venue3 = Venue.create!({
@@ -54,7 +56,8 @@ venue3 = Venue.create!({
   description: 'Vegans only.',
   longitude: 123.1237845,
   latitude: 49.2841426,
-  address: '701 W Georgia St, Vancouver'
+  address: '701 W Georgia St, Vancouver',
+  user_id: 1
 })
 
 # Setup sports...

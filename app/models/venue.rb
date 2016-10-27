@@ -4,7 +4,7 @@ class Venue < ActiveRecord::Base
 
   has_many :events
   has_many :reviews
-
+  belongs_to :user
 
   validates :name, presence: true
   validates :website, presence: true
