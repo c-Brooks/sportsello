@@ -10,14 +10,30 @@
         <!-- We can put buttons here -->
       </ul>
 
-        <ul class="nav navbar-nav navbar-right">
+        <span class="nav navbar-nav navbar-right">
+          <div class="row">
+            <div class="col-sm-5">
           <% if current_user %>
             <strong><%= current_user.name %></strong>
             | <%= link_to "SIGN OUT", signout_path, id: 'sign_out' %>
           <% else %>
-            <%= link_to "SIGN IN", "/auth/facebook", id: "sign_in" %>
+          </div>
+          <div class="col-sm-8">
+
+        <button class="btn btn-block btn-social btn-facebook"
+          onclick="window.location.href='/auth/facebook'">
+          <span class="fa fa-facebook"></span>
+           Sign in with Facebook
+         </button>
+         </span>
+       </div>
+       </row>
+
+         <span>
+         <%= link_to "SIGN IN", new_session_path, id: 'sign_in' %> |
+         <%= link_to "REGISTER", new_user_path, id: 'register' %>
           <% end %>
-        </ul>
+          </span>
 
     </div> <!-- End of #navbar -->
 
