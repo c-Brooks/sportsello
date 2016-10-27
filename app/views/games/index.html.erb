@@ -1,17 +1,12 @@
-
 <!-- <div id="games" v-infinite-scroll="loadMore()" infinite-scroll-disabled="busy" infinite-scroll-distance="10"> -->
     <div id="games">
-      <div class="game" v-for="game in games" v-on:click="viewGame">
-        <div class="time-container col-sm-3">
-          <p class="time alt-text">7:00 PM</p>
-        </div>
-        <div class="info-container col-sm-9">
-          <p class="sport alt-text" v-text="game.sport.name"></p>
-          <div class="team1 col-sm-3" v-text="game.team1.name"></div>
-          <div class="vs col-sm-3">VS</div>
-          <div class="team2 col-sm-3" v-text="game.team2.name"></div>
-        </div>
-      </div>
+      <!-- <game-info :game="game"></game-info> -->
+      <game-box
+        v-for="game in games"
+        v-bind:datetime="game.datetime"
+        v-bind:sport="game.sport.name"
+        v-bind:team1="game.team1.name"
+        v-bind:team2="game.team2.name">
+      </game-box>
     </div>
-
 <!-- </div> -->
