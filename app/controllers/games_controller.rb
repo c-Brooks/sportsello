@@ -12,11 +12,8 @@ class GamesController < ApplicationController
         j.sport Sport.find(game.sport_id), :name
      end
     end.target!
-    respond_to do |format|
-      format.html
-      format.js
-      format.json { render :json => json }
-    end
+
+    render :json => json
   end
 
   def show
