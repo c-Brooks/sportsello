@@ -9,9 +9,10 @@
   </transition>
 
   <div class="app-container">
-    <div id="games">
+    <div class="games">
       <game-box
         v-for="game in games_list"
+        :id="game.id"
         :datetime="game.datetime"
         :sport="game.sport.name"
         :team1="game.team1.name"

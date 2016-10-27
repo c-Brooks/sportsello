@@ -6,6 +6,7 @@ class GamesController < ApplicationController
     json = Jbuilder.new do |j|
       j.games @games do |game|
         j.game game.id
+        j.id game.id
         j.datetime game.game_datetime
         j.team1 Team.find(game.team1_id), :name
         j.team2 Team.find(game.team2_id), :name
@@ -20,7 +21,6 @@ class GamesController < ApplicationController
     @game = Game.find params[:id]
 
     @game_json = Jbuilder.new do |j|
-      j.game @game.id
       j.datetime @game.game_datetime
       j.team1 Team.find(@game.team1_id), :name
       j.team2 Team.find(@game.team2_id), :name

@@ -60,7 +60,7 @@ $(document).ready(function() {
         }, 400);
 
         $.ajax({
-          url: `/games/1`,
+          url: `/games/${this.id}`,
           success: function(res) {
             home.game_info = {
               datetime: res.datetime,
@@ -73,21 +73,6 @@ $(document).ready(function() {
       }
     },
   });
-
-  var games = {
-    props: ['games_list'],
-    template:
-      `<div class="games">
-        <game-box
-          v-for="game in games_list"
-          :id="game.id"
-          :datetime="game.datetime"
-          :sport="game.sport.name"
-          :team1="game.team1.name"
-          :team2="game.team2.name">
-        </game-box>
-      </div>`
-  };
 
   var empty = {
     template: '<div></div>'
