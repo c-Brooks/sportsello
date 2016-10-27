@@ -21,6 +21,16 @@ $(document).ready(function() {
             }
           });
 
+    },
+    methods: {
+      viewGame: function(event) {
+        var target = event.currentTarget;
+        $(target).addClass('game-click');
+
+        setTimeout(function() {
+          $(target).removeClass('game-click');
+        }, 400);
+      }
     }
   });
 
