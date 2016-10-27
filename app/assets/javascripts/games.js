@@ -7,14 +7,14 @@ $(document).ready(function() {
     },
     created: function() {
       this.scroll();
-      var that = this;
-      getGames(that);
+      this.getGames();
     },
     methods: {
       scroll: function() {
+        var that = this;
         window.addEventListener('scroll', function () {
           if($(window).scrollTop() + $(window).height() == $(document).height()) {
-
+            that.getGames();
           }
         })
       },
@@ -25,29 +25,31 @@ $(document).ready(function() {
         setTimeout(function() {
           $(target).removeClass('game-click');
         }, 400);
+      },
+      getGames: function() {
+        var that = this;
+        var lastDateTimeString = getLastDateTime(this.games)
+        var lock = true;
+
+        $.ajax({
+          url: `/games.json?game_datetime=${lastDateTimeString}`,
+          success: function(res) {
+            res.games.forEach(function(game) {
+              that.games.push(game);
+            });
+            lock = false;
+          }
+        });
       }
     }
   });
 
-  function getGames(gamesVue) {
-    var lastDateTimeString = getLastDateTime(gamesVue.games)
-    var lock = true;
-
-    $.ajax({
-      url: `/games.json?game_datetime=${lastDateTimeString}`,
-      success: function(res) {
-        gamesVue.games = res.games;
-        lock = false;
-      }
-    });
-  }
-
   function getDateTime() {
     var today = new Date();
-      var yr = today.getFullYear();
-      var month = today.getMonth() + 1;
-      var day = today.getDate();
-      return yr + '-' + month + '-' + day + ' 00:00:00';
+    var yr = today.getFullYear();
+    var month = today.getMonth() + 1;
+    var day = today.getDate();
+    return yr + '-' + month + '-' + day + ' 00:00:00';
   }
 
   function getLastDateTime(games_array) {
