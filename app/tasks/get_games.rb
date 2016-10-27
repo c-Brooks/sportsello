@@ -9,7 +9,7 @@ class GetGames
   def crawl
     # Start crawling games a day in advance
     @tomorrow.upto(@future) do |date|
-      # Crawl all the sports
+      Crawl all the sports
       nhl_games = NhlCrawler.new(date).crawl
       nba_games = NbaCrawler.new(date).crawl
       mlb_games = MlbCrawler.new(date).crawl
@@ -28,15 +28,19 @@ class GetGames
 
       mlb_games['games'].each do |game|
         sport = Sport.find_by_name 'MLB'
+        #Takes team data and splits into proper string
+        game['team1'] = game['team1'].split(') ')[1].split("\n")[0]
+        game['team2'] = game['team2'].split(') ')[1]
         add_game(game, sport, date)
       end
 
       nfl_games['games'].each do |game|
         sport = Sport.find_or_create_by name: 'NFL'
+        #Takes team data and splits into proper string
         game['team1'] = game['team1'].split(' at ')[0]
         game['team2'] = game['team2'].split(' at ')[1]
+        #Takes date data and grabs nested data
         game['date'] = game['date'][0]['actual_date']
-
         add_game(game, sport, date)
       end
     end
