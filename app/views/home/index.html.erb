@@ -4,12 +4,11 @@
     <!-- render page here -->
     <component
       :is="view"
-      :games_list="games_list"
       :game_info="game_info">
     </component>
   </transition>
 
-  <div class="home-container">
+  <div class="app-container">
     <div id="games">
       <game-box
         v-for="game in games_list"
@@ -20,4 +19,5 @@
       </game-box>
     </div>
   </div>
+
 </div>

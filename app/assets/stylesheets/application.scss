@@ -54,7 +54,7 @@ body {
   }
 }
 
-.home-container {
+.app-container {
   width: 50%;
   margin: 0 auto;
 }
@@ -139,17 +139,13 @@ body {
   width: 100%;
   position: fixed;
   top: 50px;
+  overflow: scroll;
 }
 
-.component-slide-leave-active {
-  transition: opacity .3s ease;
-  opacity: 100;
-}
-
-.component-slide-enter {
+.component-slide-enter, .component-slide-leave-active {
   transform: translateY(100vh);
 }
 
-.component-slide-enter-active {
+.component-slide-enter-active, .component-slide-leave-active {
   transition: transform .3s ease;
 }

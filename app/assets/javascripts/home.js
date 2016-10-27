@@ -1,16 +1,34 @@
 $(document).ready(function() {
 
+  Vue.component('vue-panel', {
+    template:
+      `<div class="close-panel" v-on:click="closePanel">
+        &times;
+      </div>`,
+    methods: {
+      closePanel: function() {
+        home.view = 'empty';
+
+        // Enable the scroll for the body
+        $('body').css('overflow', 'scroll');
+      }
+    }
+  });
+
   var gameInfo = {
     props: ['game_info'],
     template:
     `<div class="vue-panel">
-      <div class="game-info">
-        <game-box
-          :datetime="game_info.datetime"
-          :sport="game_info.sport"
-          :team1="game_info.team1"
-          :team2="game_info.team2">
-        </game-box>
+      <vue-panel/>
+      <div class="app-container">
+        <div class="game-info">
+          <game-box
+            :datetime="game_info.datetime"
+            :sport="game_info.sport"
+            :team1="game_info.team1"
+            :team2="game_info.team2">
+          </game-box>
+        </div>
       </div>
     </div>`
   };
@@ -32,6 +50,10 @@ $(document).ready(function() {
     methods: {
       viewGame: function(event) {
         home.view = 'game-info';
+
+        // Hide the scroll for the body
+        $('body').css('overflow', 'hidden');
+
         var target = event.currentTarget;
         $(target).addClass('game-click');
         setTimeout(function() {
