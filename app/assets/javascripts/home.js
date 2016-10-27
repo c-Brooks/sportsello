@@ -94,8 +94,11 @@ $(document).ready(function() {
   }
 
   function getLastDateTime(games_array) {
-    console.log(JSON.stringify(games_array[games_array.length - 1]))
+    if (games_array.length === 0) {
+      return getDateTime();
+    } else {
       return games_array[games_array.length - 1].datetime;
+    }
   }
 
 
