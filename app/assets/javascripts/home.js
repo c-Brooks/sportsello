@@ -1,13 +1,19 @@
 $(document).ready(function() {
 
-  Vue.component('game-info', {
-    data: function () {
-      return {
-        message: 'Hey there!',
-      }
-    },
-    template: '<div class="game-info">{{ message }}</div>'
-  });
+  var gameInfo = {
+    props: ['game_info'],
+    template:
+    `<div class="vue-panel">
+      <div class="game-info">
+        <game-box
+          :datetime="game_info.datetime"
+          :sport="game_info.sport"
+          :team1="game_info.team1"
+          :team2="game_info.team2">
+        </game-box>
+      </div>
+    </div>`
+  };
 
   Vue.component('game-box', {
     props: ['datetime', 'sport', 'team1', 'team2'],
@@ -25,9 +31,9 @@ $(document).ready(function() {
       </div>`,
     methods: {
       viewGame: function(event) {
+        home.view = 'game-info';
         var target = event.currentTarget;
         $(target).addClass('game-click');
-        $('.game-info').show();
         setTimeout(function() {
           $(target).removeClass('game-click');
         }, 400);
@@ -35,7 +41,7 @@ $(document).ready(function() {
     },
   });
 
-  Vue.component('games', {
+  var games = {
     props: ['games_list'],
     template:
       `<div id="games">
@@ -47,12 +53,22 @@ $(document).ready(function() {
           :team2="game.team2.name">
         </game-box>
       </div>`
-  });
+  };
 
-  new Vue({
+  var empty = {
+    template: '<div></div>'
+  }
+
+  var home = new Vue({
     el: '#home',
+    components: {
+      'empty': empty,
+      'game-info': gameInfo
+    },
     data: {
+      view: 'empty',
       games_list: [],
+      game_info: {datetime: '2016-10-26 17:00', sport: 'NHL', team1: 'Edmonton Oilers', team2: 'Vancouver Canucks'}
     },
     created: function() {
       this.scroll();
@@ -83,6 +99,11 @@ $(document).ready(function() {
         });
       }
     }
+  });
+
+  home.$on('game-info', function() {
+    console.log('ready to go!');
+    this.view = 'game-info';
   });
 
   function getDateTime() {
