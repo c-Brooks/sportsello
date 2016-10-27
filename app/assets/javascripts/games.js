@@ -1,5 +1,14 @@
 $(document).ready(function() {
 
+  Vue.component('game-info', {
+    data: function () {
+      return {
+        message: 'Hey there!',
+      }
+    },
+    template: '<div class="game-info">{{ message }}</div>'
+  });
+
   Vue.component('game-box', {
     props: ['datetime', 'sport', 'team1', 'team2'],
     template:
@@ -18,7 +27,7 @@ $(document).ready(function() {
       viewGame: function(event) {
         var target = event.currentTarget;
         $(target).addClass('game-click');
-
+        $('.game-info').show();
         setTimeout(function() {
           $(target).removeClass('game-click');
         }, 400);
