@@ -22,7 +22,6 @@ $(document).ready(function() {
         setTimeout(function() {
           $(target).removeClass('game-click');
         }, 400);
-        console.log(target);
       }
     },
   });

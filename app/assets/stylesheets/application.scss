@@ -84,7 +84,7 @@ body {
 
 #games {
   border: 1px solid $ui-dark-border;
-  border-bottom: 0px;
+  // border-bottom: 0px; Might want to have no border for last item...?
 
   .game {
     overflow: auto;
@@ -101,9 +101,9 @@ body {
     }
   }
 
-  .game:last-of-type {
-    border-bottom: 0px;
-  }
+  // .game:last-of-type {
+  //   border-bottom: 0px; Might want to have no border for last item...?
+  // }
 
   .game:hover {
     cursor: pointer;
