@@ -1,9 +1,6 @@
-<!-- I am so lazy it's astonishing. Fix this later. -->
-<br>
-<br>
-<h1>Home#index</h1>
-<body>
-  <div class="jumbotron">
-    <%= link_to 'MAP', venues_url %>
+<div id="home">
+  <game-info></game-info>
+  <div class="home-container">
+    <games :games_list="games_list"></games>
   </div>
-</body>
+</div>
