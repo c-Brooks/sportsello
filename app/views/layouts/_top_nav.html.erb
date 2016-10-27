@@ -1,6 +1,4 @@
 <nav class="navbar navbar-default navbar-fixed-top">
-  <div class="container">
-
     <div class="navbar-header">
       <a class="navbar-brand" href="/">Sportsello</a>
     </div>
@@ -11,31 +9,15 @@
       </ul>
 
         <span class="nav navbar-nav navbar-right">
-          <div class="row">
-            <div class="col-sm-5">
+          <div class="row" style="margin-right:60px">
           <% if current_user %>
             <strong><%= current_user.name %></strong>
             | <%= link_to "SIGN OUT", signout_path, id: 'sign_out' %>
+          </span>
           <% else %>
-          </div>
-          <div class="col-sm-8">
-
-        <button class="btn btn-block btn-social btn-facebook"
-          onclick="window.location.href='/auth/facebook'">
-          <span class="fa fa-facebook"></span>
-           Sign in with Facebook
-         </button>
-         </span>
-       </div>
-       </row>
-
-         <span>
          <%= link_to "SIGN IN", new_session_path, id: 'sign_in' %> |
          <%= link_to "REGISTER", new_user_path, id: 'register' %>
           <% end %>
-          </span>
-
+        </div>
     </div> <!-- End of #navbar -->
-
-  </div>
 </nav>
