@@ -14,7 +14,7 @@ Rails.application.routes.draw do
     resources :games, only: [:index]
     resources :reviews, only:[:delete]
     resources :events, only: [:index, :show]
-    resources :venues, only: [:create, :show, :destroy] do
+    resources :venues, only: [:new, :create, :show, :destroy] do
       resources :reviews, only: [:create]
     end
     get 'map', to: 'venues#index', as: :map;

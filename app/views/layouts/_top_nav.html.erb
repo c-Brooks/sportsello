@@ -11,6 +11,7 @@
         <span class="nav navbar-nav navbar-right">
           <div class="row" style="margin-right:60px">
           <% if current_user %>
+          <button class="btn btn-info" onclick="window.location.href='/venues/new'">Register a bar!</button>
             <strong><%= current_user.name %></strong>
             | <%= link_to "SIGN OUT", signout_path, id: 'sign_out' %>
           </span>
