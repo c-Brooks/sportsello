@@ -6,26 +6,15 @@ $(document).ready(function() {
       games: []
     },
     created: function() {
-      console.log('Loading');
       this.scroll();
       var that = this;
-      var lastDateTimeString = getLastDateTime(this.games)
-      var lock = true;
-
-      $.ajax({
-        url: `/games.json?game_datetime=${lastDateTimeString}`,
-        success: function(res) {
-          console.log('Scroll loading');
-          that.games = res.games;
-          lock = false;
-        }
-      });
+      getGames(that);
     },
     methods: {
       scroll: function() {
         window.addEventListener('scroll', function () {
           if($(window).scrollTop() + $(window).height() == $(document).height()) {
-            console.log('end of page');
+
           }
         })
       },
@@ -39,6 +28,19 @@ $(document).ready(function() {
       }
     }
   });
+
+  function getGames(gamesVue) {
+    var lastDateTimeString = getLastDateTime(gamesVue.games)
+    var lock = true;
+
+    $.ajax({
+      url: `/games.json?game_datetime=${lastDateTimeString}`,
+      success: function(res) {
+        gamesVue.games = res.games;
+        lock = false;
+      }
+    });
+  }
 
   function getDateTime() {
     var today = new Date();
