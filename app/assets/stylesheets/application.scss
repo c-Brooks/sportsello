@@ -96,7 +96,8 @@ body {
   color: $ui-pale-gray;
 }
 
-#games {
+.games,
+.game-info {
   border: 1px solid $ui-dark-border;
 }
 
@@ -140,6 +141,15 @@ body {
   position: fixed;
   top: 50px;
   overflow: scroll;
+  padding-top: 20px;
+
+  .close-panel {
+    font-size: 2.5em;
+    margin-right: 15px;
+    position: absolute;
+    top: 0;
+    right: 0;
+  }
 }
 
 .component-slide-enter, .component-slide-leave-active {

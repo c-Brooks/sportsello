@@ -66,7 +66,7 @@ $(document).ready(function() {
   var games = {
     props: ['games_list'],
     template:
-      `<div id="games">
+      `<div class="games">
         <game-box
           v-for="game in games_list"
           :datetime="game.datetime"
