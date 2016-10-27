@@ -8,7 +8,6 @@ $(document).ready(function() {
     methods: {
       closePanel: function() {
         home.view = 'empty';
-
         // Enable the scroll for the body
         $('body').css('overflow', 'scroll');
       }
@@ -34,7 +33,7 @@ $(document).ready(function() {
   };
 
   Vue.component('game-box', {
-    props: ['datetime', 'sport', 'team1', 'team2'],
+    props: ['id', 'datetime', 'sport', 'team1', 'team2'],
     template:
       `<div class="game" v-on:click="viewGame">
         <div class="time-container col-sm-3">
@@ -63,8 +62,12 @@ $(document).ready(function() {
         $.ajax({
           url: `/games/1`,
           success: function(res) {
-            console.log(res);
-            // home.game_info = res;
+            home.game_info = {
+              datetime: res.datetime,
+              sport: res.sport.name,
+              team1: res.team1.name,
+              team2: res.team2.name
+            };
           }
         });
       }
@@ -77,6 +80,7 @@ $(document).ready(function() {
       `<div class="games">
         <game-box
           v-for="game in games_list"
+          :id="game.id"
           :datetime="game.datetime"
           :sport="game.sport.name"
           :team1="game.team1.name"
@@ -98,7 +102,7 @@ $(document).ready(function() {
     data: {
       view: 'empty',
       games_list: [],
-      game_info: {datetime: '2016-10-26 17:00', sport: 'NHL', team1: 'Edmonton Oilers', team2: 'Vancouver Canucks'}
+      game_info: {}
     },
     created: function() {
       this.scroll();
