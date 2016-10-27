@@ -1,4 +1,3 @@
-
 $(document).ready(function() {
 
   Vue.component('game-info', {
@@ -14,21 +13,18 @@ $(document).ready(function() {
       events: []
     },
     created: function() {
-      console.log('Loading');
-      var that = this;
-      var lastDateTimeString = getLastDateTime(this.games)
-      var lock = true;
-
-      $.ajax({
-        url: `/games.json?game_datetime=${lastDateTimeString}`,
-        success: function(res) {
-          console.log('Scroll loading');
-          that.games = res.games;
-          lock = false;
-        }
-      });
+      this.scroll();
+      this.getGames();
     },
     methods: {
+      scroll: function() {
+        var that = this;
+        window.addEventListener('scroll', function () {
+          if($(window).scrollTop() + $(window).height() == $(document).height()) {
+            that.getGames();
+          }
+        })
+      },
       viewGame: function(event) {
         var target = event.currentTarget;
         $(target).addClass('game-click');
@@ -36,18 +32,32 @@ $(document).ready(function() {
         setTimeout(function() {
           $(target).removeClass('game-click');
         }, 400);
-
         this.game = 'FUCK YEAH!!!!!!!'
+      },
+      getGames: function() {
+        var that = this;
+        var lastDateTimeString = getLastDateTime(this.games)
+        var lock = true;
+
+        $.ajax({
+          url: `/games.json?game_datetime=${lastDateTimeString}`,
+          success: function(res) {
+            res.games.forEach(function(game) {
+              that.games.push(game);
+            });
+            lock = false;
+          }
+        });
       }
     }
   });
 
   function getDateTime() {
     var today = new Date();
-      var yr = today.getFullYear();
-      var month = today.getMonth() + 1;
-      var day = today.getDate();
-      return yr + '-' + month + '-' + day + ' 00:00:00';
+    var yr = today.getFullYear();
+    var month = today.getMonth() + 1;
+    var day = today.getDate();
+    return yr + '-' + month + '-' + day + ' 00:00:00';
   }
 
   function getLastDateTime(games_array) {
