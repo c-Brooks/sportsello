@@ -1,6 +1,6 @@
 Rails.application.routes.draw do
 
-  get 'app/index'
+    get 'app/index'
 
     root to: 'home#index'
 
@@ -11,12 +11,14 @@ Rails.application.routes.draw do
 
     resources :users, only: [:new, :create]
     resources :sessions, only: [:new, :create, :destroy]
-    resources :games, only: [:index]
+    resources :games, only: [:index, :show]
     resources :reviews, only:[:delete]
     resources :events, only: [:index, :show]
+
     resources :venues, only: [:create, :show, :destroy] do
       resources :reviews, only: [:create]
     end
+
     get 'map', to: 'venues#index', as: :map;
 
   # The priority is based upon order of creation: first created -> highest priority.

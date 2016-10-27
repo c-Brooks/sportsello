@@ -63,7 +63,8 @@ $(document).ready(function() {
         $.ajax({
           url: `/games/1`,
           success: function(res) {
-
+            console.log(res);
+            // home.game_info = res;
           }
         });
       }
