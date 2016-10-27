@@ -90,7 +90,6 @@ body {
 
 #games {
   border: 1px solid $ui-dark-border;
-  border-bottom: 0px;
 
   .game {
     overflow: auto;
@@ -105,10 +104,6 @@ body {
       font-size: 3em;
       color: $brand-light-red;
     }
-  }
-
-  .game:last-of-type {
-    border-bottom: 0px;
   }
 
   .game:hover {
@@ -127,4 +122,11 @@ body {
       }
     }
   }
+}
+
+.game-info {
+  display: none;
+  width: 100%;
+  z-index: 2;
+  background-color: red;
 }

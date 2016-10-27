@@ -1,12 +1,10 @@
-<!-- <div id="games" v-infinite-scroll="loadMore()" infinite-scroll-disabled="busy" infinite-scroll-distance="10"> -->
-    <div id="games">
-      <!-- <game-info :game="game"></game-info> -->
-      <game-box
-        v-for="game in games"
-        v-bind:datetime="game.datetime"
-        v-bind:sport="game.sport.name"
-        v-bind:team1="game.team1.name"
-        v-bind:team2="game.team2.name">
-      </game-box>
-    </div>
-<!-- </div> -->
+<div id="games">
+  <game-info></game-info>
+  <game-box
+    v-for="game in games"
+    :datetime="game.datetime"
+    :sport="game.sport.name"
+    :team1="game.team1.name"
+    :team2="game.team2.name">
+  </game-box>
+</div>

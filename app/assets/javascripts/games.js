@@ -1,9 +1,18 @@
 $(document).ready(function() {
 
+  Vue.component('game-info', {
+    data: function () {
+      return {
+        message: 'Hey there!',
+      }
+    },
+    template: '<div class="game-info">{{ message }}</div>'
+  });
+
   Vue.component('game-box', {
     props: ['datetime', 'sport', 'team1', 'team2'],
     template:
-      `<div class="game">
+      `<div class="game" v-on:click="viewGame">
         <div class="time-container col-sm-3">
           <p class="time alt-text" v-text="datetime"></p>
         </div>
@@ -13,8 +22,18 @@ $(document).ready(function() {
           <div class="vs col-sm-3">VS</div>
           <div class="team2 col-sm-3" v-text="team2"></div>
         </div>
-      </div>`
-  })
+      </div>`,
+    methods: {
+      viewGame: function(event) {
+        var target = event.currentTarget;
+        $(target).addClass('game-click');
+        $('.game-info').show();
+        setTimeout(function() {
+          $(target).removeClass('game-click');
+        }, 400);
+      }
+    },
+  });
 
   var games = new Vue({
     el: '#games',
@@ -33,16 +52,6 @@ $(document).ready(function() {
             that.getGames();
           }
         })
-      },
-      viewGame: function(event) {
-        alert('fuck yes!!');
-        var target = event.currentTarget;
-        $(target).addClass('game-click');
-
-        setTimeout(function() {
-          $(target).removeClass('game-click');
-        }, 400);
-        console.log(target);
       },
       getGames: function() {
         var that = this;
