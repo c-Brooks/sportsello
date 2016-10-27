@@ -1,6 +1,7 @@
 class GamesController < ApplicationController
   def index
-    @games = Game.all.order('game_datetime DESC').where("game_datetime >= ?", params['game_datetime']).limit(35)
+    @games = Game.all.order('game_datetime ASC').where("game_datetime >= ?", params['game_datetime']).limit(10)
+    puts @games
     puts params
     json = Jbuilder.new do |j|
       j.games @games do |game|
