@@ -1,5 +1,4 @@
 $(document).ready(function() {
-  var count = 1;
 
   Vue.component('game-info', {
     data: function () {
