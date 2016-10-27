@@ -1,4 +1,5 @@
 class GamesController < ApplicationController
+
   def index
     @games = Game.all.order('game_datetime ASC').where("game_datetime >= ?", params['game_datetime']).limit(10)
 
@@ -17,4 +18,10 @@ class GamesController < ApplicationController
       format.json { render :json => json }
     end
   end
+
+  def show
+    @game = Game.find params[:id]
+    render :json => @game
+  end
+
 end
