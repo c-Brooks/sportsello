@@ -1,10 +1,17 @@
 
 $(document).ready(function() {
 
+  Vue.component('game-info', {
+    props: ['game', 'events'],
+    template: '<span>HERE IS A GAME: {{game}}</span>'
+  });
+
   var games = new Vue({
     el: '#games',
     data: {
-      games: []
+      games: [],
+      game: [],
+      events: []
     },
     created: function() {
       console.log('Loading');
@@ -12,15 +19,14 @@ $(document).ready(function() {
       var lastDateTimeString = getLastDateTime(this.games)
       var lock = true;
 
-          $.ajax({
-            url: `/games.json?game_datetime=${lastDateTimeString}`,
-            success: function(res) {
-              console.log('Scroll loading');
-              that.games = res.games;
-              lock = false;
-            }
-          });
-
+      $.ajax({
+        url: `/games.json?game_datetime=${lastDateTimeString}`,
+        success: function(res) {
+          console.log('Scroll loading');
+          that.games = res.games;
+          lock = false;
+        }
+      });
     },
     methods: {
       viewGame: function(event) {
@@ -30,6 +36,8 @@ $(document).ready(function() {
         setTimeout(function() {
           $(target).removeClass('game-click');
         }, 400);
+
+        this.game = 'FUCK YEAH!!!!!!!'
       }
     }
   });
