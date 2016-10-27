@@ -9,21 +9,24 @@ console.log(infiniteScroll);
     },
     created: function() {
       console.log('Loading');
+      this.scroll();
       var that = this;
       var lastDateTimeString = getLastDateTime(this.games)
-      var lock = true;
-      window.addEventListener('scroll', function () {
-        if (endOfPage() && lock) {
-          $.ajax({
-            url: `/games.json?game_datetime=${lastDateTimeString}`,
-            success: function(res) {
-              console.log('Scroll loading');
-              that.games = res.games;
-              lock = false;
-            }
-          });
+      $.ajax({
+        url: `/games.json?game_datetime=${lastDateTimeString}`,
+        success: function(res) {
+          that.games = res.games;
         }
       });
+    },
+    methods: {
+      scroll: function() {
+        window.addEventListener('scroll', function () {
+          if($(window).scrollTop() + $(window).height() == $(document).height()) {
+            console.log('end of page');
+          }
+        })
+      }
     }
   });
 
