@@ -60,7 +60,12 @@ $(document).ready(function() {
           $(target).removeClass('game-click');
         }, 400);
 
+        $.ajax({
+          url: `/games/1`,
+          success: function(res) {
 
+          }
+        });
       }
     },
   });
@@ -110,7 +115,6 @@ $(document).ready(function() {
       getGames: function() {
         var that = this;
         var lastDateTimeString = getLastDateTime(this.games_list)
-        var lock = true;
 
         $.ajax({
           url: `/games.json?game_datetime=${lastDateTimeString}`,
@@ -118,7 +122,6 @@ $(document).ready(function() {
             res.games.forEach(function(game) {
               that.games_list.push(game);
             });
-            lock = false;
           }
         });
       }
