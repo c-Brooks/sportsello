@@ -16,12 +16,16 @@
 
 @import "bootstrap-sprockets";
 @import "bootstrap";
+// @import "font-awesome-sprockets";
+// @import "font-awesome";
 
 $ui-dark-gray: #212225;
 $ui-pale-gray: #5F5F60;
 $ui-dark-blue: #363A44;
 $ui-light-gray: #BCC4CA;
 $ui-blue: #5A82A5;
+$ui-dark-border: #191A1C;
+$ui-light-border: #292A2E;
 
 $brand-dark-red: #9f111b;
 $brand-light-red: #b11623;
@@ -29,11 +33,14 @@ $brand-dark-blue: #292c37;
 $brand-light-gray: #cccccc;
 
 body {
+  box-sizing: border-box;
   font-family: 'Open Sans', sans-serif;
   padding-top: 70px;
   background: $ui-dark-gray url("./bg-noise.png");
   color: $ui-light-gray;
   text-shadow: 0px 1px 2px rgba(0, 0, 0, 0.5);
+  width: 50%;
+  margin: 0 auto;
 
   a {
     color: $brand-dark-red;
@@ -65,10 +72,61 @@ body {
 
   line-height: 50px;
 
+  .btn-facebook {
+    padding-left: 40px;
+    margin-top: 8px;
+  }
   a {
     color: white;
   }
   a:hover {
     text-decoration: none;
   }
+}
+
+.alt-text {
+  color: $ui-pale-gray;
+}
+
+#games {
+  border: 1px solid $ui-dark-border;
+
+  .game {
+    overflow: auto;
+    padding: 15px;
+
+    border-top: 1px solid $ui-light-border;
+    border-left: 1px solid $ui-light-border;
+    border-right: 1px solid $ui-light-border;
+    border-bottom: 1px solid $ui-dark-border;
+
+    .vs {
+      font-size: 3em;
+      color: $brand-light-red;
+    }
+  }
+
+  .game:hover {
+    cursor: pointer;
+  }
+
+  .game-click,
+  .game-click p {
+    animation: highlight-game 0.4s ease;
+
+    @keyframes highlight-game {
+      50% {
+        text-shadow: 0px 0px 1px $brand-light-red;
+        color: $brand-light-red;
+        background-color: $ui-dark-border;
+      }
+    }
+  }
+}
+
+.game-info {
+  display: none;
+  width: 100%;
+  z-index: 2;
+  background-color: red;
 }
