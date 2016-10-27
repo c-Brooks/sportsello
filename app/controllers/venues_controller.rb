@@ -16,6 +16,19 @@ class VenuesController < ApplicationController
     end
   end
 
+  def new
+    @venue = Venue.new
+  end
+
+  def create
+    @venue = Venue.new(venue_params)
+    @venue.user_id = current_user.id
+    if @venue.save
+      redirect_to root_path
+    else
+      render :new
+    end
+  end
 
   def show
     @venue = Venue.find(params[:id])
@@ -67,6 +80,11 @@ class VenuesController < ApplicationController
     venue.events.each do |e|
       e.game
     end
+  end
+
+private
+  def venue_params
+    params.require(:venue).permit(:name, :website, :address, :description)
   end
 
 end

@@ -1,15 +1,20 @@
 Rails.application.routes.draw do
 
+  get 'app/index'
 
-  root to: 'events#index'
+    root to: 'home#index'
+
     get 'auth/:provider/callback', to: 'sessions#create'
     get 'auth/failure', to: redirect('/')
     get 'signout', to: 'sessions#destroy', as: 'signout'
+    post '/login' => 'sessions#create'
 
-    resources :sessions, only: [:create, :destroy]
+    resources :users, only: [:new, :create]
+    resources :sessions, only: [:new, :create, :destroy]
+    resources :games, only: [:index]
     resources :reviews, only:[:delete]
     resources :events, only: [:index, :show]
-    resources :venues, only: [:create, :show, :destroy] do
+    resources :venues, only: [:new, :create, :show, :destroy] do
       resources :reviews, only: [:create]
     end
     get 'map', to: 'venues#index', as: :map;
