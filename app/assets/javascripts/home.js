@@ -1,9 +1,18 @@
 $(document).ready(function() {
 
+  Vue.component('game-info', {
+    data: function () {
+      return {
+        message: 'Hey there!',
+      }
+    },
+    template: '<div class="game-info">{{ message }}</div>'
+  });
+
   Vue.component('game-box', {
     props: ['datetime', 'sport', 'team1', 'team2'],
     template:
-      `<div class="game">
+      `<div class="game" v-on:click="viewGame">
         <div class="time-container col-sm-3">
           <p class="time alt-text" v-text="datetime"></p>
         </div>
@@ -13,13 +22,37 @@ $(document).ready(function() {
           <div class="vs col-sm-3">VS</div>
           <div class="team2 col-sm-3" v-text="team2"></div>
         </div>
-      </div>`
-  })
+      </div>`,
+    methods: {
+      viewGame: function(event) {
+        var target = event.currentTarget;
+        $(target).addClass('game-click');
+        $('.game-info').show();
+        setTimeout(function() {
+          $(target).removeClass('game-click');
+        }, 400);
+      }
+    },
+  });
 
-  var games = new Vue({
-    el: '#games',
+  Vue.component('games', {
+    props: ['games_list'],
+    template:
+      `<div id="games">
+        <game-box
+          v-for="game in games_list"
+          :datetime="game.datetime"
+          :sport="game.sport.name"
+          :team1="game.team1.name"
+          :team2="game.team2.name">
+        </game-box>
+      </div>`
+  });
+
+  new Vue({
+    el: '#home',
     data: {
-      games: [],
+      games_list: [],
     },
     created: function() {
       this.scroll();
@@ -34,26 +67,16 @@ $(document).ready(function() {
           }
         })
       },
-      viewGame: function(event) {
-        alert('fuck yes!!');
-        var target = event.currentTarget;
-        $(target).addClass('game-click');
-
-        setTimeout(function() {
-          $(target).removeClass('game-click');
-        }, 400);
-        console.log(target);
-      },
       getGames: function() {
         var that = this;
-        var lastDateTimeString = getLastDateTime(this.games)
+        var lastDateTimeString = getLastDateTime(this.games_list)
         var lock = true;
 
         $.ajax({
           url: `/games.json?game_datetime=${lastDateTimeString}`,
           success: function(res) {
             res.games.forEach(function(game) {
-              that.games.push(game);
+              that.games_list.push(game);
             });
             lock = false;
           }
@@ -77,5 +100,6 @@ $(document).ready(function() {
       return games_array[games_array.length - 1].datetime;
     }
   }
+
 
 });

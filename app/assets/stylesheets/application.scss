@@ -16,8 +16,8 @@
 
 @import "bootstrap-sprockets";
 @import "bootstrap";
-@import "font-awesome-sprockets";
-@import "font-awesome";
+// @import "font-awesome-sprockets";
+// @import "font-awesome";
 
 $ui-dark-gray: #212225;
 $ui-pale-gray: #5F5F60;
@@ -39,8 +39,6 @@ body {
   background: $ui-dark-gray url("./bg-noise.png");
   color: $ui-light-gray;
   text-shadow: 0px 1px 2px rgba(0, 0, 0, 0.5);
-  width: 50%;
-  margin: 0 auto;
 
   a {
     color: $brand-dark-red;
@@ -49,6 +47,11 @@ body {
   a:hover {
     color: $brand-light-red;
   }
+}
+
+.home-container {
+  width: 50%;
+  margin: 0 auto;
 }
 
 .navbar {
@@ -90,7 +93,6 @@ body {
 
 #games {
   border: 1px solid $ui-dark-border;
-  border-bottom: 0px;
 
   .game {
     overflow: auto;
@@ -105,10 +107,6 @@ body {
       font-size: 3em;
       color: $brand-light-red;
     }
-  }
-
-  .game:last-of-type {
-    border-bottom: 0px;
   }
 
   .game:hover {
@@ -127,4 +125,11 @@ body {
       }
     }
   }
+}
+
+.game-info {
+  display: none;
+  width: 100%;
+  z-index: 2;
+  background-color: red;
 }
