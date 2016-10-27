@@ -59,6 +59,8 @@ $(document).ready(function() {
         setTimeout(function() {
           $(target).removeClass('game-click');
         }, 400);
+
+
       }
     },
   });
@@ -121,11 +123,6 @@ $(document).ready(function() {
         });
       }
     }
-  });
-
-  home.$on('game-info', function() {
-    console.log('ready to go!');
-    this.view = 'game-info';
   });
 
   function getDateTime() {
