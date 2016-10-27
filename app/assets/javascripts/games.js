@@ -35,6 +35,7 @@ $(document).ready(function() {
         })
       },
       viewGame: function(event) {
+        alert('fuck yes!!');
         var target = event.currentTarget;
         $(target).addClass('game-click');
 
