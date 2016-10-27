@@ -16,7 +16,10 @@ class VenuesController < ApplicationController
     end
   end
 
-
+  def create
+    redirect_to root_path
+  end
+  
   def show
     @venue = Venue.find(params[:id])
     @review = Review.new
