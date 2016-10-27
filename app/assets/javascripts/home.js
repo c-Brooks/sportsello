@@ -35,10 +35,24 @@ $(document).ready(function() {
     },
   });
 
-  var games = new Vue({
-    el: '#games',
+  Vue.component('games', {
+    props: ['games_list'],
+    template:
+      `<div id="games">
+        <game-box
+          v-for="game in games_list"
+          :datetime="game.datetime"
+          :sport="game.sport.name"
+          :team1="game.team1.name"
+          :team2="game.team2.name">
+        </game-box>
+      </div>`
+  });
+
+  new Vue({
+    el: '#home',
     data: {
-      games: [],
+      games_list: [],
     },
     created: function() {
       this.scroll();
@@ -55,14 +69,14 @@ $(document).ready(function() {
       },
       getGames: function() {
         var that = this;
-        var lastDateTimeString = getLastDateTime(this.games)
+        var lastDateTimeString = getLastDateTime(this.games_list)
         var lock = true;
 
         $.ajax({
           url: `/games.json?game_datetime=${lastDateTimeString}`,
           success: function(res) {
             res.games.forEach(function(game) {
-              that.games.push(game);
+              that.games_list.push(game);
             });
             lock = false;
           }

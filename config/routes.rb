@@ -1,6 +1,8 @@
 Rails.application.routes.draw do
 
-    root to: 'games#index'
+  get 'app/index'
+
+    root to: 'home#index'
 
     get 'auth/:provider/callback', to: 'sessions#create'
     get 'auth/failure', to: redirect('/')
