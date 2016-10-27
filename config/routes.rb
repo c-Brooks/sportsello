@@ -5,8 +5,8 @@ Rails.application.routes.draw do
     get 'auth/:provider/callback', to: 'sessions#create'
     get 'auth/failure', to: redirect('/')
     get 'signout', to: 'sessions#destroy', as: 'signout'
-    
-    resources :users, only: [:new]
+
+    resources :users, only: [:new, :create]
     resources :sessions, only: [:new, :create, :destroy]
     resources :games, only: [:index]
     resources :reviews, only:[:delete]
