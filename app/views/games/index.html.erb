@@ -3,7 +3,7 @@
     <div id="games">
       <div class="game" v-for="game in games" v-on:click="viewGame">
         <div class="time-container col-sm-3">
-          <p class="time alt-text">7:00 PM</p>
+          <p class="time alt-text" v-text="game.datetime"></p>
         </div>
         <div class="info-container col-sm-9">
           <p class="sport alt-text" v-text="game.sport.name"></p>
