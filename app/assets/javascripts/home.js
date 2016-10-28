@@ -47,14 +47,16 @@ $(document).ready(function() {
     props: ['id', 'name', 'venue'],
     template:
       `<div class="event">
-        <div class="info-container">
+        <div class="attendee-col col-sm-3">
+          <button class="btn btn-primary">I'm attending!</button>
+          <p class="alt-text">x people attending</p>
+        </div>
+        <div class="info-container col-sm-9">
+          <p class="alt-text" v-text="venue.description"></p>
           <div class="center">
-            <div class="event-name col-sm-4" v-text="name"></div>
-            <div class="at col-sm-4">@</div>
-            <div class="venue-name col-sm-4" v-text="venue.name"></div>
-          </div>
-          <div class="attendee-count center col-sm-12">
-            <p class="alt-text">Put attendee count here</p>
+            <div class="event-name col-sm-3" v-text="name"></div>
+            <div class="at col-sm-3">@</div>
+            <div class="venue-name col-sm-3" v-text="venue.name"></div>
           </div>
         </div>
       </div>`
@@ -105,9 +107,9 @@ $(document).ready(function() {
           </div>
           <div class="info-container" v-else>
             <div class="center">
-              <div class="team1 col-sm-4" v-text="team1"></div>
-              <div class="vs col-sm-4">VS</div>
-              <div class="team2 col-sm-4" v-text="team2"></div>
+              <div class="team1 col-sm-3" v-text="team1"></div>
+              <div class="vs col-sm-3">VS</div>
+              <div class="team2 col-sm-3" v-text="team2"></div>
            </div>
           </div>
         </div>
