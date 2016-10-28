@@ -28,9 +28,26 @@ $(document).ready(function() {
             :team2="game_info.team2">
           </game-box>
         </div>
+        <div class="event-info">
+          <event-box
+            v-for="event in game_info.events"
+            :id="event.id"
+            :datetime="event.name">
+          </event-box>
+        </div>
       </div>
     </div>`
   };
+
+  Vue.component('event-box', {
+    props: ['id', 'name'],
+    template:
+      `<div class="event">
+        <div class="info-container col-sm-9">
+          <p v-text="name"></p>
+        </div>
+      </div>`
+  });
 
   Vue.component('game-box', {
     props: ['id', 'datetime', 'sport', 'team1', 'team2'],

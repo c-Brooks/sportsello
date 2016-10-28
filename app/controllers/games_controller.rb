@@ -25,6 +25,7 @@ class GamesController < ApplicationController
       j.team1 Team.find(@game.team1_id), :name
       j.team2 Team.find(@game.team2_id), :name
       j.sport Sport.find(@game.sport_id), :name
+      j.events Event.where(game_id: params[:id])
     end.target!
 
     render :json => @game_json
