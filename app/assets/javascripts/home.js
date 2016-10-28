@@ -29,11 +29,15 @@ $(document).ready(function() {
             </game-box>
             <div class="section-header">EVENTS</div>
             <event-box
+              v-if="game_info.events"
               v-for="event in game_info.events"
               :id="event.id"
               :name="event.name"
               :venue="event.venue">
             </event-box>
+            <div class="box" v-if="!game_info.events.length">
+              Unfortunately there are no events for this game. Are you hosting one?
+            </div>
           </div>
         </div>
       </div>`
