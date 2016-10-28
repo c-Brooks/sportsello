@@ -32,12 +32,22 @@ $brand-light-red: #b11623;
 $brand-dark-blue: #292c37;
 $brand-light-gray: #cccccc;
 
-@mixin app-background {
-  background: $ui-dark-gray url("./bg-noise.png");
+@mixin app-background-dark-gray {
+  background: $ui-dark-gray;
+  background-image: url("./bg-noise-dark-gray.png");
+}
+
+@mixin app-background-light-gray {
+  background: $ui-dark-gray;
+  background-image: url("./bg-noise-light-gray.png");
+}
+
+@mixin app-background-red {
+  background: $brand-dark-red url("./bg-noise-red.png");
 }
 
 body {
-  @include app-background;
+  @include app-background-dark-gray;
 
   box-sizing: border-box;
   font-family: 'Open Sans', sans-serif;
@@ -66,14 +76,15 @@ body {
   box-shadow: 0px 0px 20px 0px rgba(0,0,0,0.75);
 
   background: rgba(95,95,96,1);
-  background: -moz-linear-gradient(top, rgba(95,95,96,1) 0%, rgba(51,51,51,1) 100%);
-  background: -webkit-gradient(left top, left bottom, color-stop(0%, rgba(95,95,96,1)), color-stop(100%, rgba(51,51,51,1)));
-  background: -webkit-linear-gradient(top, rgba(95,95,96,1) 0%, rgba(51,51,51,1) 100%);
-  background: -o-linear-gradient(top, rgba(95,95,96,1) 0%, rgba(51,51,51,1) 100%);
-  background: -ms-linear-gradient(top, rgba(95,95,96,1) 0%, rgba(51,51,51,1) 100%);
-  background: linear-gradient(to bottom, rgba(95,95,96,1) 0%, rgba(51,51,51,1) 100%);
-  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#5f5f60', endColorstr='#333333', GradientType=0 );
+  background: -moz-linear-gradient(top, rgba(95,95,96,1) 0%, rgba(33,34,37,1) 100%);
+  background: -webkit-gradient(left top, left bottom, color-stop(0%, rgba(95,95,96,1)), color-stop(100%, rgba(33,34,37,1)));
+  background: -webkit-linear-gradient(top, rgba(95,95,96,1) 0%, rgba(33,34,37,1) 100%);
+  background: -o-linear-gradient(top, rgba(95,95,96,1) 0%, rgba(33,34,37,1) 100%);
+  background: -ms-linear-gradient(top, rgba(95,95,96,1) 0%, rgba(33,34,37,1) 100%);
+  background: linear-gradient(to bottom, rgba(95,95,96,1) 0%, rgba(33,34,37,1) 100%);
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#5f5f60', endColorstr='#212225', GradientType=0 );
 
+  border-top: 1px solid $ui-pale-gray;
   border-bottom: 1px solid $ui-dark-gray;
 
   font-weight: 600;
@@ -101,6 +112,8 @@ label,
 .game,
 .event,
 .box {
+  @include app-background-light-gray;
+
   overflow: auto;
   padding: 15px;
 
@@ -126,21 +139,31 @@ label,
   cursor: pointer;
 }
 
-.game-click,
-.game-click p {
+.game-click {
   animation: highlight-game 0.4s ease;
+
+  p {
+    animation: highlight-no-bg 0.4s ease;
+  }
 
   @keyframes highlight-game {
     50% {
       text-shadow: 0px 0px 1px $brand-light-red;
       color: $brand-light-red;
-      background-color: $ui-dark-border;
+      background: $ui-dark-border;
+    }
+  }
+
+  @keyframes highlight-no-bg {
+    50% {
+      text-shadow: 0px 0px 1px $brand-light-red;
+      color: $brand-light-red;
     }
   }
 }
 
 .vue-panel {
-  @include app-background;
+  @include app-background-dark-gray;
   border: 2px solid $ui-dark-border;
   z-index: 2;
   height: 100vh;
@@ -188,9 +211,10 @@ label,
 }
 
 .section-header {
+  @include app-background-red;
+
   font-size: 30px;
   padding: 25px;
-  background-color: $brand-dark-red;
   color: $ui-light-gray;
   border: 1px solid #b11623;
 }
