@@ -47,14 +47,14 @@ $(document).ready(function() {
     props: ['id', 'name', 'venue'],
     template:
       `<div class="event">
-        <div class="col-sm-3">
-        </div>
-        <div class="info-container col-sm-9">
-          <p class="alt-text" v-text="venue.description"></p>
+        <div class="info-container">
           <div class="center">
-            <div class="event-name col-sm-3" v-text="name"></div>
-            <div class="at col-sm-3">@</div>
-            <div class="venue-name col-sm-3" v-text="venue.name"></div>
+            <div class="event-name col-sm-4" v-text="name"></div>
+            <div class="at col-sm-4">@</div>
+            <div class="venue-name col-sm-4" v-text="venue.name"></div>
+          </div>
+          <div class="attendee-count center col-sm-12">
+            <p class="alt-text">Put attendee count here</p>
           </div>
         </div>
       </div>`
