@@ -32,7 +32,7 @@ $(document).ready(function() {
           <event-box
             v-for="event in game_info.events"
             :id="event.id"
-            :datetime="event.name">
+            :name="event.name">
           </event-box>
         </div>
       </div>
