@@ -17,25 +17,25 @@ $(document).ready(function() {
   var gameInfo = {
     props: ['game_info'],
     template:
-    `<div class="vue-panel">
-      <vue-panel/>
-      <div class="app-container">
-        <div class="game-info">
-          <game-box
-            :datetime="game_info.datetime"
-            :sport="game_info.sport"
-            :team1="game_info.team1"
-            :team2="game_info.team2">
-          </game-box>
-          <event-box
-            v-for="event in game_info.events"
-            :id="event.id"
-            :name="event.name"
-            :venue="event.venue">
-          </event-box>
+      `<div class="vue-panel">
+        <vue-panel/>
+        <div class="app-container">
+          <div class="game-info">
+            <game-box
+              :datetime="game_info.datetime"
+              :sport="game_info.sport"
+              :team1="game_info.team1"
+              :team2="game_info.team2">
+            </game-box>
+            <event-box
+              v-for="event in game_info.events"
+              :id="event.id"
+              :name="event.name"
+              :venue="event.venue">
+            </event-box>
+          </div>
         </div>
-      </div>
-    </div>`
+      </div>`
   };
 
   Vue.component('event-box', {
@@ -100,15 +100,54 @@ $(document).ready(function() {
     },
   });
 
+  $('.sign-in').click(function() {
+    home.view = 'login';
+  });
+
+  Vue.component('login-form', {
+    template:
+      `<div class="login-form">
+        <form>
+          <div class="form-group">
+            <label for="email">Email</label>
+            <input type="email" class="form-control" id="email" placeholder="example@sportsello.com">
+          </div>
+          <div class="form-group">
+            <label for="password">Password</label>
+            <input type="password" class="form-control" id="password" placeholder="Password">
+          </div>
+          <button type="submit" class="btn btn-default">Log in</button>
+        </form>
+      </div>`
+  });
+
+  var login = {
+    template:
+    `<div class="vue-panel">
+      <vue-panel/>
+      <div class="app-container">
+        <div class="login box">
+          <button class="btn btn-block btn-social btn-facebook" onclick="window.location.href='/auth/facebook'">
+            <span class="fa fa-facebook"></span>
+            Log in with Facebook
+          </button>
+          <div class="center special-text">OR</div>
+          <login-form/>
+        </div>
+      </div>
+    </div>`
+  };
+
   var empty = {
     template: '<div></div>'
-  }
+  };
 
   var home = new Vue({
     el: '#home',
     components: {
       'empty': empty,
-      'game-info': gameInfo
+      'game-info': gameInfo,
+      'login': login
     },
     data: {
       view: 'empty',

@@ -16,7 +16,7 @@
             | <%= link_to "SIGN OUT", signout_path, id: 'sign_out' %>
           </span>
           <% else %>
-         <%= link_to "SIGN IN", new_session_path, id: 'sign_in' %> |
+         <a class="sign-in clickable">SIGN IN</a> |
          <%= link_to "REGISTER", new_user_path, id: 'register' %>
           <% end %>
         </div>
