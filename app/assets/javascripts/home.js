@@ -2,7 +2,7 @@ $(document).ready(function() {
 
   Vue.component('vue-panel', {
     template:
-      `<div class="close-panel" v-on:click="closePanel">
+      `<div class="close-panel clickable" v-on:click="closePanel">
         &times;
       </div>`,
     methods: {
