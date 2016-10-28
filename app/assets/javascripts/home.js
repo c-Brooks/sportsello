@@ -65,9 +65,10 @@ $(document).ready(function() {
     data: function() {
       return {
         displayDate: false,
+        displayTime: true,
         displayDateTime: false,
         date: this.datetime,
-        time: this.datetime
+        time: this.datetime,
       }
     },
     beforeMount: function() {
@@ -83,6 +84,7 @@ $(document).ready(function() {
         this.displayDate = true;
       } else if (home.view === 'game-info') {
         this.displayDateTime = true;
+        this.displayTime = false;
       }
     },
     template:
@@ -90,16 +92,23 @@ $(document).ready(function() {
         <div class="section-header" v-if="displayDate" v-text="date"></div>
         <div class="section-header" v-if="displayDateTime">{{date}} @ {{time}}</div>
         <div class="game" v-on:click="viewGame">
-          <div class="time-container col-sm-3">
+          <div class="time-container col-sm-3" v-if="displayTime">
             <p class="time alt-text" v-text="time"></p>
           </div>
-          <div class="info-container col-sm-9">
+          <div class="info-container col-sm-9" v-if="displayTime">
             <p class="sport alt-text" v-text="sport"></p>
             <div class="center">
               <div class="team1 col-sm-3" v-text="team1"></div>
               <div class="vs col-sm-3">VS</div>
               <div class="team2 col-sm-3" v-text="team2"></div>
-            </div>
+           </div>
+          </div>
+          <div class="info-container" v-else>
+            <div class="center">
+              <div class="team1 col-sm-4" v-text="team1"></div>
+              <div class="vs col-sm-4">VS</div>
+              <div class="team2 col-sm-4" v-text="team2"></div>
+           </div>
           </div>
         </div>
       </div>`,
