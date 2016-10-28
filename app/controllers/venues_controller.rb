@@ -38,11 +38,11 @@ class VenuesController < ApplicationController
 
   def filter
     nearby_venues = Venue.near([@query[:lat], @query[:lng]], @query[:dist])
-
-    nearby_venues.includes(events: [:game])
-    .where( "sport_id = ? AND game_datetime > ? AND game_datetime < ?",
-          @query[:sport_id],   @query[:day],        @query[:day]+1 )
-    .references(:events)
+    # games = Game.where(event_id: )
+    # nearby_venues.includes(:events)
+    # .where( "game_datetime > ? AND game_datetime < ?",
+    #         @query[:day],        @query[:day]+1 )
+    # .references(:events)
   end
 
   # I don't know where to put this so it lives here for now
@@ -51,9 +51,10 @@ class VenuesController < ApplicationController
     upcoming_events_string = ""
     # NOTE: The 'Join' button doesn't do anything yet
     upcoming_events(venue).each do |e|
+      game = Game.find(e.game_id)
       upcoming_events_string += "<tr>
         <td>#{e.name}</td>
-        <td>#{e.game.game_datetime.strftime("%m/%d at %I:%M%p")}</td>
+        <td>#{game.game_datetime.strftime("%m/%d at %I:%M%p")}</td>
         <td><button class='btn btn-info btn-sm map-rsvp-btn'>Join!</td>
       </tr>"
     end
@@ -78,7 +79,7 @@ class VenuesController < ApplicationController
   # Select next 3 upcoming events
   def upcoming_events(venue)
     venue.events.each do |e|
-      e.game
+      Game.find(e.game_id)
     end
   end
 
