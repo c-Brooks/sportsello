@@ -28,7 +28,7 @@ $(document).ready(function() {
             :team2="game_info.team2">
           </game-box>
         </div>
-        <div class="event-info">
+        <div class="events">
           <event-box
             v-for="event in game_info.events"
             :id="event.id"
@@ -83,7 +83,8 @@ $(document).ready(function() {
               datetime: res.datetime,
               sport: res.sport.name,
               team1: res.team1.name,
-              team2: res.team2.name
+              team2: res.team2.name,
+              events: res.events
             };
           }
         });
