@@ -10,6 +10,13 @@ set :repo_url, 'git@github.com:c-Brooks/sportsello.git'
 # Default deploy_to directory is /var/www/my_app_name
 set :deploy_to, '/home/deploy/sportsello'
 
+
+set :linked_files, %w{config/database.yml .env}
+set :linked_dirs, %w{bin log tmp/pids tmp/cached tmp/sockets}
+
+set :rvm_type, :user
+set :rvm_ruby_version, '2.3.0'
+
 # Default value for :scm is :git
 # set :scm, :git
 
