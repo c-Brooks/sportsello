@@ -65,31 +65,33 @@ $(document).ready(function() {
     data: function() {
       return {
         displayDate: false,
-        date: this.datetime
+        displayDateTime: false,
+        date: this.datetime,
+        time: this.datetime
       }
     },
     beforeMount: function() {
-      if (home.view != 'game-info') {
-        // Format date
-        var date = new Date(this.datetime);
-        var month = date.getMonth() + 1;
-        var date = date.getDate();
-        var year = '2016'//date.getFullYear();
+      var datetime = moment(this.datetime);
+      var date = datetime.format('dddd, MMMM Do YYYY');
+      var time = datetime.format('h:mm a');
 
-        this.date = year + '-' + month + '-' + date;
+      this.date = date;
+      this.time = time;
 
-        if (home.lastDate != date) {
-          home.lastDate = date;
-          this.displayDate = true;
-        }
+      if (home.lastDate != date) {
+        home.lastDate = date;
+        this.displayDate = true;
+      } else if (home.view === 'game-info') {
+        this.displayDateTime = true;
       }
     },
     template:
       `<div>
         <div class="section-header" v-if="displayDate" v-text="date"></div>
+        <div class="section-header" v-if="displayDateTime">{{date}} @ {{time}}</div>
         <div class="game" v-on:click="viewGame">
           <div class="time-container col-sm-3">
-            <p class="time alt-text" v-text="datetime"></p>
+            <p class="time alt-text" v-text="time"></p>
           </div>
           <div class="info-container col-sm-9">
             <p class="sport alt-text" v-text="sport"></p>
