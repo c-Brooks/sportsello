@@ -248,7 +248,9 @@ $(document).ready(function() {
     },
     updated: function() {
       $('.bottom-loader').hide();
-      $('.loader').fadeTo("slow", 0);
+      $('.loader').fadeTo("slow", 0, function() {
+        $('.loader').hide();
+      });
     },
     methods: {
       scroll: function() {
