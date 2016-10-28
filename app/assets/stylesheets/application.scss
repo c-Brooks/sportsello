@@ -163,8 +163,12 @@ label,
   transform: translateY(100vh);
 }
 
-.component-slide-enter-active, .component-slide-leave-active {
+.component-slide-enter-active {
   transition: transform .3s ease-out;
+}
+
+.component-slide-leave-active {
+  transition: transform .3s ease-in;
 }
 
 .center {
