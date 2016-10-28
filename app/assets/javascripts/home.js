@@ -246,7 +246,7 @@ $(document).ready(function() {
       this.scroll();
       this.getGames();
     },
-    mounted: function() {
+    updated: function() {
       $('.bottom-loader').hide();
       $('.loader').hide();
     },
