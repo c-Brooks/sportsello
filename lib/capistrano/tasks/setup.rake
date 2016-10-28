@@ -8,6 +8,13 @@ namespace :setup do
     end
   end
 
+  desc "Upload .env.production file."
+  task :upload_env do
+    on roles(:app) do
+      upload! StringIO.new(File.read(".env.production")), "#{shared_path}/.env"
+    end
+  end
+
   desc "Seed the database."
   task :seed_db do
     on roles(:app) do
