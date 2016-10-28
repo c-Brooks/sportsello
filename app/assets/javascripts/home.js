@@ -100,14 +100,22 @@ $(document).ready(function() {
     },
   });
 
-  $('.sign-in').click(function() {
+  $('.log-in').click(function() {
     home.view = 'login';
+    // Hide the scroll for the body
+    $('body').css('overflow', 'hidden');
+  });
+
+  $('.register').click(function() {
+    home.view = 'register';
+    // Hide the scroll for the body
+    $('body').css('overflow', 'hidden');
   });
 
   Vue.component('login-form', {
     template:
       `<div class="login-form">
-        <form>
+        <form action="/login" method="POST">
           <div class="form-group">
             <label for="email">Email</label>
             <input type="email" class="form-control" id="email" placeholder="example@sportsello.com">
@@ -121,22 +129,74 @@ $(document).ready(function() {
       </div>`
   });
 
+  Vue.component('facebook-button', {
+    template:
+      `<button class="btn btn-block btn-social btn-facebook" onclick="window.location.href='/auth/facebook'">
+        <span class="fa fa-facebook"></span>
+        Log in with Facebook
+      </button>`
+  });
+
+  Vue.component('register-form', {
+    template:
+      `<div class="login-form">
+        <form action="/users" method="POST">
+
+          <div class="form-group">
+            <label for="name">Name</label>
+            <input type="name" class="form-control" id="name" placeholder="Wayne Gretzky">
+          </div>
+
+          <div class="form-group">
+            <label for="email">Email</label>
+            <input type="email" class="form-control" id="email" placeholder="example@sportsello.com">
+          </div>
+
+          <div class="form-group">
+            <label for="password">Password</label>
+            <input type="password" class="form-control" id="password" placeholder="Password">
+          </div>
+
+          <div class="form-group">
+            <label for="password_confirmation">Password Confirmation</label>
+            <input type="password" class="form-control" id="password_confirmation" placeholder="Password Confirmation">
+          </div>
+
+          <button type="submit" class="btn btn-default pull-right">Register</button>
+        </form>
+
+      </div>`
+  });
+
   var login = {
     template:
-    `<div class="vue-panel">
-      <vue-panel/>
-      <div class="app-container">
-        <div class="login box">
-          <button class="btn btn-block btn-social btn-facebook" onclick="window.location.href='/auth/facebook'">
-            <span class="fa fa-facebook"></span>
-            Log in with Facebook
-          </button>
-          <div class="center special-text">OR</div>
-          <login-form/>
+      `<div class="vue-panel">
+        <vue-panel/>
+        <div class="app-container">
+
+          <div class="login box">
+            <facebook-button/>
+            <div class="center special-text">OR</div>
+            <login-form/>
+          </div>
+
         </div>
-      </div>
-    </div>`
+      </div>`
   };
+
+  var register = {
+    template:
+      `<div class="vue-panel">
+        <vue-panel/>
+        <div class="app-container">
+          <div class="login box">
+            <facebook-button/>
+            <div class="center special-text">OR</div>
+            <register-form/>
+          </div>
+        </div>
+      </div>`
+  }
 
   var empty = {
     template: '<div></div>'
@@ -147,7 +207,8 @@ $(document).ready(function() {
     components: {
       'empty': empty,
       'game-info': gameInfo,
-      'login': login
+      'login': login,
+      'register': register
     },
     data: {
       view: 'empty',
