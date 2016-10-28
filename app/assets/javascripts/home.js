@@ -247,6 +247,7 @@ $(document).ready(function() {
       this.getGames();
     },
     mounted: function() {
+      $('.bottom-loader').hide();
       $('.loader').hide();
     },
     methods: {
@@ -259,6 +260,7 @@ $(document).ready(function() {
         })
       },
       getGames: function() {
+        $('.bottom-loader').show();
         var that = this;
         var lastDateTimeString = getLastDateTime(this.games_list)
 
@@ -268,6 +270,7 @@ $(document).ready(function() {
             res.games.forEach(function(game) {
               that.games_list.push(game);
             });
+            $('.bottom-loader').hide();
           }
         });
       }
