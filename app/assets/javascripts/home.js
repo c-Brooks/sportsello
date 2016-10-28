@@ -94,18 +94,12 @@ $(document).ready(function() {
         <div class="section-header" v-if="displayDate" v-text="date"></div>
         <div class="section-header" v-if="displayDateTime">{{date}} @ {{time}}</div>
         <div class="game" v-on:click="viewGame">
-          <div class="time-container col-sm-3" v-if="displayTime">
-            <p class="time alt-text" v-text="time"></p>
+          <div class="time-container col-sm-3">
+            <p class="time alt-text" v-text="time" v-if="displayTime"></p>
+            <button class="btn btn-primary" v-if="!displayTime">I'm hosting!</button>
           </div>
-          <div class="info-container col-sm-9" v-if="displayTime">
+          <div class="info-container col-sm-9">
             <p class="sport alt-text" v-text="sport"></p>
-            <div class="center">
-              <div class="team1 col-sm-3" v-text="team1"></div>
-              <div class="vs col-sm-3">VS</div>
-              <div class="team2 col-sm-3" v-text="team2"></div>
-           </div>
-          </div>
-          <div class="info-container" v-else>
             <div class="center">
               <div class="team1 col-sm-3" v-text="team1"></div>
               <div class="vs col-sm-3">VS</div>
