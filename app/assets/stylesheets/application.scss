@@ -101,7 +101,8 @@ body {
   border: 1px solid $ui-dark-border;
 }
 
-.game {
+.game,
+.event {
   overflow: auto;
   padding: 15px;
 
@@ -110,7 +111,8 @@ body {
   border-right: 1px solid $ui-light-border;
   border-bottom: 1px solid $ui-dark-border;
 
-  .vs {
+  .vs,
+  .at {
     font-size: 3em;
     color: $brand-light-red;
   }
@@ -158,4 +160,8 @@ body {
 
 .component-slide-enter-active, .component-slide-leave-active {
   transition: transform .3s ease;
+}
+
+.center {
+  text-align: center;
 }
