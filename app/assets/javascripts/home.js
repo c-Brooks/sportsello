@@ -27,12 +27,11 @@ $(document).ready(function() {
             :team1="game_info.team1"
             :team2="game_info.team2">
           </game-box>
-        </div>
-        <div class="events">
           <event-box
             v-for="event in game_info.events"
             :id="event.id"
-            :name="event.name">
+            :name="event.name"
+            :venue="event.venue">
           </event-box>
         </div>
       </div>
@@ -40,11 +39,18 @@ $(document).ready(function() {
   };
 
   Vue.component('event-box', {
-    props: ['id', 'name'],
+    props: ['id', 'name', 'venue'],
     template:
       `<div class="event">
+        <div class="col-sm-3">
+        </div>
         <div class="info-container col-sm-9">
-          <p v-text="name"></p>
+          <p class="alt-text" v-text="venue.description"></p>
+          <div class="center">
+            <div class="event-name col-sm-3" v-text="name"></div>
+            <div class="at col-sm-3">@</div>
+            <div class="venue-name col-sm-3" v-text="venue.name"></div>
+          </div>
         </div>
       </div>`
   });
@@ -58,9 +64,11 @@ $(document).ready(function() {
         </div>
         <div class="info-container col-sm-9">
           <p class="sport alt-text" v-text="sport"></p>
-          <div class="team1 col-sm-3" v-text="team1"></div>
-          <div class="vs col-sm-3">VS</div>
-          <div class="team2 col-sm-3" v-text="team2"></div>
+          <div class="center">
+            <div class="team1 col-sm-3" v-text="team1"></div>
+            <div class="vs col-sm-3">VS</div>
+            <div class="team2 col-sm-3" v-text="team2"></div>
+          </div>
         </div>
       </div>`,
     methods: {
