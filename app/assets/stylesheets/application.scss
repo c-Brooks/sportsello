@@ -32,8 +32,14 @@ $brand-light-red: #b11623;
 $brand-dark-blue: #292c37;
 $brand-light-gray: #cccccc;
 
-@mixin app-background-gray {
-  background: $ui-dark-gray url("./bg-noise-gray.png");
+@mixin app-background-dark-gray {
+  background: $ui-dark-gray;
+  background-image: url("./bg-noise-dark-gray.png");
+}
+
+@mixin app-background-light-gray {
+  background: $ui-dark-gray;
+  background-image: url("./bg-noise-light-gray.png");
 }
 
 @mixin app-background-red {
@@ -41,7 +47,7 @@ $brand-light-gray: #cccccc;
 }
 
 body {
-  @include app-background-gray;
+  @include app-background-dark-gray;
 
   box-sizing: border-box;
   font-family: 'Open Sans', sans-serif;
@@ -105,6 +111,8 @@ label,
 .game,
 .event,
 .box {
+  @include app-background-light-gray;
+
   overflow: auto;
   padding: 15px;
 
@@ -144,7 +152,7 @@ label,
 }
 
 .vue-panel {
-  @include app-background-gray;
+  @include app-background-dark-gray;
   border: 2px solid $ui-dark-border;
   z-index: 2;
   height: 100vh;
