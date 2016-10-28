@@ -32,12 +32,16 @@ $brand-light-red: #b11623;
 $brand-dark-blue: #292c37;
 $brand-light-gray: #cccccc;
 
-@mixin app-background {
-  background: $ui-dark-gray url("./bg-noise.png");
+@mixin app-background-gray {
+  background: $ui-dark-gray url("./bg-noise-gray.png");
+}
+
+@mixin app-background-red {
+  background: $brand-dark-red url("./bg-noise-red.png");
 }
 
 body {
-  @include app-background;
+  @include app-background-gray;
 
   box-sizing: border-box;
   font-family: 'Open Sans', sans-serif;
@@ -140,7 +144,7 @@ label,
 }
 
 .vue-panel {
-  @include app-background;
+  @include app-background-gray;
   border: 2px solid $ui-dark-border;
   z-index: 2;
   height: 100vh;
@@ -188,9 +192,10 @@ label,
 }
 
 .section-header {
+  @include app-background-red;
+
   font-size: 30px;
   padding: 25px;
-  background-color: $brand-dark-red;
   color: $ui-light-gray;
   border: 1px solid #b11623;
 }
