@@ -141,14 +141,14 @@ $(document).ready(function() {
   Vue.component('login-form', {
     template:
       `<div class="login-form">
-        <form action="/login" method="POST">
+        <form id="loginForm" action="/login" method="POST">
           <div class="form-group">
             <label for="email">Email</label>
-            <input type="email" class="form-control" id="email" placeholder="example@sportsello.com">
+            <input type="email" class="form-control" id="email" name="email" placeholder="example@sportsello.com">
           </div>
           <div class="form-group">
             <label for="password">Password</label>
-            <input type="password" class="form-control" id="password" placeholder="Password">
+            <input type="password" class="form-control" id="password" name="password" placeholder="Password">
           </div>
           <button type="submit" class="btn btn-default pull-right">Log in</button>
         </form>
@@ -170,22 +170,22 @@ $(document).ready(function() {
 
           <div class="form-group">
             <label for="name">Name</label>
-            <input type="name" class="form-control" id="name" placeholder="Wayne Gretzky">
+            <input type="name" class="form-control" id="name" name="name" placeholder="Wayne Gretzky">
           </div>
 
           <div class="form-group">
             <label for="email">Email</label>
-            <input type="email" class="form-control" id="email" placeholder="example@sportsello.com">
+            <input type="email" class="form-control" id="email" name="email" placeholder="example@sportsello.com">
           </div>
 
           <div class="form-group">
             <label for="password">Password</label>
-            <input type="password" class="form-control" id="password" placeholder="Password">
+            <input type="password" class="form-control" id="password" name="password" placeholder="Password">
           </div>
 
           <div class="form-group">
             <label for="password_confirmation">Password Confirmation</label>
-            <input type="password" class="form-control" id="password_confirmation" placeholder="Password Confirmation">
+            <input type="password" class="form-control" id="password_confirmation" name="password_confirmation" placeholder="Password Confirmation">
           </div>
 
           <button type="submit" class="btn btn-default pull-right">Register</button>
