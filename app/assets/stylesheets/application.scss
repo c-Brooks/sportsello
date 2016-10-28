@@ -180,3 +180,9 @@ label,
   border: 1px solid $ui-pale-gray;
   background-color: $ui-dark-gray;
 }
+
+.loader {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}

@@ -219,6 +219,9 @@ $(document).ready(function() {
       this.scroll();
       this.getGames();
     },
+    mounted: function() {
+      $('.loader').hide();
+    },
     methods: {
       scroll: function() {
         var that = this;
