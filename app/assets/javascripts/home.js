@@ -65,17 +65,19 @@ $(document).ready(function() {
       }
     },
     beforeMount: function() {
-      // Format date
-      var date = new Date(this.datetime);
-      var month = date.getMonth() + 1;
-      var date = date.getDate();
-      var year = '2016'//date.getFullYear();
+      if (home.view != 'game-info') {
+        // Format date
+        var date = new Date(this.datetime);
+        var month = date.getMonth() + 1;
+        var date = date.getDate();
+        var year = '2016'//date.getFullYear();
 
-      this.date = year + '-' + month + '-' + date;
+        this.date = year + '-' + month + '-' + date;
 
-      if (home.lastDate != date) {
-        home.lastDate = date;
-        this.displayDate = true;
+        if (home.lastDate != date) {
+          home.lastDate = date;
+          this.displayDate = true;
+        }
       }
     },
     template:
