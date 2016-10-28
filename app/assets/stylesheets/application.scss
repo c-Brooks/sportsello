@@ -186,3 +186,11 @@ label,
   justify-content: center;
   align-items: center;
 }
+
+.section-header {
+  font-size: 30px;
+  padding: 25px;
+  background-color: $brand-dark-red;
+  color: $ui-light-gray;
+  border: 1px solid #b11623;
+}

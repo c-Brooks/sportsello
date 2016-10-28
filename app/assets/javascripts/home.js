@@ -27,6 +27,7 @@ $(document).ready(function() {
               :team1="game_info.team1"
               :team2="game_info.team2">
             </game-box>
+            <div class="section-header">EVENTS</div>
             <event-box
               v-for="event in game_info.events"
               :id="event.id"
@@ -57,17 +58,42 @@ $(document).ready(function() {
 
   Vue.component('game-box', {
     props: ['id', 'datetime', 'sport', 'team1', 'team2'],
+    data: function() {
+      return {
+        displayDate: false,
+        date: this.datetime
+      }
+    },
+    beforeMount: function() {
+      if (home.view != 'game-info') {
+        // Format date
+        var date = new Date(this.datetime);
+        var month = date.getMonth() + 1;
+        var date = date.getDate();
+        var year = '2016'//date.getFullYear();
+
+        this.date = year + '-' + month + '-' + date;
+
+        if (home.lastDate != date) {
+          home.lastDate = date;
+          this.displayDate = true;
+        }
+      }
+    },
     template:
-      `<div class="game" v-on:click="viewGame">
-        <div class="time-container col-sm-3">
-          <p class="time alt-text" v-text="datetime"></p>
-        </div>
-        <div class="info-container col-sm-9">
-          <p class="sport alt-text" v-text="sport"></p>
-          <div class="center">
-            <div class="team1 col-sm-3" v-text="team1"></div>
-            <div class="vs col-sm-3">VS</div>
-            <div class="team2 col-sm-3" v-text="team2"></div>
+      `<div>
+        <div class="section-header" v-if="displayDate" v-text="date"></div>
+        <div class="game" v-on:click="viewGame">
+          <div class="time-container col-sm-3">
+            <p class="time alt-text" v-text="datetime"></p>
+          </div>
+          <div class="info-container col-sm-9">
+            <p class="sport alt-text" v-text="sport"></p>
+            <div class="center">
+              <div class="team1 col-sm-3" v-text="team1"></div>
+              <div class="vs col-sm-3">VS</div>
+              <div class="team2 col-sm-3" v-text="team2"></div>
+            </div>
           </div>
         </div>
       </div>`,
@@ -213,7 +239,8 @@ $(document).ready(function() {
     data: {
       view: 'empty',
       games_list: [],
-      game_info: {}
+      game_info: {},
+      last_date: ''
     },
     created: function() {
       this.scroll();
