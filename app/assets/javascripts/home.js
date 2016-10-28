@@ -110,29 +110,31 @@ $(document).ready(function() {
       </div>`,
     methods: {
       viewGame: function(event) {
-        home.view = 'game-info';
+        if (home.view != 'game-info') {
+          home.view = 'game-info';
 
-        // Hide the scroll for the body
-        $('body').css('overflow', 'hidden');
+          // Hide the scroll for the body
+          $('body').css('overflow', 'hidden');
 
-        var target = event.currentTarget;
-        $(target).addClass('game-click');
-        setTimeout(function() {
-          $(target).removeClass('game-click');
-        }, 400);
+          var target = event.currentTarget;
+          $(target).addClass('game-click');
+          setTimeout(function() {
+            $(target).removeClass('game-click');
+          }, 400);
 
-        $.ajax({
-          url: `/games/${this.id}`,
-          success: function(res) {
-            home.game_info = {
-              datetime: res.datetime,
-              sport: res.sport.name,
-              team1: res.team1.name,
-              team2: res.team2.name,
-              events: res.events
-            };
-          }
-        });
+          $.ajax({
+            url: `/games/${this.id}`,
+            success: function(res) {
+              home.game_info = {
+                datetime: res.datetime,
+                sport: res.sport.name,
+                team1: res.team1.name,
+                team2: res.team2.name,
+                events: res.events
+              };
+            }
+          });
+        }
       }
     },
   });
