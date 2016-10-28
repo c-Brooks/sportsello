@@ -116,7 +116,7 @@ $(document).ready(function() {
             <label for="password">Password</label>
             <input type="password" class="form-control" id="password" placeholder="Password">
           </div>
-          <button type="submit" class="btn btn-default">Log in</button>
+          <button type="submit" class="btn btn-default pull-right">Log in</button>
         </form>
       </div>`
   });

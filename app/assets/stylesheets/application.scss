@@ -174,3 +174,9 @@ label,
 .center {
   text-align: center;
 }
+
+.btn-default {
+  color: $ui-light-gray;
+  border: 1px solid $ui-pale-gray;
+  background-color: $ui-dark-gray;
+}
