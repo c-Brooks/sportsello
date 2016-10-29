@@ -5,36 +5,36 @@
 </head>
 
 <div class="container">
-<body id="venue-map">
-  <div style="width: 100%; height: 500px">
-    <google-map
-            :center="{lat: 1.38, lng: 103.8}"
-            :zoom="12"
-    >
-      <ground-overlay
-        source="./overlay.png"
-        :bounds="{
-            north: 1.502,
-            south: 1.185,
-            east: 104.0262,
-            west: 103.5998,
-        }"
-        :opacity="0.5"
+  <div id="venue-map">
+    <div style="width: 100%; height: 500px">
+      <google-map
+              :center="{lat: 49.28, lng: -123.1}"
+              :zoom="12"
       >
-      </ground-overlay>
-    </google-map>
+        <ground-overlay
+          source="./overlay.png"
+          :bounds="{
+              north: 1.502,
+              south: 1.185,
+              east: 104.0262,
+              west: 103.5998,
+          }"
+          :opacity="0.5"
+        >
+        </ground-overlay>
+      </google-map>
+    </div>
+    <script>
+    // NOTE: Browserify lets us use require here
+      const VueGoogleMap = require('vue-google-maps');
+      VueGoogleMap.load({
+          key: '<%= ENV['MAPS_KEY'] %>',
+          v: '3.24',
+      });
+      Vue.component('google-map', VueGoogleMap.Map);
+      new Vue({
+          el: '#venue-map',
+      });
+    </script>
   </div>
-  <script>
-  // NOTE: Browserify lets us use require here
-    const VueGoogleMap = require('vue-google-maps');
-    VueGoogleMap.load({
-        key: '<%= ENV['MAPS_KEY'] %>',
-        v: '3.24',
-    });
-    Vue.component('google-map', VueGoogleMap.Map);
-    new Vue({
-        el: '#venue-map',
-    });
-  </script>
-</body>
 </div>
