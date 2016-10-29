@@ -2,20 +2,21 @@ class MmaCrawler
   # USES YAHOO SPORTS
   include Wombat::Crawler
 
-  def initialize(date)
-    @date = date
-  end
 
   def crawl
-    get_this_path = "/api/v1/us/events"
-      base_url "http://ufc-data-api.ufc.com/"
-      path get_this_path
-      games "css=.wisbb_scheduleTable", :iterator do
-        date "css=.time"
-        # TO-DO GET RID OF JUNK ON TEAM1
-        team1 "css=.away"
-        team2 "css=.home"
+
+    Wombat.crawl do
+      base_url "http://m.ufc.ca/schedule/"
+      # path get_this_path
+        games "css=.schedule li", :iterator do
+          date "css=a"
+          time "css=a"
+          team1 "css=a > strong"
+          team2 "css=a > strong"
+
       end
+    end
+
   end
 
 end
