@@ -12,8 +12,6 @@ class NflCrawler
     Wombat.crawl do
       base_url "http://www.covers.com/"
       path get_this_path
-      # top_date = "css=.cmb_matchup_game > .cmb_matchup_game_box > .cmb_matchup_header_date"
-      # date_comp = Date(top_date.split(',')[1])
       games "css=.cmg_matchup_game", :iterator do
         date "css=.cmg_matchup_game_box", :iterator do
           actual_date "xpath=./@data-game-date"

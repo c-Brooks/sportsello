@@ -29,11 +29,15 @@ $(document).ready(function() {
             </game-box>
             <div class="section-header">EVENTS</div>
             <event-box
+              v-if="game_info.events"
               v-for="event in game_info.events"
               :id="event.id"
               :name="event.name"
               :venue="event.venue">
             </event-box>
+            <div class="box" v-if="!game_info.events.length">
+              Unfortunately there are no events for this game. Are you hosting one?
+            </div>
           </div>
         </div>
       </div>`
@@ -43,7 +47,9 @@ $(document).ready(function() {
     props: ['id', 'name', 'venue'],
     template:
       `<div class="event">
-        <div class="col-sm-3">
+        <div class="attendee-col col-sm-3">
+          <button class="btn btn-primary">I'm attending!</button>
+          <p class="alt-text">x people attending</p>
         </div>
         <div class="info-container col-sm-9">
           <p class="alt-text" v-text="venue.description"></p>
@@ -61,31 +67,36 @@ $(document).ready(function() {
     data: function() {
       return {
         displayDate: false,
-        date: this.datetime
+        displayTime: true,
+        displayDateTime: false,
+        date: this.datetime,
+        time: this.datetime,
       }
     },
     beforeMount: function() {
-      if (home.view != 'game-info') {
-        // Format date
-        var date = new Date(this.datetime);
-        var month = date.getMonth() + 1;
-        var date = date.getDate();
-        var year = '2016'//date.getFullYear();
+      var datetime = moment(this.datetime);
+      var date = datetime.format('dddd, MMMM Do YYYY');
+      var time = datetime.format('h:mm a');
 
-        this.date = year + '-' + month + '-' + date;
+      this.date = date;
+      this.time = time;
 
-        if (home.lastDate != date) {
-          home.lastDate = date;
-          this.displayDate = true;
-        }
+      if (home.lastDate != date) {
+        home.lastDate = date;
+        this.displayDate = true;
+      } else if (home.view === 'game-info') {
+        this.displayDateTime = true;
+        this.displayTime = false;
       }
     },
     template:
       `<div>
         <div class="section-header" v-if="displayDate" v-text="date"></div>
+        <div class="section-header" v-if="displayDateTime">{{date}} @ {{time}}</div>
         <div class="game" v-on:click="viewGame">
           <div class="time-container col-sm-3">
-            <p class="time alt-text" v-text="datetime"></p>
+            <p class="time alt-text" v-text="time" v-if="displayTime"></p>
+            <button class="btn btn-primary" v-if="!displayTime">I'm hosting!</button>
           </div>
           <div class="info-container col-sm-9">
             <p class="sport alt-text" v-text="sport"></p>
@@ -93,35 +104,37 @@ $(document).ready(function() {
               <div class="team1 col-sm-3" v-text="team1"></div>
               <div class="vs col-sm-3">VS</div>
               <div class="team2 col-sm-3" v-text="team2"></div>
-            </div>
+           </div>
           </div>
         </div>
       </div>`,
     methods: {
       viewGame: function(event) {
-        home.view = 'game-info';
+        if (home.view != 'game-info') {
+          home.view = 'game-info';
 
-        // Hide the scroll for the body
-        $('body').css('overflow', 'hidden');
+          // Hide the scroll for the body
+          $('body').css('overflow', 'hidden');
 
-        var target = event.currentTarget;
-        $(target).addClass('game-click');
-        setTimeout(function() {
-          $(target).removeClass('game-click');
-        }, 400);
+          var target = event.currentTarget;
+          $(target).addClass('game-click');
+          setTimeout(function() {
+            $(target).removeClass('game-click');
+          }, 400);
 
-        $.ajax({
-          url: `/games/${this.id}`,
-          success: function(res) {
-            home.game_info = {
-              datetime: res.datetime,
-              sport: res.sport.name,
-              team1: res.team1.name,
-              team2: res.team2.name,
-              events: res.events
-            };
-          }
-        });
+          $.ajax({
+            url: `/games/${this.id}`,
+            success: function(res) {
+              home.game_info = {
+                datetime: res.datetime,
+                sport: res.sport.name,
+                team1: res.team1.name,
+                team2: res.team2.name,
+                events: res.events
+              };
+            }
+          });
+        }
       }
     },
   });
@@ -141,16 +154,16 @@ $(document).ready(function() {
   Vue.component('login-form', {
     template:
       `<div class="login-form">
-        <form action="/login" method="POST">
+        <form id="loginForm" action="/login" method="POST">
           <div class="form-group">
             <label for="email">Email</label>
-            <input type="email" class="form-control" id="email" placeholder="example@sportsello.com">
+            <input type="email" class="form-control" id="email" name="email" placeholder="example@sportsello.com">
           </div>
           <div class="form-group">
             <label for="password">Password</label>
-            <input type="password" class="form-control" id="password" placeholder="Password">
+            <input type="password" class="form-control" id="password" name="password" placeholder="Password">
           </div>
-          <button type="submit" class="btn btn-default pull-right">Log in</button>
+          <button type="submit" class="btn btn-primary pull-right">Log in</button>
         </form>
       </div>`
   });
@@ -170,25 +183,25 @@ $(document).ready(function() {
 
           <div class="form-group">
             <label for="name">Name</label>
-            <input type="name" class="form-control" id="name" placeholder="Wayne Gretzky">
+            <input type="name" class="form-control" id="name" name="name" placeholder="Wayne Gretzky">
           </div>
 
           <div class="form-group">
             <label for="email">Email</label>
-            <input type="email" class="form-control" id="email" placeholder="example@sportsello.com">
+            <input type="email" class="form-control" id="email" name="email" placeholder="example@sportsello.com">
           </div>
 
           <div class="form-group">
             <label for="password">Password</label>
-            <input type="password" class="form-control" id="password" placeholder="Password">
+            <input type="password" class="form-control" id="password" name="password" placeholder="Password">
           </div>
 
           <div class="form-group">
             <label for="password_confirmation">Password Confirmation</label>
-            <input type="password" class="form-control" id="password_confirmation" placeholder="Password Confirmation">
+            <input type="password" class="form-control" id="password_confirmation" name="password_confirmation" placeholder="Password Confirmation">
           </div>
 
-          <button type="submit" class="btn btn-default pull-right">Register</button>
+          <button type="submit" class="btn btn-primary pull-right">Register</button>
         </form>
 
       </div>`
@@ -246,8 +259,11 @@ $(document).ready(function() {
       this.scroll();
       this.getGames();
     },
-    mounted: function() {
-      $('.loader').hide();
+    updated: function() {
+      $('.bottom-loader').hide();
+      $('.loader').fadeTo("slow", 0, function() {
+        $('.loader').hide();
+      });
     },
     methods: {
       scroll: function() {
@@ -259,6 +275,7 @@ $(document).ready(function() {
         })
       },
       getGames: function() {
+        $('.bottom-loader').show();
         var that = this;
         var lastDateTimeString = getLastDateTime(this.games_list)
 
@@ -268,6 +285,7 @@ $(document).ready(function() {
             res.games.forEach(function(game) {
               that.games_list.push(game);
             });
+            $('.bottom-loader').hide();
           }
         });
       }
