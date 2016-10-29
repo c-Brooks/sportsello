@@ -1,0 +1,28 @@
+{
+  "name": "sportsello",
+  "version": "1.0.0",
+  "description": "== SPORTSELLO",
+  "main": "index.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/c-Brooks/sportsello.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/c-Brooks/sportsello/issues"
+  },
+  "homepage": "https://github.com/c-Brooks/sportsello#readme",
+  "dependencies": {
+    "lodash": "^4.16.4",
+    "q": "^1.4.1",
+    "vue": "^2.0.3",
+    "vue-google-maps": "^0.1.21"
+  }
+}
