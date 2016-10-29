@@ -33,17 +33,17 @@ $brand-dark-blue: #292c37;
 $brand-light-gray: #cccccc;
 
 @mixin app-background-dark-gray {
-  background: $ui-dark-gray;
-  background-image: url("./bg-noise-dark-gray.png");
+  background: white;
+  background-image: url("./bg-noise-main.png");
 }
 
 @mixin app-background-light-gray {
   background: $ui-dark-gray;
-  background-image: url("./bg-noise-light-gray.png");
+  background-image: url("./bg-noise-content.png");
 }
 
 @mixin app-background-red {
-  background: $brand-dark-red url("./bg-noise-red.png");
+  background: $brand-dark-red url("./bg-noise-header.png");
 }
 
 body {
@@ -67,7 +67,7 @@ body {
 .app-container {
   width: 50%;
   margin: 0 auto;
-  border: 1px solid $ui-dark-border;
+  border: 1.5px solid $ui-dark-border;
 }
 
 .navbar {
@@ -118,9 +118,9 @@ label,
   padding: 15px;
 
   border-top: 1px solid $ui-light-border;
-  border-left: 1px solid $ui-light-border;
-  border-right: 1px solid $ui-light-border;
-  border-bottom: 1px solid $ui-dark-border;
+  border-left: 2px solid $ui-light-border;
+  border-right: 2px solid $ui-light-border;
+  border-bottom: 2px solid $ui-dark-border;
 
   .vs,
   .at,
@@ -223,7 +223,7 @@ label,
   font-size: 20px;
   padding: 15px;
   color: white;
-  border: 1px solid #b11623;
+  border: 2px solid #b11623;
 }
 
 .btn-primary {
