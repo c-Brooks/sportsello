@@ -32,22 +32,22 @@ $brand-light-red: #b11623;
 $brand-dark-blue: #292c37;
 $brand-light-gray: #cccccc;
 
-@mixin app-background-dark-gray {
-  background: white;
+@mixin app-background-main {
+  background: $ui-light-border;
   background-image: url("./bg-noise-main.png");
 }
 
-@mixin app-background-light-gray {
+@mixin app-background-content {
   background: $ui-dark-gray;
   background-image: url("./bg-noise-content.png");
 }
 
-@mixin app-background-red {
+@mixin app-background-header {
   background: $brand-dark-red url("./bg-noise-header.png");
 }
 
 body {
-  @include app-background-dark-gray;
+  @include app-background-main;
 
   box-sizing: border-box;
   font-family: 'Open Sans', sans-serif;
@@ -71,18 +71,11 @@ body {
 }
 
 .navbar {
+  @include app-background-header;
+
   -webkit-box-shadow: 0px 0px 20px 0px rgba(0,0,0,0.75);
   -moz-box-shadow: 0px 0px 20px 0px rgba(0,0,0,0.75);
   box-shadow: 0px 0px 20px 0px rgba(0,0,0,0.75);
-
-  background: rgba(95,95,96,1);
-  background: -moz-linear-gradient(top, rgba(95,95,96,1) 0%, rgba(33,34,37,1) 100%);
-  background: -webkit-gradient(left top, left bottom, color-stop(0%, rgba(95,95,96,1)), color-stop(100%, rgba(33,34,37,1)));
-  background: -webkit-linear-gradient(top, rgba(95,95,96,1) 0%, rgba(33,34,37,1) 100%);
-  background: -o-linear-gradient(top, rgba(95,95,96,1) 0%, rgba(33,34,37,1) 100%);
-  background: -ms-linear-gradient(top, rgba(95,95,96,1) 0%, rgba(33,34,37,1) 100%);
-  background: linear-gradient(to bottom, rgba(95,95,96,1) 0%, rgba(33,34,37,1) 100%);
-  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#5f5f60', endColorstr='#212225', GradientType=0 );
 
   border-top: 1px solid $ui-pale-gray;
   border-bottom: 1px solid $ui-dark-gray;
@@ -100,6 +93,7 @@ body {
     color: white;
   }
   a:hover {
+    color: $brand-light-gray;
     text-decoration: none;
   }
 }
@@ -112,7 +106,7 @@ label,
 .game,
 .event,
 .box {
-  @include app-background-light-gray;
+  @include app-background-content;
 
   overflow: auto;
   padding: 15px;
@@ -163,7 +157,7 @@ label,
 }
 
 .vue-panel {
-  @include app-background-dark-gray;
+  @include app-background-main;
   border: 2px solid $ui-dark-border;
   z-index: 2;
   height: 100vh;
@@ -218,7 +212,7 @@ label,
 }
 
 .section-header {
-  @include app-background-red;
+  @include app-background-header;
 
   font-size: 20px;
   padding: 15px;
