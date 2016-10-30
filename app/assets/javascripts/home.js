@@ -154,19 +154,51 @@ $(document).ready(function() {
   Vue.component('login-form', {
     template:
       `<div class="login-form">
-        <form id="loginForm" action="/login" method="POST">
+        <form v-on:submit.prevent='loginFn'>
           <div class="form-group">
             <label for="email">Email</label>
-            <input type="email" class="form-control" id="email" name="email" placeholder="example@sportsello.com">
+            <input
+              type="email"
+              class="form-control"
+              id="email"
+              name="email"
+              placeholder="example@sportsello.com"
+              v-model="email"
+            >
           </div>
           <div class="form-group">
             <label for="password">Password</label>
-            <input type="password" class="form-control" id="password" name="password" placeholder="Password">
+            <input
+              type="password"
+              class="form-control"
+              id="password"
+              name="password"
+              placeholder="Password"
+              v-model="password"
+            >
           </div>
-          <button type="submit" class="btn btn-primary pull-right">Log in</button>
+          <button class="btn btn-primary pull-right">Log in</button>
         </form>
-      </div>`
-  });
+      </div>`,
+      
+      methods: {
+      loginFn: function () {
+        console.log('Logging in!', this);
+        var self = this;
+        $.ajax({
+          url: '/login',
+          method: 'POST',
+          data: {email: self.email, password: self.password},
+          success: function (data) {
+            console.log('Success', data);
+            window.sessionStorage.setItem( 'user_id', data.id );
+            home.view = 'empty'
+          }
+        })
+      }
+    }
+  }
+);
 
   Vue.component('facebook-button', {
     template:
@@ -253,7 +285,9 @@ $(document).ready(function() {
       view: 'empty',
       games_list: [],
       game_info: {},
-      last_date: ''
+      last_date: '',
+      session: {},
+      user: {}
     },
     created: function() {
       this.scroll();
