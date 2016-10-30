@@ -180,7 +180,6 @@ $(document).ready(function() {
           <button class="btn btn-primary pull-right">Log in</button>
         </form>
       </div>`,
-      
       methods: {
       loginFn: function () {
         console.log('Logging in!', this);
@@ -194,7 +193,7 @@ $(document).ready(function() {
             window.sessionStorage.setItem( 'user_id', data.id );
             home.view = 'empty'
           }
-        })
+        });
       }
     }
   }
@@ -211,33 +210,66 @@ $(document).ready(function() {
   Vue.component('register-form', {
     template:
       `<div class="login-form">
-        <form action="/users" method="POST">
+        <form v-on:submit.prevent='registerFn'>
 
           <div class="form-group">
             <label for="name">Name</label>
-            <input type="name" class="form-control" id="name" name="name" placeholder="Wayne Gretzky">
+            <input
+              v-model="name"
+              type="name"
+              class="form-control"
+              id="name"
+              name="name"
+              placeholder="Wayne Gretzky"
+            >
           </div>
 
           <div class="form-group">
             <label for="email">Email</label>
-            <input type="email" class="form-control" id="email" name="email" placeholder="example@sportsello.com">
+            <input
+            v-model="email"
+              type="email"
+              class="form-control"
+              id="email"
+              name="email"
+              placeholder="example@sportsello.com"
+            >
           </div>
 
           <div class="form-group">
             <label for="password">Password</label>
-            <input type="password" class="form-control" id="password" name="password" placeholder="Password">
+            <input
+              v-model="password"
+              type="password"
+              class="form-control"
+              id="password"
+              name="password"
+              placeholder="Password"
+            >
           </div>
 
           <div class="form-group">
             <label for="password_confirmation">Password Confirmation</label>
-            <input type="password" class="form-control" id="password_confirmation" name="password_confirmation" placeholder="Password Confirmation">
+            <input
+              v-model="password_confirmation"
+              type="password"
+              class="form-control"
+              id="password_confirmation"
+              name="password_confirmation"
+              placeholder="Password Confirmation"
+            >
           </div>
 
           <button type="submit" class="btn btn-primary pull-right">Register</button>
         </form>
 
-      </div>`
-  });
+      </div>`,
+      methods: {
+        registerFn: function () {
+          home.view = empty;
+            }
+          }
+      })
 
   var login = {
     template:
