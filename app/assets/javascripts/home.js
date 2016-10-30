@@ -187,7 +187,7 @@ $(document).ready(function() {
         $.ajax({
           url: '/login',
           method: 'POST',
-          data: {email: self.email, password: self.password},
+          data: { email: self.email, password: self.password },
           success: function (data) {
             console.log('Success', data);
             window.sessionStorage.setItem( 'user_id', data.id );
@@ -266,9 +266,25 @@ $(document).ready(function() {
       </div>`,
       methods: {
         registerFn: function () {
-          home.view = empty;
+          console.log('Logging in!', this);
+          var self = this;
+          $.ajax({
+            url: '/users',
+            method: 'POST',
+            data: {
+              name:                  self.name,
+              email:                 self.email,
+              password:              self.password,
+              password_confirmation: self.password_confirmation
+            },
+            success: function (data) {
+              console.log('Success', data);
+              window.sessionStorage.setItem( 'user_id', data.id );
+              home.view = 'empty'
             }
+          });
           }
+        }
       })
 
   var login = {
