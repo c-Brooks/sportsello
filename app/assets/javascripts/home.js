@@ -96,7 +96,7 @@ $(document).ready(function() {
         <div class="game" v-on:click="viewGame">
           <div class="time-container col-sm-3">
             <p class="time alt-text" v-text="time" v-if="displayTime"></p>
-            <button class="btn btn-primary" v-if="!displayTime">I'm hosting!</button>
+            <button class="btn btn-primary">I'm hosting!</button>
           </div>
           <div class="info-container col-sm-9">
             <p class="sport alt-text" v-text="sport"></p>
