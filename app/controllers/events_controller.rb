@@ -9,7 +9,11 @@ class EventsController < ApplicationController
 
   def attending
     @attendee = Attendee.create(attendee_params)
+    render json: @attendee
+  end
 
+  def cancel
+    @attendee = Attendee.where(attendee_params).destroy_all
     render json: @attendee
   end
 

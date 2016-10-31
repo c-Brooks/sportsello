@@ -49,6 +49,7 @@ $(document).ready(function() {
     data: function() {
       return {
         attendeesList: this.attendees,
+        attendeesCount: this.attendees.length,
         attending: false
       }
     },
@@ -64,8 +65,8 @@ $(document).ready(function() {
           <button class="btn btn-primary" v-on:click="cancel" v-if="attending">Cancel RSVP</button>
           <button class="btn btn-primary" v-on:click="attending" v-else>I'm attending!</button>
 
-          <p class="alt-text" v-if="attendees === 1">{{attendees}} person attending</p>
-          <p class="alt-text" v-else>{{attendees}} people attending</p>
+          <p class="alt-text" v-if="attendees === 1">{{attendeesCount}} person attending</p>
+          <p class="alt-text" v-else>{{attendeesCount}} people attending</p>
         </div>
         <div class="info-container col-sm-9">
           <p class="alt-text" v-text="venue.description"></p>
