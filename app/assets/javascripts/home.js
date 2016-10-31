@@ -48,13 +48,22 @@ $(document).ready(function() {
     props: ['id', 'name', 'venue', 'attendees'],
     data: function() {
       return {
-        attendeesList: this.attendees
+        attendeesList: this.attendees,
+        attending: false
+      }
+    },
+    created: function() {
+      // If user is attending, set attending to true
+      if (this.attendeesList.indexOf(window.sessionStorage.getItem('user_id')) !== -1) {
+        this.attending = true;
       }
     },
     template:
       `<div class="event">
         <div class="attendee-col col-sm-3">
-          <button class="btn btn-primary" v-on:click="attending">I'm attending!</button>
+          <button class="btn btn-primary" v-on:click="notAttending" v-if="attending">Cancel RSVP</button>
+          <button class="btn btn-primary" v-on:click="attending" v-else>I'm attending!</button>
+
           <p class="alt-text" v-if="attendees === 1">{{attendees}} person attending</p>
           <p class="alt-text" v-else>{{attendees}} people attending</p>
         </div>
