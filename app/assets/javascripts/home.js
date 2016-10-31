@@ -1,5 +1,70 @@
 $(document).ready(function() {
 
+  Vue.component('nav-bar', {
+    props: ["user_id", "user_name"],
+    template:
+    `
+    <nav class="navbar navbar-default navbar-fixed-top">
+        <div class="navbar-header">
+          <a class="navbar-brand" href="/"><object class="svg-logo" type="image/svg+xml" data="/assets/sportsello.svg"></object></a>
+        </div>
+
+          <div class="navbar-collapse collapse">
+            <ul class="nav navbar-nav">
+            </ul>
+            <div class="row" style="margin-right:60px">
+              <log-reg-btn
+                :user_id="user_id"
+                :user_name="user_name"
+              >
+              </log-reg-btn>
+            </div>
+          </div>
+        </div> <!-- End of #navbar -->
+    </nav>
+`
+  });
+
+Vue.component('log-reg-btn', {
+  props: ['user_id', 'user_name'],
+  template:
+  `
+  <span class="nav navbar-nav navbar-right">
+    <div v-if="user_name" class="row" style="margin-right:60px">
+      <strong v-text="user_name"></strong>
+      | <a class="clickable" id='sign_out' v-on:click="signOut"> SIGN OUT </a>
+    </div>
+    <div v-else>
+      <a class="log-in clickable" v-on:click="showLogin">SIGN IN</a> |
+      <a class="register clickable" v-on:click="showReg">REGISTER</a>
+    </div>
+  </span>
+  `,
+  methods: {
+    showLogin: function () {
+      home.view = 'login'
+    },
+    showReg: function () {
+      home.view = 'register'
+    },
+    signOut: function () {
+      console.log('Sign out');
+      var self = this;
+      $.ajax({
+        url: '/signout',
+        method:'GET',
+        success: function (res) {
+          home.user_id = null;
+          home.user_name = null;
+          self.user_id = null;
+          self.user_name = null;
+        }
+      });
+      home.view = 'empty'
+    }
+  }
+})
+
   Vue.component('vue-panel', {
     template:
       `<div class="close-panel clickable" v-on:click="closePanel">
@@ -236,8 +301,10 @@ $(document).ready(function() {
           method: 'POST',
           data: { email: self.email, password: self.password },
           success: function (data) {
-            console.log('Success', data);
+            home.user_id = data.id;
+            home.user_name = data.name;
             window.sessionStorage.setItem( 'user_id', data.id );
+            window.sessionStorage.setItem( 'user_name', data.name );
             home.view = 'empty'
           }
         });
@@ -248,7 +315,8 @@ $(document).ready(function() {
 
   Vue.component('facebook-button', {
     template:
-      `<button class="btn btn-block btn-social btn-facebook" onclick="window.location.href='/auth/facebook'">
+      `<button class="btn btn-block btn-social btn-facebook"
+        onclick="window.location.href='/auth/facebook'">
         <span class="fa fa-facebook"></span>
         Log in with Facebook
       </button>`
@@ -313,7 +381,6 @@ $(document).ready(function() {
       </div>`,
       methods: {
         registerFn: function () {
-          console.log('Logging in!', this);
           var self = this;
           $.ajax({
             url: '/users',
@@ -326,7 +393,10 @@ $(document).ready(function() {
             },
             success: function (data) {
               console.log('Success', data);
+              home.user_id = data.id;
+              home.user_name = data.name;
               window.sessionStorage.setItem( 'user_id', data.id );
+              window.sessionStorage.setItem( 'user_name', data.name );
               home.view = 'empty'
             }
           });
@@ -368,6 +438,7 @@ $(document).ready(function() {
     template: '<div></div>'
   };
 
+
   var home = new Vue({
     el: '#home',
     components: {
@@ -382,11 +453,13 @@ $(document).ready(function() {
       game_info: {},
       last_date: '',
       session: {},
-      user: {}
+      user_id: null,
+      user_name: null
     },
     created: function() {
       this.scroll();
       this.getGames();
+      this.updateUser();
     },
     updated: function() {
       $('.bottom-loader').hide();
@@ -417,6 +490,10 @@ $(document).ready(function() {
             $('.bottom-loader').hide();
           }
         });
+      },
+      updateUser: function () {
+        this.user_id = window.sessionStorage.user_id;
+        this.user_name = window.sessionStorage.user_name;
       }
     }
   });
