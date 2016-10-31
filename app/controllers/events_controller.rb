@@ -12,7 +12,7 @@ class EventsController < ApplicationController
     render json: @attendee
   end
 
-  def cancel
+  def cancel_rsvp
     @attendee = Attendee.where(attendee_params).destroy_all
     render json: @attendee
   end
