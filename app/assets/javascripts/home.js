@@ -107,12 +107,12 @@ $(document).ready(function() {
       this.date = date;
       this.time = time;
 
-      if (home.lastDate != date) {
-        home.lastDate = date;
-        this.displayDate = true;
-      } else if (home.view === 'game-info') {
+      if (home.view === 'game-info') {
         this.displayDateTime = true;
         this.displayTime = false;
+      } else if (home.lastDate != date) {
+        home.lastDate = date;
+        this.displayDate = true;
       }
     },
     template:
