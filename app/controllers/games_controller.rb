@@ -27,6 +27,7 @@ class GamesController < ApplicationController
       j.sport Sport.find(@game.sport_id), :name
       j.events Event.where(game_id: params[:id]) do |event|
         j.event event.id
+        j.id event.id
         j.name event.name
         j.venue Venue.find(event.venue_id)
         j.attendees Attendee.where(event_id: event.id).count

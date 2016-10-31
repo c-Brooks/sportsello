@@ -46,11 +46,16 @@ $(document).ready(function() {
 
   Vue.component('event-box', {
     props: ['id', 'name', 'venue', 'attendees'],
+    data: function() {
+      return {
+        attendeesList: this.attendees
+      }
+    },
     template:
       `<div class="event">
         <div class="attendee-col col-sm-3">
-          <button class="btn btn-primary">I'm attending!</button>
-          <p class="alt-text" v-if="attendees = 1">{{attendees}} person attending</p>
+          <button class="btn btn-primary" v-on:click="attending">I'm attending!</button>
+          <p class="alt-text" v-if="attendees === 1">{{attendees}} person attending</p>
           <p class="alt-text" v-else>{{attendees}} people attending</p>
         </div>
         <div class="info-container col-sm-9">
@@ -61,7 +66,17 @@ $(document).ready(function() {
             <div class="venue-name col-sm-3" v-text="venue.name"></div>
           </div>
         </div>
-      </div>`
+      </div>`,
+    methods: {
+      attending: function() {
+        $.ajax({
+          url: `/events/${this.id}/attending/${window.sessionStorage.getItem('user_id')}`,
+          method: 'POST',
+          success: function(res) {
+          }
+        });
+      }
+    }
   });
 
   Vue.component('game-box', {

@@ -8,11 +8,13 @@ class EventsController < ApplicationController
   end
 
   def attending
-    Attendee.create(attendee_params)
+    @attendee = Attendee.create(attendee_params)
+
+    render json: @attendee
   end
 
   private
     def attendee_params
-      params.require(:attendee).permit(:user_id, :event_id)
+      params.permit(:user_id, :event_id)
     end
 end
