@@ -88,7 +88,7 @@ $(document).ready(function() {
       },
       cancel: function () {
         $.ajax({
-          url: `/events/${this.id}/cancel/${window.sessionStorage.getItem('user_id')}`,
+          url: `/events/${this.id}/cancel_rsvp/${window.sessionStorage.getItem('user_id')}`,
           method: 'POST',
           success: function(res) {
           }
