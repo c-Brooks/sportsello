@@ -16,7 +16,7 @@ class GetGames
       mlb_games = MlbCrawler.new(date).crawl
       nfl_games = NflCrawler.new(date).crawl
       fifa_games = FifaCrawler.new(date).crawl
-      mma_games = MmaCrawler.new.crawl    ## FAILS WHEN NO DATE NEEDS TO BE LOOKED AT
+      mma_games = MmaCrawler.new.crawl
 
       # Go through each group of games
       nhl_games['games'].each do |game|
@@ -36,7 +36,7 @@ class GetGames
 
       mlb_games['games'].each do |game|
         sport = Sport.find_by_name 'MLB'
-        #Takes team data and splits into proper string
+        #Takes team data and splits into proper format
         game['team1'] = game['team1'].split(') ')[1].split("\n")[0]
         game['team2'] = game['team2'].split(') ')[1]
         #Format date
@@ -47,7 +47,7 @@ class GetGames
 
       nfl_games['games'].each do |game|
         sport = Sport.find_or_create_by name: 'NFL'
-        #Takes team data and splits into proper string
+        #Takes team data and splits into proper format
         game['team1'] = game['team1'].split(' at ')[0]
         game['team2'] = game['team2'].split(' at ')[1]
         #Takes date data and grabs nested data
@@ -69,13 +69,20 @@ class GetGames
 
       mma_games['games'].each do |game|
         sport = Sport.find_or_create_by name: 'MMA'
+        #Takes team data and splits into proper format
         game['team1'] = game['team1'].split(' - ')[1].split(' vs ')[0]
         game['team2'] = game['team2'].split(' - ')[1].split(' vs ')[1]
-        game['time'] = game['time'].split('M/')[1].split(' ETPT')[0]
-        game['date'] = convert_to_datetime(game['date'].split("\n\t\t\t\t")[1])
-        game['date'] = (game['date'] + ' ' + game['time'])
 
-        add_game(game, sport, date)
+          #Check to make sure game has a time before adding to database
+          game['time'] = game['time'].split('M/')
+          if game['time'].length == 2
+            #If game has a time format and add
+            game['time'] = game['time'][1].split(' ETPT')[0]
+            game['date'] = convert_to_datetime(game['date'].split("\n\t\t\t\t")[1])
+            game['date'] = (game['date'] + ' ' + game['time'])
+
+            add_game(game, sport, date)
+          end
       end
 
     end
@@ -102,11 +109,6 @@ class GetGames
       puts "Ignoring existing game..."
     end
 
-  end
-
-  #Converts a time string such as "7PM" into 24 hour string
-  def to_24(time)
-    Time.strptime(time, "%I%P").strftime("%H:%M")
   end
 
   #Converts a time string "November 05, 2016" into a datetime string
