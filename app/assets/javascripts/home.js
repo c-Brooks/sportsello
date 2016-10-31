@@ -65,7 +65,7 @@ $(document).ready(function() {
           <button class="btn btn-primary" v-on:click="cancel" v-if="isAttending">Cancel RSVP</button>
           <button class="btn btn-primary" v-on:click="attending" v-else>I'm attending!</button>
 
-          <p class="alt-text" v-if="attendees === 1">{{attendeesCount}} person attending</p>
+          <p class="alt-text" v-if="attendeesCount === 1">{{attendeesCount}} person attending</p>
           <p class="alt-text" v-else>{{attendeesCount}} people attending</p>
         </div>
         <div class="info-container col-sm-9">
