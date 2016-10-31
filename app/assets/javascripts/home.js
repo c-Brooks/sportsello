@@ -33,7 +33,8 @@ $(document).ready(function() {
               v-for="event in game_info.events"
               :id="event.id"
               :name="event.name"
-              :venue="event.venue">
+              :venue="event.venue"
+              :attendees="event.attendees">
             </event-box>
             <div class="box" v-if="!game_info.events.length">
               Unfortunately there are no events for this game. Are you hosting one?
@@ -44,12 +45,12 @@ $(document).ready(function() {
   };
 
   Vue.component('event-box', {
-    props: ['id', 'name', 'venue'],
+    props: ['id', 'name', 'venue', 'attendees'],
     template:
       `<div class="event">
         <div class="attendee-col col-sm-3">
           <button class="btn btn-primary">I'm attending!</button>
-          <p class="alt-text">x people attending</p>
+          <p class="alt-text">{{attendees}} people attending</p>
         </div>
         <div class="info-container col-sm-9">
           <p class="alt-text" v-text="venue.description"></p>
