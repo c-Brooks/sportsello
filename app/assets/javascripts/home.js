@@ -1,5 +1,22 @@
 $(document).ready(function() {
 
+  Vue.component('nav-bar', {
+    props: ['id'],
+    template:
+    `<nav class="navbar navbar-default navbar-fixed-top">
+        <div class="navbar-header">
+          <a class="navbar-brand" href="/"><object class="svg-logo" type="image/svg+xml" data="/assets/sportsello.svg"></object></a>
+        </div>
+
+        <div id="navbar" class="navbar-collapse collapse">
+          <ul class="nav navbar-nav">
+          </ul>
+
+            </div>
+        </div> <!-- End of #navbar -->
+    </nav>
+`
+  });
   Vue.component('vue-panel', {
     template:
       `<div class="close-panel clickable" v-on:click="closePanel">
@@ -320,6 +337,11 @@ $(document).ready(function() {
   var empty = {
     template: '<div></div>'
   };
+
+  var nav = new Vue({
+    el: '#nav-bar'
+
+  });
 
   var home = new Vue({
     el: '#home',
