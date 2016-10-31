@@ -65,6 +65,14 @@ Vue.component('log-reg-btn', {
   }
 })
 
+  Vue.component('search-bar', {
+    template:
+      `<div class="input search-bar-container">
+        <input type="text" class="form-control search-bar" placeholder="What are you looking for?">
+        <span class="glyphicon glyphicon-search btn-search clickable" aria-hidden="true"></span>
+      </div>`
+  });
+
   Vue.component('vue-panel', {
     template:
       `<div class="close-panel clickable" v-on:click="closePanel">
@@ -130,7 +138,7 @@ Vue.component('log-reg-btn', {
           <button class="btn btn-primary" v-on:click="cancel" v-if="isAttending">Cancel RSVP</button>
           <button class="btn btn-primary" v-on:click="attending" v-else>I'm attending!</button>
 
-          <p class="alt-text" v-if="attendees === 1">{{attendeesCount}} person attending</p>
+          <p class="alt-text" v-if="attendeesCount === 1">{{attendeesCount}} person attending</p>
           <p class="alt-text" v-else>{{attendeesCount}} people attending</p>
         </div>
         <div class="info-container col-sm-9">
