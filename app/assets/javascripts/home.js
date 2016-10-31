@@ -1,5 +1,13 @@
 $(document).ready(function() {
 
+  Vue.component('search-bar', {
+    template:
+      `<div class="input search-bar-container">
+        <input type="text" class="form-control search-bar" placeholder="What are you looking for?">
+        <span class="glyphicon glyphicon-search btn-search clickable" aria-hidden="true"></span>
+      </div>`
+  });
+
   Vue.component('vue-panel', {
     template:
       `<div class="close-panel clickable" v-on:click="closePanel">
