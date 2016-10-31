@@ -35,11 +35,20 @@ Vue.component('log-reg-btn', {
     </div>
   <!-- v-else -->
     <div>
-      <a class="log-in clickable">SIGN IN</a> |
-      <a class="register clickable">REGISTER</a>
+      <a class="log-in clickable" v-on:click="showLogin">SIGN IN</a> |
+      <a class="register clickable" v-on:click="showReg">REGISTER</a>
     </div>
   </span>
-  `
+  `,
+  methods: {
+    showLogin: function () {
+      home.view = 'login'
+    },
+    showReg: function () {
+      home.view = 'register'
+    }
+
+  }
 })
 
   Vue.component('vue-panel', {
