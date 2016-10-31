@@ -50,7 +50,8 @@ $(document).ready(function() {
       `<div class="event">
         <div class="attendee-col col-sm-3">
           <button class="btn btn-primary">I'm attending!</button>
-          <p class="alt-text">{{attendees}} people attending</p>
+          <p class="alt-text" v-if="attendees = 1">{{attendees}} person attending</p>
+          <p class="alt-text" v-else>{{attendees}} people attending</p>
         </div>
         <div class="info-container col-sm-9">
           <p class="alt-text" v-text="venue.description"></p>
