@@ -61,7 +61,7 @@ $(document).ready(function() {
     template:
       `<div class="event">
         <div class="attendee-col col-sm-3">
-          <button class="btn btn-primary" v-on:click="notAttending" v-if="attending">Cancel RSVP</button>
+          <button class="btn btn-primary" v-on:click="cancel" v-if="attending">Cancel RSVP</button>
           <button class="btn btn-primary" v-on:click="attending" v-else>I'm attending!</button>
 
           <p class="alt-text" v-if="attendees === 1">{{attendees}} person attending</p>
@@ -80,6 +80,14 @@ $(document).ready(function() {
       attending: function() {
         $.ajax({
           url: `/events/${this.id}/attending/${window.sessionStorage.getItem('user_id')}`,
+          method: 'POST',
+          success: function(res) {
+          }
+        });
+      },
+      cancel: function () {
+        $.ajax({
+          url: `/events/${this.id}/cancel/${window.sessionStorage.getItem('user_id')}`,
           method: 'POST',
           success: function(res) {
           }
