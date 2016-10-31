@@ -10,6 +10,7 @@ Rails.application.routes.draw do
     post '/login' => 'sessions#create'
 
     post '/events/:event_id/attending/:user_id', to: 'events#attending', as: :attending;
+    post '/events/:event_id/cancel_rsvp/:user_id', to: 'events#cancel_rsvp', as: :cancel_rsvp;
 
     resources :users, only: [:new, :create]
     resources :sessions, only: [:new, :create, :destroy]
