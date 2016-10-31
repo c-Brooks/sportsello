@@ -1,6 +1,6 @@
 $(document).ready(function() {
 
-  Vue.component('test', {
+  Vue.component('nav-bar', {
     props: ["user_id", "user_name"],
     template:
     `
@@ -255,9 +255,8 @@ Vue.component('log-reg-btn', {
           data: { email: self.email, password: self.password },
           success: function (data) {
             console.log("DATA", data);
-            nav.user_id = data.id;
-            nav.user_name = data.name;
-            this.$dispatch('loginEvent', { user_id: data.id, user_name: data.name })
+            home.user_id = data.id;
+            home.user_name = data.name;
             window.sessionStorage.setItem( 'user_id', data.id );
             window.sessionStorage.setItem( 'user_name', data.name );
             home.view = 'empty'
@@ -270,7 +269,8 @@ Vue.component('log-reg-btn', {
 
   Vue.component('facebook-button', {
     template:
-      `<button class="btn btn-block btn-social btn-facebook" onclick="window.location.href='/auth/facebook'">
+      `<button class="btn btn-block btn-social btn-facebook"
+        onclick="window.location.href='/auth/facebook'">
         <span class="fa fa-facebook"></span>
         Log in with Facebook
       </button>`
@@ -335,7 +335,6 @@ Vue.component('log-reg-btn', {
       </div>`,
       methods: {
         registerFn: function () {
-          console.log('Logging in!', this);
           var self = this;
           $.ajax({
             url: '/users',
@@ -348,7 +347,10 @@ Vue.component('log-reg-btn', {
             },
             success: function (data) {
               console.log('Success', data);
+              home.user_id = data.id;
+              home.user_name = data.name;
               window.sessionStorage.setItem( 'user_id', data.id );
+              window.sessionStorage.setItem( 'user_name', data.name );
               home.view = 'empty'
             }
           });
