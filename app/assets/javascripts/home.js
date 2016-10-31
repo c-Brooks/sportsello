@@ -1,21 +1,23 @@
 $(document).ready(function() {
 
-  Vue.component('nav-bar', {
-    props: ['user_id'],
+  Vue.component('test', {
+    props: ["user_id", "user_name"],
     template:
-    `<nav class="navbar navbar-default navbar-fixed-top">
+    `
+    <nav class="navbar navbar-default navbar-fixed-top">
         <div class="navbar-header">
           <a class="navbar-brand" href="/"><object class="svg-logo" type="image/svg+xml" data="/assets/sportsello.svg"></object></a>
         </div>
 
-          <div id="navbar" class="navbar-collapse collapse">
+          <div class="navbar-collapse collapse">
             <ul class="nav navbar-nav">
             </ul>
             <div class="row" style="margin-right:60px">
-            <log-reg-btn
-            :user_id="user_id"
-            >
-            </log-reg-btn>
+              <log-reg-btn
+                :user_id="user_id"
+                :user_name="user_name"
+              >
+              </log-reg-btn>
             </div>
           </div>
         </div> <!-- End of #navbar -->
@@ -28,13 +30,11 @@ Vue.component('log-reg-btn', {
   template:
   `
   <span class="nav navbar-nav navbar-right">
-    <div v-if="user_id" class="row" style="margin-right:60px">
-    <button class="btn btn-info" v-on:click="window.location.href='/venues/new'">Register a bar!</button>
-      <strong v-text=user_id></strong>
-      | <div id='sign_out'> SIGN OUT </div>
+    <div v-if="user_name" class="row" style="margin-right:60px">
+      <strong v-text="user_name"></strong>
+      | <a class="clickable" id='sign_out' v-on:click="signOut"> SIGN OUT </a>
     </div>
-  <!-- v-else -->
-    <div>
+    <div v-else>
       <a class="log-in clickable" v-on:click="showLogin">SIGN IN</a> |
       <a class="register clickable" v-on:click="showReg">REGISTER</a>
     </div>
@@ -46,8 +46,22 @@ Vue.component('log-reg-btn', {
     },
     showReg: function () {
       home.view = 'register'
+    },
+    signOut: function () {
+      console.log('Sign out');
+      var self = this;
+      $.ajax({
+        url: '/signout',
+        method:'GET',
+        success: function (res) {
+          home.user_id = null;
+          home.user_name = null;
+          self.user_id = null;
+          self.user_name = null;
+        }
+      });
+      home.view = 'empty'
     }
-
   }
 })
 
@@ -240,8 +254,12 @@ Vue.component('log-reg-btn', {
           method: 'POST',
           data: { email: self.email, password: self.password },
           success: function (data) {
-            console.log('Success', data);
+            console.log("DATA", data);
+            nav.user_id = data.id;
+            nav.user_name = data.name;
+            this.$dispatch('loginEvent', { user_id: data.id, user_name: data.name })
             window.sessionStorage.setItem( 'user_id', data.id );
+            window.sessionStorage.setItem( 'user_name', data.name );
             home.view = 'empty'
           }
         });
@@ -372,10 +390,6 @@ Vue.component('log-reg-btn', {
     template: '<div></div>'
   };
 
-  var nav = new Vue({
-    el: '#nav-bar'
-
-  });
 
   var home = new Vue({
     el: '#home',
@@ -391,7 +405,8 @@ Vue.component('log-reg-btn', {
       game_info: {},
       last_date: '',
       session: {},
-      user: {}
+      user_id: null,
+      user_name: null
     },
     created: function() {
       this.scroll();
