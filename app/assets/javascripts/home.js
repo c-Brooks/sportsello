@@ -50,19 +50,19 @@ $(document).ready(function() {
       return {
         attendeesList: this.attendees,
         attendeesCount: this.attendees.length,
-        attending: false
+        isAttending: false
       }
     },
     created: function() {
       // If user is attending, set attending to true
-      if (this.attendeesList.indexOf(window.sessionStorage.getItem('user_id')) !== -1) {
-        this.attending = true;
+      if (this.attendeesList.indexOf(+window.sessionStorage.getItem('user_id')) !== -1) {
+        this.isAttending = true;
       }
     },
     template:
       `<div class="event">
         <div class="attendee-col col-sm-3">
-          <button class="btn btn-primary" v-on:click="cancel" v-if="attending">Cancel RSVP</button>
+          <button class="btn btn-primary" v-on:click="cancel" v-if="isAttending">Cancel RSVP</button>
           <button class="btn btn-primary" v-on:click="attending" v-else>I'm attending!</button>
 
           <p class="alt-text" v-if="attendees === 1">{{attendeesCount}} person attending</p>
@@ -79,18 +79,30 @@ $(document).ready(function() {
       </div>`,
     methods: {
       attending: function() {
+        const that = this;
+        const userID = window.sessionStorage.getItem('user_id');
         $.ajax({
-          url: `/events/${this.id}/attending/${window.sessionStorage.getItem('user_id')}`,
+          url: `/events/${this.id}/attending/${userID}`,
           method: 'POST',
           success: function(res) {
+            that.isAttending = true;
+            that.attendeesList.push(userID);
+            that.attendeesCount = that.attendeesList.length;
           }
         });
       },
       cancel: function () {
+        const that = this;
+        const userID = window.sessionStorage.getItem('user_id');
+
         $.ajax({
-          url: `/events/${this.id}/cancel_rsvp/${window.sessionStorage.getItem('user_id')}`,
+          url: `/events/${this.id}/cancel_rsvp/${userID}`,
           method: 'POST',
           success: function(res) {
+            that.isAttending = false;
+            var userFound = that.attendeesList.indexOf(userID);
+            that.attendeesList.splice(userFound);
+            that.attendeesCount = that.attendeesList.length;
           }
         });
       }
