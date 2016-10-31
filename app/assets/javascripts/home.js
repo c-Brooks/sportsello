@@ -254,7 +254,6 @@ Vue.component('log-reg-btn', {
           method: 'POST',
           data: { email: self.email, password: self.password },
           success: function (data) {
-            console.log("DATA", data);
             home.user_id = data.id;
             home.user_name = data.name;
             window.sessionStorage.setItem( 'user_id', data.id );
@@ -413,6 +412,7 @@ Vue.component('log-reg-btn', {
     created: function() {
       this.scroll();
       this.getGames();
+      this.updateUser();
     },
     updated: function() {
       $('.bottom-loader').hide();
@@ -443,6 +443,10 @@ Vue.component('log-reg-btn', {
             $('.bottom-loader').hide();
           }
         });
+      },
+      updateUser: function () {
+        this.user_id = window.sessionStorage.user_id;
+        this.user_name = window.sessionStorage.user_name;
       }
     }
   });
