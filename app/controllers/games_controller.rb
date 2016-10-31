@@ -29,6 +29,7 @@ class GamesController < ApplicationController
         j.event event.id
         j.name event.name
         j.venue Venue.find(event.venue_id)
+        j.attendees Attendee.where(event_id: event.id).count
       end
     end.target!
 
