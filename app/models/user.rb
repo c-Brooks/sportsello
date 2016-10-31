@@ -3,6 +3,8 @@ class User < ActiveRecord::Base
   has_secure_password
   has_many :reviews
   has_many :venues
+  # Attends many events
+  has_many :attendees
   before_save :downcase_email
   EMAIL_REGEX = /\b[A-Z0-9._%a-z\-]+@(?:[A-Z0-9a-z\-]+\.)+[A-Za-z]{2,4}\z/
   validates :name, :presence => true, :length => { :in => 3..20 }

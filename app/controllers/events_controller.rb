@@ -6,4 +6,19 @@ class EventsController < ApplicationController
   def show
     @event = Event.find(params[:id])
   end
+
+  def attending
+    @attendee = Attendee.create(attendee_params)
+    render json: @attendee
+  end
+
+  def cancel_rsvp
+    @attendee = Attendee.where(attendee_params).destroy_all
+    render json: @attendee
+  end
+
+  private
+    def attendee_params
+      params.permit(:user_id, :event_id)
+    end
 end

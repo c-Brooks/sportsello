@@ -98,7 +98,8 @@ Vue.component('log-reg-btn', {
               v-for="event in game_info.events"
               :id="event.id"
               :name="event.name"
-              :venue="event.venue">
+              :venue="event.venue"
+              :attendees="event.attendees">
             </event-box>
             <div class="box" v-if="!game_info.events.length">
               Unfortunately there are no events for this game. Are you hosting one?
@@ -109,12 +110,28 @@ Vue.component('log-reg-btn', {
   };
 
   Vue.component('event-box', {
-    props: ['id', 'name', 'venue'],
+    props: ['id', 'name', 'venue', 'attendees'],
+    data: function() {
+      return {
+        attendeesList: this.attendees,
+        attendeesCount: this.attendees.length,
+        isAttending: false
+      }
+    },
+    created: function() {
+      // If user is attending, set attending to true
+      if (this.attendeesList.indexOf(+window.sessionStorage.getItem('user_id')) !== -1) {
+        this.isAttending = true;
+      }
+    },
     template:
       `<div class="event">
         <div class="attendee-col col-sm-3">
-          <button class="btn btn-primary">I'm attending!</button>
-          <p class="alt-text">x people attending</p>
+          <button class="btn btn-primary" v-on:click="cancel" v-if="isAttending">Cancel RSVP</button>
+          <button class="btn btn-primary" v-on:click="attending" v-else>I'm attending!</button>
+
+          <p class="alt-text" v-if="attendees === 1">{{attendeesCount}} person attending</p>
+          <p class="alt-text" v-else>{{attendeesCount}} people attending</p>
         </div>
         <div class="info-container col-sm-9">
           <p class="alt-text" v-text="venue.description"></p>
@@ -124,7 +141,37 @@ Vue.component('log-reg-btn', {
             <div class="venue-name col-sm-3" v-text="venue.name"></div>
           </div>
         </div>
-      </div>`
+      </div>`,
+    methods: {
+      attending: function() {
+        const that = this;
+        const userID = window.sessionStorage.getItem('user_id');
+        $.ajax({
+          url: `/events/${this.id}/attending/${userID}`,
+          method: 'POST',
+          success: function(res) {
+            that.isAttending = true;
+            that.attendeesList.push(userID);
+            that.attendeesCount = that.attendeesList.length;
+          }
+        });
+      },
+      cancel: function () {
+        const that = this;
+        const userID = window.sessionStorage.getItem('user_id');
+
+        $.ajax({
+          url: `/events/${this.id}/cancel_rsvp/${userID}`,
+          method: 'POST',
+          success: function(res) {
+            that.isAttending = false;
+            var userFound = that.attendeesList.indexOf(userID);
+            that.attendeesList.splice(userFound);
+            that.attendeesCount = that.attendeesList.length;
+          }
+        });
+      }
+    }
   });
 
   Vue.component('game-box', {
@@ -146,12 +193,12 @@ Vue.component('log-reg-btn', {
       this.date = date;
       this.time = time;
 
-      if (home.lastDate != date) {
-        home.lastDate = date;
-        this.displayDate = true;
-      } else if (home.view === 'game-info') {
+      if (home.view === 'game-info') {
         this.displayDateTime = true;
         this.displayTime = false;
+      } else if (home.lastDate != date) {
+        home.lastDate = date;
+        this.displayDate = true;
       }
     },
     template:

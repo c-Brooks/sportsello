@@ -9,6 +9,9 @@ Rails.application.routes.draw do
     get 'signout', to: 'sessions#destroy', as: 'signout'
     post '/login' => 'sessions#create'
 
+    post '/events/:event_id/attending/:user_id', to: 'events#attending', as: :attending;
+    post '/events/:event_id/cancel_rsvp/:user_id', to: 'events#cancel_rsvp', as: :cancel_rsvp;
+
     resources :users, only: [:new, :create]
     resources :sessions, only: [:new, :create, :destroy]
     resources :games, only: [:index, :show]
