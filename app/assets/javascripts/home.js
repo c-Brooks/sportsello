@@ -1,22 +1,47 @@
 $(document).ready(function() {
 
   Vue.component('nav-bar', {
-    props: ['id'],
+    props: ['user_id'],
     template:
     `<nav class="navbar navbar-default navbar-fixed-top">
         <div class="navbar-header">
           <a class="navbar-brand" href="/"><object class="svg-logo" type="image/svg+xml" data="/assets/sportsello.svg"></object></a>
         </div>
 
-        <div id="navbar" class="navbar-collapse collapse">
-          <ul class="nav navbar-nav">
-          </ul>
-
+          <div id="navbar" class="navbar-collapse collapse">
+            <ul class="nav navbar-nav">
+            </ul>
+            <div class="row" style="margin-right:60px">
+            <log-reg-btn
+            :user_id="user_id"
+            >
+            </log-reg-btn>
             </div>
+          </div>
         </div> <!-- End of #navbar -->
     </nav>
 `
   });
+
+Vue.component('log-reg-btn', {
+  props: ['user_id', 'user_name'],
+  template:
+  `
+  <span class="nav navbar-nav navbar-right">
+    <div v-if="user_id" class="row" style="margin-right:60px">
+    <button class="btn btn-info" v-on:click="window.location.href='/venues/new'">Register a bar!</button>
+      <strong v-text=user_id></strong>
+      | <div id='sign_out'> SIGN OUT </div>
+    </div>
+  <!-- v-else -->
+    <div>
+      <a class="log-in clickable">SIGN IN</a> |
+      <a class="register clickable">REGISTER</a>
+    </div>
+  </span>
+  `
+})
+
   Vue.component('vue-panel', {
     template:
       `<div class="close-panel clickable" v-on:click="closePanel">
