@@ -270,6 +270,7 @@ Vue.component('log-reg-btn', {
     props: ['id', 'datetime', 'sport', 'team1', 'team2'],
     data: function() {
       return {
+        displayGame: false,
         displayDate: false,
         displayTime: true,
         displayDateTime: false,
@@ -278,23 +279,31 @@ Vue.component('log-reg-btn', {
       }
     },
     beforeMount: function() {
-      var datetime = moment(this.datetime);
-      var date = datetime.format('dddd, MMMM Do YYYY');
-      var time = datetime.format('h:mm a');
+      // Datetime logic
+      const today     = moment(getDateTime());
+      const datetime  = moment(this.datetime);
 
-      this.date = date;
-      this.time = time;
+      // Filter off games unless they are today or later
+      // Easier to do on the front end because it's in the proper timezone
+      if (datetime > today) {
+        this.displayGame = true;
 
-      if (home.view === 'game-info') {
-        this.displayDateTime = true;
-        this.displayTime = false;
-      } else if (home.lastDate != date) {
-        home.lastDate = date;
-        this.displayDate = true;
+        const date      = datetime.format('dddd, MMMM Do YYYY');
+        const time      = datetime.format('h:mm a');
+        this.date       = date;
+        this.time       = time;
+
+        if (home.view === 'game-info') {
+          this.displayDateTime = true;
+          this.displayTime = false;
+        } else if (home.lastDate != date) {
+          home.lastDate = date;
+          this.displayDate = true;
+        }
       }
     },
     template:
-      `<div>
+      `<div v-if="displayGame">
         <div class="section-header" v-if="displayDate" v-text="date"></div>
         <div class="section-header" v-if="displayDateTime">{{date}} @ {{time}}</div>
         <div class="game" v-on:click="viewGame">
@@ -624,6 +633,7 @@ Vue.component('log-reg-btn', {
     var yr = today.getFullYear();
     var month = today.getMonth() + 1;
     var day = today.getDate();
+
     return yr + '-' + month + '-' + day + ' 00:00:00';
   }
 
