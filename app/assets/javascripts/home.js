@@ -569,7 +569,8 @@ Vue.component('log-reg-btn', {
       last_date: '',
       session: {},
       user_id: null,
-      user_name: null
+      user_name: null,
+      user_venues: []
     },
     created: function() {
       this.scroll();
@@ -616,13 +617,14 @@ Vue.component('log-reg-btn', {
         });
       },
       updateUser: function () {
-        console.log($('#user-name'))
         var self = this
         if ($('#user-id')) {
           self.user_id = $('#user-id').text().replace(/^\s+|\s+$/g, '');
           self.user_name = $('#user-name').text().replace(/^\s+|\s+$/g, '');
           window.sessionStorage.setItem( 'user_id', self.user_id );
           window.sessionStorage.setItem( 'user_name', self.user_name );
+
+          this.getUserVenues();
         }
         this.user_id = window.sessionStorage.user_id;
         this.user_name = window.sessionStorage.user_name;
@@ -634,6 +636,16 @@ Vue.component('log-reg-btn', {
           url: `/events/top?game_datetime=${today}`,
           success: function(res) {
             that.top_events = res;
+          }
+        });
+      },
+      getUserVenues: function() {
+        const that = this;
+
+        $.ajax({
+          url: `/users/${that.user_id}/venues`,
+          success: function(res) {
+            that.user_venues = res;
           }
         });
       }
