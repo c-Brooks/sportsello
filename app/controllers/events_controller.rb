@@ -7,6 +7,11 @@ class EventsController < ApplicationController
     @event = Event.find(params[:id])
   end
 
+  def top
+    @events = Event.joins(:attendees).distinct.select('events.*, COUNT(attendees.*) AS attendee_count').group('events.id').limit(10)
+    render json: @events
+  end
+
   def attending
     @attendee = Attendee.create(attendee_params)
     render json: @attendee

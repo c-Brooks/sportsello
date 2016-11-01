@@ -11,6 +11,7 @@ Rails.application.routes.draw do
 
     post '/events/:event_id/attending/:user_id', to: 'events#attending', as: :attending;
     post '/events/:event_id/cancel_rsvp/:user_id', to: 'events#cancel_rsvp', as: :cancel_rsvp;
+    get '/events/top', to: 'events#top', as: :top_events;
 
     resources :users, only: [:new, :create]
     resources :sessions, only: [:new, :create, :destroy]

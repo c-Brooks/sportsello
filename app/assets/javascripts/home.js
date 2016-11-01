@@ -1,10 +1,45 @@
 $(document).ready(function() {
 
+  Vue.component('game-sidebar', {
+    template:
+      `<div class="col-sm-4">
+        <div class="sidebar list-group">
+          <div class="sidebar-header">
+            Map
+          </div>
+          <div class="sidebar-body">
+            <div class="sidebar-box">
+              PUT THE MAP IN HERE YO
+            </div>
+          </div>
+        </div>
+      </div>`
+  });
+
+  Vue.component('main-sidebar', {
+    props: ["top_events"],
+    template:
+      `<div class="col-sm-4">
+        <div class="sidebar list-group">
+          <div class="sidebar-header">
+            Popular Events
+          </div>
+          <div class="sidebar-body">
+            <div class="sidebar-box" v-for="event in top_events">
+              {{event.name}}
+              <br/>
+              <span class="alt-text" v-if="event.attendee_count === 1">{{event.attendee_count}} person going</span>
+              <span class="alt-text" v-else>{{event.attendee_count}} people going</span>
+            </div>
+          </div>
+        </div>
+      </div>`
+  });
+
   Vue.component('nav-bar', {
     props: ["user_id", "user_name"],
     template:
-    `
-    <nav class="navbar navbar-default navbar-fixed-top">
+    `<nav class="navbar navbar-default navbar-fixed-top">
         <div class="navbar-header">
           <a class="navbar-brand" href="/"><object class="svg-logo" type="image/svg+xml" data="/assets/sportsello.svg"></object></a>
         </div>
@@ -21,8 +56,7 @@ $(document).ready(function() {
             </div>
           </div>
         </div> <!-- End of #navbar -->
-    </nav>
-`
+    </nav>`
   });
 
 Vue.component('log-reg-btn', {
@@ -95,27 +129,34 @@ Vue.component('log-reg-btn', {
       `<div class="vue-panel">
         <vue-panel/>
         <div class="app-container">
-          <div class="content">
-            <div class="game-info">
-              <game-box
-                :datetime="game_info.datetime"
-                :sport="game_info.sport"
-                :team1="game_info.team1"
-                :team2="game_info.team2">
-              </game-box>
-              <div class="section-header">EVENTS</div>
-              <event-box
-                v-if="game_info.events"
-                v-for="event in game_info.events"
-                :id="event.id"
-                :name="event.name"
-                :venue="event.venue"
-                :attendees="event.attendees">
-              </event-box>
-              <div class="box" v-if="!game_info.events.length">
-                Unfortunately there are no events for this game. Are you hosting one?
+          <div class="row">
+            <div class="col-sm-8">
+              <div class="content">
+                <div class="game-info">
+                  <game-box
+                    :datetime="game_info.datetime"
+                    :sport="game_info.sport"
+                    :team1="game_info.team1"
+                    :team2="game_info.team2">
+                  </game-box>
+                  <div class="section-header">EVENTS</div>
+                  <event-box
+                    v-if="game_info.events"
+                    v-for="event in game_info.events"
+                    :id="event.id"
+                    :name="event.name"
+                    :venue="event.venue"
+                    :attendees="event.attendees">
+                  </event-box>
+                  <div class="box" v-if="!game_info.events.length">
+                    Unfortunately there are no events for this game. Are you hosting one?
+                  </div>
+                </div>
               </div>
             </div>
+
+            <game-sidebar>
+            <game-sidebar/>
           </div>
         </div>
       </div>`
@@ -465,6 +506,7 @@ Vue.component('log-reg-btn', {
       view: 'empty',
       games_list: [],
       game_info: {},
+      top_events: [],
       last_date: '',
       session: {},
       user_id: null,
@@ -472,6 +514,7 @@ Vue.component('log-reg-btn', {
     },
     created: function() {
       this.scroll();
+      this.getTopEvents();
       this.getGames();
       this.updateUser();
     },
@@ -500,8 +543,8 @@ Vue.component('log-reg-btn', {
       },
       getGames: function() {
         $('.bottom-loader').show();
-        var that = this;
-        var lastDateTimeString = getLastDateTime(this.games_list)
+        const that = this;
+        const lastDateTimeString = getLastDateTime(this.games_list)
 
         $.ajax({
           url: `/games.json?game_datetime=${lastDateTimeString}`,
@@ -524,6 +567,15 @@ Vue.component('log-reg-btn', {
         }
         this.user_id = window.sessionStorage.user_id;
         this.user_name = window.sessionStorage.user_name;
+      },
+      getTopEvents: function() {
+        const that = this;
+        $.ajax({
+          url: `/events/top`,
+          success: function(res) {
+            that.top_events = res;
+          }
+        });
       }
     }
   });

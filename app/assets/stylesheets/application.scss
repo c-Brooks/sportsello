@@ -70,10 +70,10 @@ a {
 
 
 .app-container {
-  width: 50%;
+  width: 75%;
   margin: 0 auto;
 
-  .content {
+  .content, .sidebar {
     border: 1.5px solid $ui-dark-border;
   }
 
@@ -167,6 +167,11 @@ label,
   padding: 30px;
 }
 
+.sidebar-box {
+  @extend .box;
+  padding: 15px;
+}
+
 .clickable:hover,
 .games .game:hover {
   cursor: pointer;
@@ -248,7 +253,8 @@ label,
   height: 10%;
 }
 
-.section-header {
+.section-header,
+.sidebar-header {
   @include app-background-header;
 
   font-size: 20px;
