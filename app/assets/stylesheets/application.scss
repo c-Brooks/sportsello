@@ -269,6 +269,10 @@ label,
     border: 2px solid $brand-light-red;
     box-shadow: 0px 0px 10px $brand-light-red;
   }
+
+  &:active {
+    @include app-background-main;
+  }
 }
 
 .btn-social:hover {
