@@ -1,4 +1,10 @@
 const VueGoogleMap = require('vue-google-maps');
+const mapKey = "<%= ENV['MAPS_KEY'] %>";
+VueGoogleMap.load({
+    key: mapKey,
+    v: '3.24',
+});
+
 $(document).ready(function() {
 
 Vue.component('sidebar-map', {
