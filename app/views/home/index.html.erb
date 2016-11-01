@@ -24,19 +24,28 @@
   <div class="app-container" id="top">
     <search-bar></search-bar>
 
-    <div class="content">
-      <div class="games">
-        <game-box
-          v-for="game in games_list"
-          :id="game.id"
-          :datetime="game.datetime"
-          :sport="game.sport.name"
-          :team1="game.team1.name"
-          :team2="game.team2.name">
-        </game-box>
-    </div>
+    <div class="row">
+      <div class="col-sm-8">
+        <div class="content">
+          <div class="games">
+            <game-box
+              v-for="game in games_list"
+              :id="game.id"
+              :datetime="game.datetime"
+              :sport="game.sport.name"
+              :team1="game.team1.name"
+              :team2="game.team2.name">
+            </game-box>
+          </div>
+        </div>
+      </div>
+
+      <main-sidebar
+        :top_events="top_events">
+      </main-sidebar>
     </div>
   </div>
+
 
   <div class="bottom-loader">
     <img src="/assets/loader.svg" alt="loading">
