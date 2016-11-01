@@ -87,11 +87,17 @@ $(document).ready(function() {
             Popular Events
           </div>
           <div class="sidebar-body">
-            <top-event v-for="event in top_events"
-              :game_id="event.game_id"
-              :name="event.name"
-              :attendee_count="event.attendee_count">
-            </top-event>
+            <div v-if="top_events.length > 0">
+              <top-event v-for="event in top_events"
+                :game_id="event.game_id"
+                :name="event.name"
+                :attendee_count="event.attendee_count">
+              </top-event>
+            </div>
+            <div class="sidebar-box" v-else>
+              <p>It doesn't look like there are any events coming up. Help us out by hosting one!</p>
+              <center><hosting-button /></center>
+            </div>
           </div>
         </div>
       </div>`
@@ -287,10 +293,16 @@ Vue.component('log-reg-btn', {
     }
   });
 
+  Vue.component('hosting-button', {
+    template:
+      `<button class="btn btn-primary">I'm hosting!</button>`
+  });
+
   Vue.component('game-box', {
     props: ['id', 'datetime', 'sport', 'team1', 'team2'],
     data: function() {
       return {
+        displayGame: false,
         displayDate: false,
         displayTime: true,
         displayDateTime: false,
@@ -299,29 +311,37 @@ Vue.component('log-reg-btn', {
       }
     },
     beforeMount: function() {
-      var datetime = moment(this.datetime);
-      var date = datetime.format('dddd, MMMM Do YYYY');
-      var time = datetime.format('h:mm a');
+      // Datetime logic
+      const today     = moment(getDateTime());
+      const datetime  = moment(this.datetime);
 
-      this.date = date;
-      this.time = time;
+      // Filter off games unless they are today or later
+      // Easier to do on the front end because it's in the proper timezone
+      if (datetime > today) {
+        this.displayGame = true;
 
-      if (home.view === 'game-info') {
-        this.displayDateTime = true;
-        this.displayTime = false;
-      } else if (home.lastDate != date) {
-        home.lastDate = date;
-        this.displayDate = true;
+        const date  = datetime.format('dddd, MMMM Do YYYY');
+        const time  = datetime.format('h:mm a');
+        this.date   = date;
+        this.time   = time;
+
+        if (home.view === 'game-info') {
+          this.displayDateTime = true;
+          this.displayTime = false;
+        } else if (home.lastDate != date) {
+          home.lastDate = date;
+          this.displayDate = true;
+        }
       }
     },
     template:
-      `<div>
+      `<div v-if="displayGame">
         <div class="section-header" v-if="displayDate" v-text="date"></div>
         <div class="section-header" v-if="displayDateTime">{{date}} @ {{time}}</div>
         <div class="game" v-on:click="viewGame">
           <div class="time-container col-sm-3">
             <p class="time alt-text" v-text="time" v-if="displayTime"></p>
-            <button class="btn btn-primary">I'm hosting!</button>
+            <hosting-button />
           </div>
           <div class="info-container col-sm-9">
             <p class="sport alt-text" v-text="sport"></p>
@@ -636,8 +656,9 @@ Vue.component('log-reg-btn', {
       },
       getTopEvents: function() {
         const that = this;
+        const today = getDateTime();
         $.ajax({
-          url: `/events/top`,
+          url: `/events/top?game_datetime=${today}`,
           success: function(res) {
             that.top_events = res;
           }
@@ -651,6 +672,7 @@ Vue.component('log-reg-btn', {
     var yr = today.getFullYear();
     var month = today.getMonth() + 1;
     var day = today.getDate();
+
     return yr + '-' + month + '-' + day + ' 00:00:00';
   }
 
@@ -661,6 +683,5 @@ Vue.component('log-reg-btn', {
       return games_array[games_array.length - 1].datetime;
     }
   }
-
 
 });
