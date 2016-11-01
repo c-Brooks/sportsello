@@ -83,6 +83,11 @@ class VenuesController < ApplicationController
     end
   end
 
+  def user_venues
+    @venues = Venue.where(user_id: params[:user_id])
+    render json: @venues
+  end
+
 private
   def venue_params
     params.require(:venue).permit(:name, :website, :address, :description)

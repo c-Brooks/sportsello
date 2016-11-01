@@ -38,6 +38,14 @@ $(document).ready(function() {
       </div>`
   });
 
+  Vue.component('user-venue', {
+    props: ["venue_id", "name"],
+    template:
+      `<div class="sidebar-box user-venue">
+        {{name}}
+      </div>`,
+  });
+
   Vue.component('top-event', {
     props: ["game_id", "name", "attendee_count"],
     template:
@@ -78,25 +86,66 @@ $(document).ready(function() {
     }
   });
 
+  Vue.component('top-events', {
+    props: ["top_events", "user_venues"],
+    template:
+    `<div v-if="top_events.length > 0">
+        <top-event v-for="event in top_events"
+          :game_id="event.game_id"
+          :name="event.name"
+          :attendee_count="event.attendee_count">
+        </top-event>
+      </div>
+      <div class="sidebar-box" v-else>
+        <p>It doesn't look like there are any events coming up. Help us out by hosting one!</p>
+        <center>
+          <hosting-button v-if="user_venues.length > 0"/>
+        </center>
+      </div>`
+
+  });
+
+  Vue.component('user-venues', {
+    props: ["user_venues"],
+    template:
+    `<div v-if="user_venues.length > 0">
+        <user-venue v-for="venue in user_venues"
+          :venue_id="venue.id"
+          :name="venue.name">
+        </user-venue>
+      </div>
+      <div class="sidebar-box" v-else>
+        <p>Do you host sporting events?</p>
+        <center><create-venue-button /></center>
+      </div>`
+
+  });
+
   Vue.component('main-sidebar', {
-    props: ["top_events"],
+    props: ["top_events","user_venues"],
     template:
       `<div class="col-sm-4">
-        <div class="sidebar list-group">
-          <div class="sidebar-header">
-            Popular Events
-          </div>
-          <div class="sidebar-body">
-            <div v-if="top_events.length > 0">
-              <top-event v-for="event in top_events"
-                :game_id="event.game_id"
-                :name="event.name"
-                :attendee_count="event.attendee_count">
-              </top-event>
+        <div class="sidebar">
+          <div class="sidebar-section">
+            <div class="sidebar-header">
+              Popular Events
             </div>
-            <div class="sidebar-box" v-else>
-              <p>It doesn't look like there are any events coming up. Help us out by hosting one!</p>
-              <center><hosting-button /></center>
+            <div class="sidebar-body">
+              <top-events
+                :top_events="top_events"
+                :user_venues="user_venues">
+              </top-events>
+            </div>
+          </div>
+
+          <div class="sidebar-section">
+            <div class="sidebar-header">
+              My Venues
+            </div>
+            <div class="sidebar-body">
+              <user-venues
+                :user_venues="user_venues">
+              </user-venues>
             </div>
           </div>
         </div>
@@ -160,6 +209,7 @@ Vue.component('log-reg-btn', {
           self.user_name = null;
           window.sessionStorage.user_id = null;
           window.sessionStorage.user_name = null;
+          home.user_venues = [];
         }
       });
       home.view = 'empty'
@@ -190,7 +240,7 @@ Vue.component('log-reg-btn', {
   });
 
   var gameInfo = {
-    props: ['game_info'],
+    props: ['game_info', 'user_venues'],
     template:
       `<div class="vue-panel">
         <vue-panel/>
@@ -203,7 +253,8 @@ Vue.component('log-reg-btn', {
                     :datetime="game_info.datetime"
                     :sport="game_info.sport"
                     :team1="game_info.team1"
-                    :team2="game_info.team2">
+                    :team2="game_info.team2"
+                    :user_venues="user_venues">
                   </game-box>
                   <div class="section-header">EVENTS</div>
                   <event-box
@@ -293,13 +344,8 @@ Vue.component('log-reg-btn', {
     }
   });
 
-  Vue.component('hosting-button', {
-    template:
-      `<button class="btn btn-primary">I'm hosting!</button>`
-  });
-
   Vue.component('game-box', {
-    props: ['id', 'datetime', 'sport', 'team1', 'team2'],
+    props: ['id', 'datetime', 'sport', 'team1', 'team2', 'user_venues'],
     data: function() {
       return {
         displayGame: false,
@@ -307,7 +353,7 @@ Vue.component('log-reg-btn', {
         displayTime: true,
         displayDateTime: false,
         date: this.datetime,
-        time: this.datetime,
+        time: this.datetime
       }
     },
     beforeMount: function() {
@@ -341,7 +387,7 @@ Vue.component('log-reg-btn', {
         <div class="game" v-on:click="viewGame">
           <div class="time-container col-sm-3">
             <p class="time alt-text" v-text="time" v-if="displayTime"></p>
-            <hosting-button />
+            <hosting-button v-if="user_venues.length > 0"/>
           </div>
           <div class="info-container col-sm-9">
             <p class="sport alt-text" v-text="sport"></p>
@@ -382,6 +428,16 @@ Vue.component('log-reg-btn', {
         }
       }
     },
+  });
+
+  Vue.component('hosting-button', {
+    template:
+      `<button class="btn btn-primary"">I'm hosting!</button>`
+  });
+
+  Vue.component('create-venue-button', {
+    template:
+      `<button class="btn btn-primary">Create a Venue</button>`
   });
 
   $('.log-in').click(function() {
@@ -597,13 +653,14 @@ Vue.component('log-reg-btn', {
       last_date: '',
       session: {},
       user_id: null,
-      user_name: null
+      user_name: null,
+      user_venues: []
     },
     created: function() {
       this.scroll();
+      this.updateUser();
       this.getTopEvents();
       this.getGames();
-      this.updateUser();
     },
     updated: function() {
       $('.bottom-loader').hide();
@@ -650,6 +707,9 @@ Vue.component('log-reg-btn', {
           self.user_name = $('#user-name').text().replace(/^\s+|\s+$/g, '');
           window.sessionStorage.setItem( 'user_id', self.user_id );
           window.sessionStorage.setItem( 'user_name', self.user_name );
+          if (self.user_id != '') {
+            this.getUserVenues();
+          }
         }
         this.user_id = window.sessionStorage.user_id;
         this.user_name = window.sessionStorage.user_name;
@@ -661,6 +721,16 @@ Vue.component('log-reg-btn', {
           url: `/events/top?game_datetime=${today}`,
           success: function(res) {
             that.top_events = res;
+          }
+        });
+      },
+      getUserVenues: function() {
+        const that = this;
+
+        $.ajax({
+          url: `/users/${that.user_id}/venues`,
+          success: function(res) {
+            that.user_venues = res;
           }
         });
       }
