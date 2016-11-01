@@ -92,7 +92,7 @@ Vue.component('log-reg-btn', {
     template:
       `<div class="vue-panel">
         <vue-panel/>
-        <div class="app-container">
+        <div class="app-container content">
           <div class="game-info">
             <game-box
               :datetime="game_info.datetime"
@@ -416,7 +416,7 @@ Vue.component('log-reg-btn', {
     template:
       `<div class="vue-panel">
         <vue-panel/>
-        <div class="app-container">
+        <div class="app-container content">
 
           <div class="login box">
             <facebook-button/>
@@ -432,7 +432,7 @@ Vue.component('log-reg-btn', {
     template:
       `<div class="vue-panel">
         <vue-panel/>
-        <div class="app-container">
+        <div class="app-container content">
           <div class="login box">
             <facebook-button/>
             <div class="center special-text">OR</div>
