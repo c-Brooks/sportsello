@@ -92,25 +92,27 @@ Vue.component('log-reg-btn', {
     template:
       `<div class="vue-panel">
         <vue-panel/>
-        <div class="app-container content">
-          <div class="game-info">
-            <game-box
-              :datetime="game_info.datetime"
-              :sport="game_info.sport"
-              :team1="game_info.team1"
-              :team2="game_info.team2">
-            </game-box>
-            <div class="section-header">EVENTS</div>
-            <event-box
-              v-if="game_info.events"
-              v-for="event in game_info.events"
-              :id="event.id"
-              :name="event.name"
-              :venue="event.venue"
-              :attendees="event.attendees">
-            </event-box>
-            <div class="box" v-if="!game_info.events.length">
-              Unfortunately there are no events for this game. Are you hosting one?
+        <div class="app-container">
+          <div class="content">
+            <div class="game-info">
+              <game-box
+                :datetime="game_info.datetime"
+                :sport="game_info.sport"
+                :team1="game_info.team1"
+                :team2="game_info.team2">
+              </game-box>
+              <div class="section-header">EVENTS</div>
+              <event-box
+                v-if="game_info.events"
+                v-for="event in game_info.events"
+                :id="event.id"
+                :name="event.name"
+                :venue="event.venue"
+                :attendees="event.attendees">
+              </event-box>
+              <div class="box" v-if="!game_info.events.length">
+                Unfortunately there are no events for this game. Are you hosting one?
+              </div>
             </div>
           </div>
         </div>
@@ -416,14 +418,14 @@ Vue.component('log-reg-btn', {
     template:
       `<div class="vue-panel">
         <vue-panel/>
-        <div class="app-container content">
-
-          <div class="login box">
-            <facebook-button/>
-            <div class="center special-text">OR</div>
-            <login-form/>
+        <div class="app-container">
+          <div class="content">
+            <div class="login box">
+              <facebook-button/>
+              <div class="center special-text">OR</div>
+              <login-form/>
+            </div>
           </div>
-
         </div>
       </div>`
   };
@@ -432,11 +434,13 @@ Vue.component('log-reg-btn', {
     template:
       `<div class="vue-panel">
         <vue-panel/>
-        <div class="app-container content">
-          <div class="login box">
-            <facebook-button/>
-            <div class="center special-text">OR</div>
-            <register-form/>
+        <div class="app-container">
+          <div class="content">
+            <div class="login box">
+              <facebook-button/>
+              <div class="center special-text">OR</div>
+              <register-form/>
+            </div>
           </div>
         </div>
       </div>`
