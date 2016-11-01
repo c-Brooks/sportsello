@@ -65,11 +65,17 @@ $(document).ready(function() {
             Popular Events
           </div>
           <div class="sidebar-body">
-            <top-event v-for="event in top_events"
-              :game_id="event.game_id"
-              :name="event.name"
-              :attendee_count="event.attendee_count">
-            </top-event>
+            <div v-if="top_events.length > 0">
+              <top-event v-for="event in top_events"
+                :game_id="event.game_id"
+                :name="event.name"
+                :attendee_count="event.attendee_count">
+              </top-event>
+            </div>
+            <div class="sidebar-box" v-else>
+              <p>It doesn't look like there are any events coming up. Help us out by hosting one!</p>
+              <center><hosting-button /></center>
+            </div>
           </div>
         </div>
       </div>`
@@ -266,6 +272,11 @@ Vue.component('log-reg-btn', {
     }
   });
 
+  Vue.component('hosting-button', {
+    template:
+      `<button class="btn btn-primary">I'm hosting!</button>`
+  });
+
   Vue.component('game-box', {
     props: ['id', 'datetime', 'sport', 'team1', 'team2'],
     data: function() {
@@ -309,7 +320,7 @@ Vue.component('log-reg-btn', {
         <div class="game" v-on:click="viewGame">
           <div class="time-container col-sm-3">
             <p class="time alt-text" v-text="time" v-if="displayTime"></p>
-            <button class="btn btn-primary">I'm hosting!</button>
+            <hosting-button />
           </div>
           <div class="info-container col-sm-9">
             <p class="sport alt-text" v-text="sport"></p>
