@@ -8,7 +8,7 @@
 # server 'db.example.com', user: 'deploy', roles: %w{db}
 
 server 'sportsello.com', user: 'deploy', roles: %w{app}
-set :branch, 'production/config'
+set :branch, 'master'
 
 
 # role-based syntax
