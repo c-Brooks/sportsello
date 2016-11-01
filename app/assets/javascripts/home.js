@@ -288,10 +288,10 @@ Vue.component('log-reg-btn', {
       if (datetime > today) {
         this.displayGame = true;
 
-        const date      = datetime.format('dddd, MMMM Do YYYY');
-        const time      = datetime.format('h:mm a');
-        this.date       = date;
-        this.time       = time;
+        const date  = datetime.format('dddd, MMMM Do YYYY');
+        const time  = datetime.format('h:mm a');
+        this.date   = date;
+        this.time   = time;
 
         if (home.view === 'game-info') {
           this.displayDateTime = true;
