@@ -1,4 +1,10 @@
-<%= console %> 
+<div id="user-id" class="hidden" style="display:none">
+  <%= current_user ? current_user.id : nil %>
+</div>
+<div id="user-name" class="hidden" style="display:none">
+  <%= current_user ? current_user.name : nil %>
+</div>
+
 <div id="home">
 
   <div class="nav navbar-nav" id="nav-bar">

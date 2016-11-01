@@ -58,6 +58,8 @@ Vue.component('log-reg-btn', {
           home.user_name = null;
           self.user_id = null;
           self.user_name = null;
+          window.sessionStorage.user_id = null;
+          window.sessionStorage.user_name = null;
         }
       });
       home.view = 'empty'
@@ -492,6 +494,14 @@ Vue.component('log-reg-btn', {
         });
       },
       updateUser: function () {
+        console.log($('#user-name'))
+        var self = this
+        if ($('#user-id')) {
+          self.user_id = $('#user-id').text();
+          self.user_name = $('#user-name').text();
+          window.sessionStorage.setItem( 'user_id', self.user_id );
+          window.sessionStorage.setItem( 'user_name', self.user_name );
+        }
         this.user_id = window.sessionStorage.user_id;
         this.user_name = window.sessionStorage.user_name;
       }
