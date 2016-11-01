@@ -1,4 +1,12 @@
+const VueGoogleMap = require('vue-google-maps');
 $(document).ready(function() {
+
+Vue.component('sidebar-map', {
+  template:
+  `
+  <div>MAP</div>
+  `
+})
 
   Vue.component('game-sidebar', {
     template:
@@ -9,7 +17,8 @@ $(document).ready(function() {
           </div>
           <div class="sidebar-body">
             <div class="sidebar-box">
-              PUT THE MAP IN HERE YO
+              <sidebar-map>
+              </sidebar-map>
             </div>
           </div>
         </div>
