@@ -16,6 +16,14 @@ $(document).ready(function() {
       </div>`
   });
 
+  Vue.component('user-venue', {
+    props: ["venue_id", "name"],
+    template:
+      `<div class="sidebar-box user-venue">
+        {{name}}
+      </div>`,
+  });
+
   Vue.component('top-event', {
     props: ["game_id", "name", "attendee_count"],
     template:
@@ -56,25 +64,63 @@ $(document).ready(function() {
     }
   });
 
-  Vue.component('main-sidebar', {
+  Vue.component('top-events', {
     props: ["top_events"],
     template:
+    `<div v-if="top_events.length > 0">
+        <top-event v-for="event in top_events"
+          :game_id="event.game_id"
+          :name="event.name"
+          :attendee_count="event.attendee_count">
+        </top-event>
+      </div>
+      <div class="sidebar-box" v-else>
+        <p>It doesn't look like there are any events coming up. Help us out by hosting one!</p>
+        <center><hosting-button /></center>
+      </div>`
+
+  });
+
+  Vue.component('user-venues', {
+    props: ["user_venues"],
+    template:
+    `<div v-if="user_venues.length > 0">
+        <user-venue v-for="venue in user_venues"
+          :venue_id="venue.id"
+          :name="venue.name">
+        </user-venue>
+      </div>
+      <div class="sidebar-box" v-else>
+        <p>Do you host sporting events?</p>
+        <center><create-venue /></center>
+      </div>`
+
+  });
+
+  Vue.component('main-sidebar', {
+    props: ["top_events","user_venues"],
+    template:
       `<div class="col-sm-4">
-        <div class="sidebar list-group">
-          <div class="sidebar-header">
-            Popular Events
-          </div>
-          <div class="sidebar-body">
-            <div v-if="top_events.length > 0">
-              <top-event v-for="event in top_events"
-                :game_id="event.game_id"
-                :name="event.name"
-                :attendee_count="event.attendee_count">
-              </top-event>
+        <div class="sidebar">
+          <div class="sidebar-section">
+            <div class="sidebar-header">
+              Popular Events
             </div>
-            <div class="sidebar-box" v-else>
-              <p>It doesn't look like there are any events coming up. Help us out by hosting one!</p>
-              <center><hosting-button /></center>
+            <div class="sidebar-body">
+              <top-events
+                :top_events="top_events">
+              </top-events>
+            </div>
+          </div>
+
+          <div class="sidebar-section">
+            <div class="sidebar-header">
+              My Venues
+            </div>
+            <div class="sidebar-body">
+              <user-venues
+                :user_venues="user_venues">
+              </user-venues>
             </div>
           </div>
         </div>
