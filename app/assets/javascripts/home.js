@@ -258,6 +258,16 @@ Vue.component('log-reg-btn', {
       </div>`
   };
 
+  var createVenue = {
+    template:
+      `<div class="vue-panel">
+        <vue-panel/>
+        <div class="app-container">
+          CHOCOLATE RAIN
+        </div>
+      </div>`
+  };
+
   Vue.component('event-box', {
     props: ['id', 'name', 'venue', 'attendees'],
     data: function() {
@@ -416,7 +426,12 @@ Vue.component('log-reg-btn', {
 
   Vue.component('create-venue-button', {
     template:
-      `<button class="btn btn-primary">Create a Venue</button>`
+      `<button class="btn btn-primary" v-on:click="createVenue">Create a Venue</button>`,
+    methods: {
+      createVenue: function() {
+        home.view = 'createVenue'
+      }
+    }
   });
 
   $('.log-in').click(function() {
@@ -615,7 +630,8 @@ Vue.component('log-reg-btn', {
       'empty': empty,
       'game-info': gameInfo,
       'login': login,
-      'register': register
+      'register': register,
+      'createVenue': createVenue
     },
     data: {
       view: 'empty',

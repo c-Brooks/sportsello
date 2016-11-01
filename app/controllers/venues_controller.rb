@@ -24,9 +24,9 @@ class VenuesController < ApplicationController
     @venue = Venue.new(venue_params)
     @venue.user_id = current_user.id
     if @venue.save
-      redirect_to root_path
+      render json: @venue
     else
-      render :new
+      render json: @venue.errors
     end
   end
 
