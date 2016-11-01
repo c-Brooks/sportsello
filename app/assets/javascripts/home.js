@@ -1,5 +1,21 @@
 $(document).ready(function() {
 
+  Vue.component('game-sidebar', {
+    template:
+      `<div class="col-sm-4">
+        <div class="sidebar list-group">
+          <div class="sidebar-header">
+            Map
+          </div>
+          <div class="sidebar-body">
+            <div class="sidebar-box">
+              PUT THE MAP IN HERE YO
+            </div>
+          </div>
+        </div>
+      </div>`
+  });
+
   Vue.component('main-sidebar', {
     props: ["top_events"],
     template:
