@@ -8,7 +8,14 @@ class EventsController < ApplicationController
   end
 
   def top
-    @events = Event.joins(:attendees).distinct.select('events.*, COUNT(attendees.*) AS attendee_count').group('events.id').limit(10)
+    @events = Event.distinct.select('events.*, COUNT(attendees.*) AS attendee_count')
+      .joins("LEFT OUTER JOIN attendees ON attendees.event_id = events.id")
+      .joins("INNER JOIN games ON games.id = events.game_id")
+      .group('events.id')
+      .where("game_datetime >= ?", params['game_datetime'])
+      .order('attendee_count DESC')
+      .limit(10)
+
     render json: @events
   end
 

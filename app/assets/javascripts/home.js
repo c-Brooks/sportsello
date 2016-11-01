@@ -618,8 +618,9 @@ Vue.component('log-reg-btn', {
       },
       getTopEvents: function() {
         const that = this;
+        const today = getDateTime();
         $.ajax({
-          url: `/events/top`,
+          url: `/events/top?game_datetime=${today}`,
           success: function(res) {
             that.top_events = res;
           }
@@ -644,6 +645,5 @@ Vue.component('log-reg-btn', {
       return games_array[games_array.length - 1].datetime;
     }
   }
-
 
 });
