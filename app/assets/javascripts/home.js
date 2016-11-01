@@ -484,12 +484,20 @@ Vue.component('log-reg-btn', {
               password_confirmation: self.password_confirmation
             },
             success: function (data) {
-              console.log('Success', data);
-              home.user_id = data.id;
-              home.user_name = data.name;
-              window.sessionStorage.setItem( 'user_id', data.id );
-              window.sessionStorage.setItem( 'user_name', data.name );
-              home.view = 'empty'
+              // If any errors, the type of that field will be Object
+              if (typeof(data.name) !== 'string'
+              && typeof(data.email) !== 'string'
+              && typeof(data.password) !== 'string'
+              && typeof(data.password_confirmation) !== 'string'
+            ) {
+              // Error logic goes here
+              } else {
+                home.user_id = data.id;
+                home.user_name = data.name;
+                window.sessionStorage.setItem( 'user_id', data.id );
+                window.sessionStorage.setItem( 'user_name', data.name );
+                home.view = 'empty'
+              }
             }
           });
           }
