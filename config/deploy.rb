@@ -17,6 +17,9 @@ set :bundle_binstubs, nil
 set :rvm_type, :user
 set :rvm_ruby_version, '2.3.0'
 
+# Set whenever for cron jobs
+set :whenever_command, "bundle exec whenever"
+
 # Default value for :scm is :git
 # set :scm, :git
 
