@@ -23,7 +23,8 @@
     <!-- render page here -->
     <component
       :is="view"
-      :game_info="game_info">
+      :game_info="game_info"
+      :user_venues="user_venues">
     </component>
   </transition>
 
@@ -40,7 +41,8 @@
               :datetime="game.datetime"
               :sport="game.sport.name"
               :team1="game.team1.name"
-              :team2="game.team2.name">
+              :team2="game.team2.name"
+              :user_venues="user_venues">
             </game-box>
           </div>
         </div>
