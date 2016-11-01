@@ -121,7 +121,6 @@ Vue.component('log-reg-btn', {
       home.view = 'register'
     },
     signOut: function () {
-      console.log('Sign out');
       var self = this;
       $.ajax({
         url: '/signout',
@@ -386,7 +385,6 @@ Vue.component('log-reg-btn', {
       </div>`,
       methods: {
       loginFn: function () {
-        console.log('Logging in!', this);
         var self = this;
         $.ajax({
           url: '/login',
@@ -604,7 +602,6 @@ Vue.component('log-reg-btn', {
         });
       },
       updateUser: function () {
-        console.log($('#user-name'))
         var self = this
         if ($('#user-id')) {
           self.user_id = $('#user-id').text().replace(/^\s+|\s+$/g, '');
