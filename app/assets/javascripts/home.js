@@ -1,25 +1,6 @@
 $(document).ready(function() {
-  const VueGoogleMap = require('vue-google-maps');
-  const mapKey = "<%= ENV['MAPS_KEY'] %>";
-  VueGoogleMap.load({
-      key: mapKey,
-      v: '3.24',
-  });
-  
-  Vue.component('sidebar-map', {
-    template:
-    `
-    <div style="width: 100%; height: 200px">
-      <google-map
-              :center="{lat: 49.28, lng: -123.1}"
-              :zoom="12"
-      >
-      </google-map>
-    </div>
-    `
-  })
 
-  Vue.component('google-map', VueGoogleMap.Map);
+  $.getScript("http://maps.googleapis.com/maps/api/js?v=3&sensor=false");
 
   Vue.component('game-sidebar', {
     template:
@@ -30,12 +11,26 @@ $(document).ready(function() {
           </div>
           <div class="sidebar-body">
             <div class="sidebar-box">
-              <sidebar-map>
-              </sidebar-map>
+              <div id="map"></div>
             </div>
           </div>
         </div>
-      </div>`
+      </div>`,
+    mounted: function() {
+      var mapOptions = {
+        // How zoomed in you want the map to start at (always required)
+        zoom: 10,
+
+        // The latitude and longitude to center the map (always required)
+        center: new google.maps.LatLng(49.317623,-123.0879393,14), // Start in Vancouver
+
+        // How you would like to style the map.
+        // This is where you would paste any style found on Snazzy Maps.
+        styles: [{"featureType":"water","elementType":"geometry","stylers":[{"color":"#e9e9e9"},{"lightness":17}]},{"featureType":"landscape","elementType":"geometry","stylers":[{"color":"#f5f5f5"},{"lightness":20}]},{"featureType":"road.highway","elementType":"geometry.fill","stylers":[{"color":"#ffffff"},{"lightness":17}]},{"featureType":"road.highway","elementType":"geometry.stroke","stylers":[{"color":"#ffffff"},{"lightness":29},{"weight":0.2}]},{"featureType":"road.arterial","elementType":"geometry","stylers":[{"color":"#ffffff"},{"lightness":18}]},{"featureType":"road.local","elementType":"geometry","stylers":[{"color":"#ffffff"},{"lightness":16}]},{"featureType":"poi","elementType":"geometry","stylers":[{"color":"#f5f5f5"},{"lightness":21}]},{"featureType":"poi.park","elementType":"geometry","stylers":[{"color":"#dedede"},{"lightness":21}]},{"elementType":"labels.text.stroke","stylers":[{"visibility":"on"},{"color":"#ffffff"},{"lightness":16}]},{"elementType":"labels.text.fill","stylers":[{"saturation":36},{"color":"#333333"},{"lightness":40}]},{"elementType":"labels.icon","stylers":[{"visibility":"off"}]},{"featureType":"transit","elementType":"geometry","stylers":[{"color":"#f2f2f2"},{"lightness":19}]},{"featureType":"administrative","elementType":"geometry.fill","stylers":[{"color":"#fefefe"},{"lightness":20}]},{"featureType":"administrative","elementType":"geometry.stroke","stylers":[{"color":"#fefefe"},{"lightness":17},{"weight":1.2}]}]
+      };
+
+      map = new google.maps.Map(document.getElementById('map'), mapOptions);
+    }
   });
 
   Vue.component('user-venue', {
