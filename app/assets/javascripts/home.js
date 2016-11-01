@@ -497,8 +497,8 @@ Vue.component('log-reg-btn', {
         console.log($('#user-name'))
         var self = this
         if ($('#user-id')) {
-          self.user_id = $('#user-id').text();
-          self.user_name = $('#user-name').text();
+          self.user_id = $('#user-id').text().replace(/^\s+|\s+$/g, '');
+          self.user_name = $('#user-name').text().replace(/^\s+|\s+$/g, '');
           window.sessionStorage.setItem( 'user_id', self.user_id );
           window.sessionStorage.setItem( 'user_name', self.user_name );
         }
