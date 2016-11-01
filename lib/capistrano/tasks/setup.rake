@@ -4,6 +4,7 @@ namespace :setup do
   task :upload_yml do
     on roles(:app) do
       execute "mkdir -p #{shared_path}/config"
+      execute "touch #{shared_path}/config/database.yml"
       upload! StringIO.new(File.read("config/database.yml")), "#{shared_path}/config/database.yml"
     end
   end
@@ -11,6 +12,7 @@ namespace :setup do
   desc "Upload .env.production file."
   task :upload_env do
     on roles(:app) do
+      execute "touch #{shared_path}/.env"
       upload! StringIO.new(File.read(".env.production")), "#{shared_path}/.env"
     end
   end
