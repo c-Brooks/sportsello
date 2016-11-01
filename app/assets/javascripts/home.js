@@ -479,7 +479,15 @@ Vue.component('log-reg-btn', {
       scroll: function() {
         var that = this;
         window.addEventListener('scroll', function () {
-          if($(window).scrollTop() + $(window).height() == $(document).height()) {
+          // Show scroll to top icon
+          if ($(window).scrollTop() > $(window).height()) {
+            $('.scroll-to-top').css('opacity', '100');
+          } else {
+            $('.scroll-to-top').css('opacity', '0');
+          }
+
+          // Load more games
+          if ($(window).scrollTop() + $(window).height() == $(document).height()) {
             that.getGames();
           }
         })
