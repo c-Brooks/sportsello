@@ -1,4 +1,25 @@
 $(document).ready(function() {
+  const VueGoogleMap = require('vue-google-maps');
+  const mapKey = "<%= ENV['MAPS_KEY'] %>";
+  VueGoogleMap.load({
+      key: mapKey,
+      v: '3.24',
+  });
+  
+  Vue.component('sidebar-map', {
+    template:
+    `
+    <div style="width: 100%; height: 200px">
+      <google-map
+              :center="{lat: 49.28, lng: -123.1}"
+              :zoom="12"
+      >
+      </google-map>
+    </div>
+    `
+  })
+
+  Vue.component('google-map', VueGoogleMap.Map);
 
   Vue.component('game-sidebar', {
     template:
@@ -9,7 +30,8 @@ $(document).ready(function() {
           </div>
           <div class="sidebar-body">
             <div class="sidebar-box">
-              PUT THE MAP IN HERE YO
+              <sidebar-map>
+              </sidebar-map>
             </div>
           </div>
         </div>
@@ -176,7 +198,6 @@ Vue.component('log-reg-btn', {
       home.view = 'register'
     },
     signOut: function () {
-      console.log('Sign out');
       var self = this;
       $.ajax({
         url: '/signout',
@@ -477,7 +498,6 @@ Vue.component('log-reg-btn', {
       </div>`,
       methods: {
       loginFn: function () {
-        console.log('Logging in!', this);
         var self = this;
         $.ajax({
           url: '/login',
@@ -575,12 +595,20 @@ Vue.component('log-reg-btn', {
               password_confirmation: self.password_confirmation
             },
             success: function (data) {
-              console.log('Success', data);
-              home.user_id = data.id;
-              home.user_name = data.name;
-              window.sessionStorage.setItem( 'user_id', data.id );
-              window.sessionStorage.setItem( 'user_name', data.name );
-              home.view = 'empty'
+              // If any errors, the type of that field will be Object
+              if (typeof(data.name) !== 'string'
+              && typeof(data.email) !== 'string'
+              && typeof(data.password) !== 'string'
+              && typeof(data.password_confirmation) !== 'string'
+            ) {
+              // Error logic goes here
+              } else {
+                home.user_id = data.id;
+                home.user_name = data.name;
+                window.sessionStorage.setItem( 'user_id', data.id );
+                window.sessionStorage.setItem( 'user_name', data.name );
+                home.view = 'empty'
+              }
             }
           });
           }
