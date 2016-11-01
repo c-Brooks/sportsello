@@ -2,7 +2,7 @@
 lock '3.6.1'
 
 set :application, 'sportsello'
-set :repo_url, 'git@github.com:c-Brooks/sportsello.git'
+set :repo_url, 'git@github.com:amorriscode/sportsello.git'
 
 # Default branch is :master
 # ask :branch, `git rev-parse --abbrev-ref HEAD`.chomp
