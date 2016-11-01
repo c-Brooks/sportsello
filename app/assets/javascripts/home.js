@@ -67,6 +67,14 @@ Vue.component('log-reg-btn', {
   }
 })
 
+  Vue.component('search-bar', {
+    template:
+      `<div class="input search-bar-container">
+        <input type="text" class="form-control search-bar" placeholder="What are you looking for?">
+        <span class="glyphicon glyphicon-search btn-search clickable" aria-hidden="true"></span>
+      </div>`
+  });
+
   Vue.component('vue-panel', {
     template:
       `<div class="close-panel clickable" v-on:click="closePanel">
@@ -87,24 +95,26 @@ Vue.component('log-reg-btn', {
       `<div class="vue-panel">
         <vue-panel/>
         <div class="app-container">
-          <div class="game-info">
-            <game-box
-              :datetime="game_info.datetime"
-              :sport="game_info.sport"
-              :team1="game_info.team1"
-              :team2="game_info.team2">
-            </game-box>
-            <div class="section-header">EVENTS</div>
-            <event-box
-              v-if="game_info.events"
-              v-for="event in game_info.events"
-              :id="event.id"
-              :name="event.name"
-              :venue="event.venue"
-              :attendees="event.attendees">
-            </event-box>
-            <div class="box" v-if="!game_info.events.length">
-              Unfortunately there are no events for this game. Are you hosting one?
+          <div class="content">
+            <div class="game-info">
+              <game-box
+                :datetime="game_info.datetime"
+                :sport="game_info.sport"
+                :team1="game_info.team1"
+                :team2="game_info.team2">
+              </game-box>
+              <div class="section-header">EVENTS</div>
+              <event-box
+                v-if="game_info.events"
+                v-for="event in game_info.events"
+                :id="event.id"
+                :name="event.name"
+                :venue="event.venue"
+                :attendees="event.attendees">
+              </event-box>
+              <div class="box" v-if="!game_info.events.length">
+                Unfortunately there are no events for this game. Are you hosting one?
+              </div>
             </div>
           </div>
         </div>
@@ -132,7 +142,7 @@ Vue.component('log-reg-btn', {
           <button class="btn btn-primary" v-on:click="cancel" v-if="isAttending">Cancel RSVP</button>
           <button class="btn btn-primary" v-on:click="attending" v-else>I'm attending!</button>
 
-          <p class="alt-text" v-if="attendees === 1">{{attendeesCount}} person attending</p>
+          <p class="alt-text" v-if="attendeesCount === 1">{{attendeesCount}} person attending</p>
           <p class="alt-text" v-else>{{attendeesCount}} people attending</p>
         </div>
         <div class="info-container col-sm-9">
@@ -411,13 +421,13 @@ Vue.component('log-reg-btn', {
       `<div class="vue-panel">
         <vue-panel/>
         <div class="app-container">
-
-          <div class="login box">
-            <facebook-button/>
-            <div class="center special-text">OR</div>
-            <login-form/>
+          <div class="content">
+            <div class="login box">
+              <facebook-button/>
+              <div class="center special-text">OR</div>
+              <login-form/>
+            </div>
           </div>
-
         </div>
       </div>`
   };
@@ -427,10 +437,12 @@ Vue.component('log-reg-btn', {
       `<div class="vue-panel">
         <vue-panel/>
         <div class="app-container">
-          <div class="login box">
-            <facebook-button/>
-            <div class="center special-text">OR</div>
-            <register-form/>
+          <div class="content">
+            <div class="login box">
+              <facebook-button/>
+              <div class="center special-text">OR</div>
+              <register-form/>
+            </div>
           </div>
         </div>
       </div>`
@@ -473,7 +485,15 @@ Vue.component('log-reg-btn', {
       scroll: function() {
         var that = this;
         window.addEventListener('scroll', function () {
-          if($(window).scrollTop() + $(window).height() == $(document).height()) {
+          // Show scroll to top icon
+          if ($(window).scrollTop() > $(window).height()) {
+            $('.scroll-to-top').css('opacity', '100');
+          } else {
+            $('.scroll-to-top').css('opacity', '0');
+          }
+
+          // Load more games
+          if ($(window).scrollTop() + $(window).height() == $(document).height()) {
             that.getGames();
           }
         })

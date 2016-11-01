@@ -54,20 +54,54 @@ body {
   padding-top: 70px;
   color: white;
   text-shadow: 0px 1px 2px rgba(0, 0, 0, 0.5);
+}
 
-  a {
-    color: $brand-dark-red;
+a {
+  color: $brand-dark-red;
+
+  &:hover {
+   color: $brand-light-red;
   }
 
-  a:hover {
+  &:visited {
     color: $brand-light-red;
   }
 }
 
+
 .app-container {
   width: 50%;
   margin: 0 auto;
-  border: 1.5px solid $ui-dark-border;
+
+  .content {
+    border: 1.5px solid $ui-dark-border;
+  }
+
+  .search-bar, .btn-search {
+    height: 62px;
+  }
+
+  .search-bar-container {
+    margin-bottom: 25px;
+    position: relative;
+    input {
+      padding-right: 35px;
+    }
+  }
+}
+
+.btn-search {
+  line-height: 62px;
+  font-size: 15px;
+  color: $ui-pale-gray;
+  position: absolute;
+  right: 12px;
+  top: 0px;
+}
+
+.form-control:focus {
+  border: 1px solid $brand-light-red;
+  box-shadow: 0px 0px 10px $brand-light-red;
 }
 
 .navbar {
@@ -164,7 +198,7 @@ label,
 .vue-panel {
   @include app-background-main;
   border: 2px solid $ui-dark-border;
-  z-index: 2;
+  z-index: 5;
   height: 100vh;
   width: 100%;
   position: fixed;
@@ -235,6 +269,10 @@ label,
     border: 2px solid $brand-light-red;
     box-shadow: 0px 0px 10px $brand-light-red;
   }
+
+  &:active {
+    @include app-background-main;
+  }
 }
 
 .btn-social:hover {
@@ -245,7 +283,6 @@ label,
   font-size: 12px;
   position: relative;
   top: 70px;
-  text-align: center;
 }
 
 .svg-logo {
@@ -253,4 +290,15 @@ label,
   top: -210px;
   left: 0;
   width: 350px;
+}
+
+.scroll-to-top {
+  opacity: 0;
+  position: fixed;
+  bottom: 0;
+  right: 0;
+  font-size: 25px;
+  color: $brand-light-red;
+  padding: 0 15px;
+  transition: opacity 1s ease-out;
 }
