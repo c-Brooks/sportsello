@@ -16,6 +16,46 @@ $(document).ready(function() {
       </div>`
   });
 
+  Vue.component('top-event', {
+    props: ["game_id", "name", "attendee_count"],
+    template:
+      `<div class="sidebar-box clickable" v-on:click="viewGame">
+        {{name}}
+        <br/>
+        <span class="alt-text" v-if="attendee_count === 1">{{attendee_count}} person going</span>
+        <span class="alt-text" v-else>{{attendee_count}} people going</span>
+      </div>`,
+    methods: {
+      viewGame: function(event) {
+        if (home.view != 'game-info') {
+          home.view = 'game-info';
+
+          // Hide the scroll for the body
+          $('body').css('overflow', 'hidden');
+
+          var target = event.currentTarget;
+          $(target).addClass('game-click');
+          setTimeout(function() {
+            $(target).removeClass('game-click');
+          }, 400);
+
+          $.ajax({
+            url: `/games/${this.game_id}`,
+            success: function(res) {
+              home.game_info = {
+                datetime: res.datetime,
+                sport: res.sport.name,
+                team1: res.team1.name,
+                team2: res.team2.name,
+                events: res.events
+              };
+            }
+          });
+        }
+      }
+    }
+  });
+
   Vue.component('main-sidebar', {
     props: ["top_events"],
     template:
@@ -25,12 +65,11 @@ $(document).ready(function() {
             Popular Events
           </div>
           <div class="sidebar-body">
-            <div class="sidebar-box" v-for="event in top_events">
-              {{event.name}}
-              <br/>
-              <span class="alt-text" v-if="event.attendee_count === 1">{{event.attendee_count}} person going</span>
-              <span class="alt-text" v-else>{{event.attendee_count}} people going</span>
-            </div>
+            <top-event v-for="event in top_events"
+              :game_id="event.game_id"
+              :name="event.name"
+              :attendee_count="event.attendee_count">
+            </top-event>
           </div>
         </div>
       </div>`
