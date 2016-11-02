@@ -241,13 +241,14 @@ $.getScript("https://maps.googleapis.com/maps/api/js?key=<%=ENV['MAPS_KEY']%>");
             $.ajax({
               url: `/search?query=${that.query}`,
               success: function(res) {
-                home.games_list = res.games;
-                home.venues_list = res.venues;
+                home.game_results = res.games;
+                home.venue_results = res.venues;
+                home.view = 'searchResults';
+                $('body').css('overflow', 'hidden');
+                $('.search-bar').val('');
               }
             });
           } else {
-            home.games_list = [];
-            home.venues_list = [];
             home.getGames();
           }
         }
@@ -416,6 +417,51 @@ Vue.component('log-reg-btn', {
     }
   };
 
+  var searchResults = {
+    props: ['venue_results', 'game_results', 'user_venues'],
+    template:
+      `<div class="vue-panel">
+        <vue-panel/>
+        <div class="app-container">
+          <div class="row">
+            <div class="col-sm-12">
+              <div class="content">
+                <div class="venues">
+                  <div class="section-header" v-if="venue_results.length > 0">
+                    Venues
+                  </div>
+                  <search-venue-box
+                    v-for="venue in venue_results"
+                    :name="venue.name"
+                    :address="venue.address"
+                    :description="venue.description"
+                    :website="venue.website">
+                  </search-venue-box>
+                </div>
+                <div class="games">
+                  <div class="section-header" v-if="game_results.length > 0">
+                    Games
+                  </div>
+                  <search-game-box
+                    v-for="game in game_results"
+                    :id="game.id"
+                    :datetime="game.datetime"
+                    :sport="game.sport.name"
+                    :team1="game.team1.name"
+                    :team2="game.team2.name"
+                    :user_venues="user_venues">
+                  </search-game-box>
+                  <div class="box" v-if="game_results.length === 0 && venue_results.length === 0">
+                    Unfortunately there are no results for this search!
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>`
+  }
+
   Vue.component('event-box', {
     props: ['id', 'name', 'venue', 'attendees'],
     data: function() {
@@ -489,25 +535,100 @@ Vue.component('log-reg-btn', {
       }
     },
     beforeMount: function() {
-      if(home.venues_list.length != 0){
+      if(home.venue_results.length != 0){
         this.displayVenue = true;
       }
     },
     template:
       `<div v-if="displayVenue">
-        <div class="section-header" v-text="name"></div>
           <div class="venue">
             <div class="time-container col-sm-3">
               <p class="time alt-text" v-text="address"></p>
             </div>
             <div class="info-container col-sm-9">
-              <div class="center">
-                <div class="team1 col-sm-9" v-text="description"></div>
-              </div>
+                <div class="team1 col-sm-9">
+                <p>{{name}}</p>
+                <p>{{description}}</p>
+                </div>
             </div>
           </div>
         </div>
       </div>`
+  });
+
+    Vue.component('search-game-box', {
+    props: ['id', 'datetime', 'sport', 'team1', 'team2', 'user_venues'],
+    data: function() {
+      return {
+        displayGame: false,
+        date: this.datetime,
+        time: this.datetime
+      }
+    },
+    beforeMount: function() {
+      // Datetime logic
+      const today     = moment(getDateTime());
+      const datetime  = moment(this.datetime);
+
+      // Filter off games unless they are today or later
+      // Easier to do on the front end because it's in the proper timezone
+      if (datetime > today) {
+        this.displayGame = true;
+
+        const date  = datetime.format('dddd, MMMM Do YYYY');
+        const time  = datetime.format('h:mm a');
+        this.date   = date;
+        this.time   = time;
+
+      }
+    },
+    template:
+      `<div v-if="displayGame">
+        <div class="game" v-on:click="viewGame">
+          <div class="time-container col-sm-3">
+            <p class="time alt-text" v-text="date" ></p>
+            <p class="time alt-text" v-text="time" ></p>
+            <hosting-button v-if="user_venues.length > 0"/>
+          </div>
+          <div class="info-container col-sm-9">
+            <p class="sport alt-text" v-text="sport"></p>
+            <div class="center">
+              <div class="team1 col-sm-3" v-text="team1"></div>
+              <div class="vs col-sm-3">VS</div>
+              <div class="team2 col-sm-3" v-text="team2"></div>
+           </div>
+          </div>
+        </div>
+      </div>`,
+    methods: {
+      viewGame: function(event) {
+        if (home.view != 'game-info') {
+          home.view = 'game-info';
+
+          // Hide the scroll for the body
+          $('body').css('overflow', 'hidden');
+
+          var target = event.currentTarget;
+          $(target).addClass('game-click');
+          setTimeout(function() {
+            $(target).removeClass('game-click');
+          }, 400);
+
+          $.ajax({
+            url: `/games/${this.id}`,
+            success: function(res) {
+              home.game_info = {
+                datetime: res.datetime,
+                sport: res.sport.name,
+                team1: res.team1.name,
+                team2: res.team2.name,
+                events: res.events
+              };
+            }
+          });
+        }
+      }
+    },
   });
 
   Vue.component('game-box', {
@@ -854,19 +975,21 @@ Vue.component('log-reg-btn', {
       'game-info': gameInfo,
       'login': login,
       'register': register,
-      'createVenue': createVenue
+      'createVenue': createVenue,
+      'searchResults': searchResults
     },
     data: {
       view: 'empty',
       games_list: [],
-      venues_list: [],
       game_info: {},
       top_events: [],
       last_date: '',
       session: {},
       user_id: null,
       user_name: null,
-      user_venues: []
+      user_venues: [],
+      game_results: [],
+      venue_results: []
     },
     created: function() {
       this.scroll();
