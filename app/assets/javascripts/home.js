@@ -236,7 +236,11 @@ Vue.component('log-reg-btn', {
       </div>`,
       meithods: {
         search: function() {
-
+          $.ajax({
+            url: '/search.json?query=${message}',
+            success: function(res) {
+            }
+          });
         }
       }
   });
@@ -763,6 +767,7 @@ Vue.component('log-reg-btn', {
       this.updateUser();
       this.getTopEvents();
       this.getGames();
+      this.search();
     },
     updated: function() {
       $('.bottom-loader').hide();

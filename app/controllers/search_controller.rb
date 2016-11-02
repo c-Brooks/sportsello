@@ -2,8 +2,8 @@ class SearchController < ApplicationController
 
    def index
     # @games = Game.all.order('game_datetime ASC').where("game_datetime >= ?", params['game_datetime']).limit(10)
-    @venues = Search.new.searchVenues(params[message])
-    @games = Search.new.searchGames(params[message])
+    @venues = Search.new.searchVenues(params[:message])
+    @games = Search.new.searchGames(params[:message])
 
     json = Jbuilder.new do |j|
       j.games @games do |game|
