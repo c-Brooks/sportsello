@@ -295,7 +295,7 @@ hr {
   &:focus,
   &:active {
     border: 2px solid $brand-light-red;
-    box-shadow: 20px 20px 20px $brand-light-red;
+    box-shadow: 0px 0px 20px $brand-light-red;
   }
 
   &:active {
