@@ -697,7 +697,7 @@ Vue.component('log-reg-btn', {
                   <div class="invisible-box">
                     <center>
                       <p>Don't have an account?</p>
-                      <button class="btn btn-primary">Sign up for one now!</button>
+                      <button class="btn btn-primary" v-on:click="register">Sign up for one now!</button>
                     </center>
                   </div>
                 </div>
@@ -705,7 +705,12 @@ Vue.component('log-reg-btn', {
             </div>
           </div>
         </div>
-      </div>`
+      </div>`,
+    methods: {
+      register: function() {
+        home.view = 'register';
+      }
+    }
   };
 
   var register = {
@@ -726,7 +731,7 @@ Vue.component('log-reg-btn', {
                   <div class="invisible-box">
                     <center>
                       <p>Already have an account?</p>
-                      <button class="btn btn-primary">Sign in!</button>
+                      <button class="btn btn-primary" v-on:click="signIn">Sign in!</button>
                     </center>
                   </div>
                 </div>
@@ -734,7 +739,12 @@ Vue.component('log-reg-btn', {
             </div>
           </div>
         </div>
-      </div>`
+      </div>`,
+    methods: {
+      signIn: function() {
+        home.view = 'login'
+      }
+    }
   }
 
   var empty = {
