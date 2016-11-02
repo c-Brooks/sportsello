@@ -1,8 +1,7 @@
 $(document).ready(function() {
 
-  $.getScript("http://maps.googleapis.com/maps/api/js?v=3&sensor=false");
-  //$.getScript("http://maps.googleapis.com/maps/api/key=AIzaSyBYc0nuRjddVC75dHAc4xHMcpuw0r976Eo&callback=initMap");
-
+  //$.getScript("http://maps.googleapis.com/maps/api/js?v=3&sensor=false");
+$.getScript("https://maps.googleapis.com/maps/api/js?key=<%=ENV['MAPS_KEY']%>");
   Vue.component('game-sidebar', {
     props: ['id', 'name', 'venue'],
     template:
