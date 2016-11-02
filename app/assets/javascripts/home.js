@@ -34,11 +34,40 @@ $(document).ready(function() {
   });
 
   Vue.component('user-venue', {
+    data: function() {
+      return {
+        displayTools: false
+      }
+    },
     props: ["venue_id", "name"],
     template:
-      `<div class="sidebar-box user-venue">
+      `<div class="sidebar-box user-venue" v-on:mouseover="showTools" v-on:mouseout="hideTools">
         {{name}}
+        <i v-show="displayTools" v-on:click="deleteVenue" class="fa fa-trash clickable"></i>
       </div>`,
+    methods: {
+      showTools: function() {
+        this.displayTools = true;
+      },
+      hideTools: function() {
+        this.displayTools = false;
+      },
+      deleteVenue: function() {
+        const that = this;
+        $.ajax({
+          url: `/venues/${this.venue_id}`,
+          method: 'DELETE',
+          success: function(user_venues) {
+            // Can this be done in a sexier way with vanilla JS?
+            for (i = 0; i < home.user_venues.length; i++) {
+              if (home.user_venues[i].id === that.venue_id) {
+                home.user_venues.splice(i);
+              }
+            }
+          }
+        });
+      }
+    }
   });
 
   Vue.component('top-event', {
