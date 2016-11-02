@@ -55,7 +55,7 @@ $.getScript("https://maps.googleapis.com/maps/api/js?key=<%=ENV['MAPS_KEY']%>");
     },
     props: ["venue_id", "name"],
     template:
-      `<div class="sidebar-box user-venue" v-on:mouseover="showTools" v-on:mouseout="hideTools">
+      `<div class="sidebar-box user-venue clickable" v-on:mouseover="showTools" v-on:mouseout="hideTools" v-on:click="viewVenue">
         {{name}}
         <i v-show="displayTools" v-on:click="deleteVenue" class="fa fa-trash clickable"></i>
       </div>`,
@@ -80,6 +80,33 @@ $.getScript("https://maps.googleapis.com/maps/api/js?key=<%=ENV['MAPS_KEY']%>");
             }
           }
         });
+      },
+      viewVenue: function() {
+        if (home.view != 'venue') {
+          home.view = 'venue';
+
+          // Hide the scroll for the body
+          $('body').css('overflow', 'hidden');
+
+          var target = event.currentTarget;
+          $(target).addClass('game-click');
+          setTimeout(function() {
+            $(target).removeClass('game-click');
+          }, 400);
+
+          $.ajax({
+            url: `/venues/${this.venue_id}`,
+            success: function(res) {
+              alert('go time!');
+              home.venue_info = {
+                name: res.name,
+                website: res.website,
+                description: res.description,
+                address: res.address
+              };
+            }
+          });
+        }
       }
     }
   });
@@ -156,7 +183,6 @@ $.getScript("https://maps.googleapis.com/maps/api/js?key=<%=ENV['MAPS_KEY']%>");
         <p>Do you host sporting events?</p>
         <center><create-venue-button /></center>
       </div>`
-
   });
 
   Vue.component('main-sidebar', {
@@ -350,6 +376,25 @@ Vue.component('log-reg-btn', {
             :venue="event.venue"
             :attendees="event.attendees">
             <game-sidebar/>
+          </div>
+        </div>
+      </div>`
+  };
+
+  var venue = {
+    props: ['id', 'venue_info'],
+    template:
+      `<div class="vue-panel">
+        <vue-panel/>
+        <div class="app-container">
+          <div class="row">
+            <div class="col-sm-8">
+              <div class="content">
+                <div class="venue-info">
+
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>`
@@ -898,6 +943,7 @@ Vue.component('log-reg-btn', {
       'game-info': gameInfo,
       'login': login,
       'register': register,
+      'venue': venue,
       'createVenue': createVenue,
       'hostEvent': hostEvent
     },
@@ -905,6 +951,7 @@ Vue.component('log-reg-btn', {
       view: 'empty',
       games_list: [],
       game_info: {},
+      venue_info: {},
       top_events: [],
       last_date: '',
       session: {},
