@@ -362,7 +362,7 @@ Vue.component('log-reg-btn', {
       }
       bus.$on('highlit', function (id) {
         if (this.id == id) {
-            console.log(this);
+            this.highlightEvent()
         }
       }.bind(this))
     },
@@ -385,6 +385,10 @@ Vue.component('log-reg-btn', {
         </div>
       </div>`,
     methods: {
+      highlightEvent: function () {
+        console.log('EVENT', this);
+        $(this.$el).addClass('game-click');
+      },
       attending: function() {
         const that = this;
         const userID = window.sessionStorage.getItem('user_id');
