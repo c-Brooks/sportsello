@@ -558,7 +558,7 @@ Vue.component('log-reg-btn', {
               v-model="password"
             >
           </div>
-          <button class="btn btn-primary pull-right">Log in</button>
+          <button class="btn btn-primary">Log in</button>
         </form>
       </div>`,
       methods: {
@@ -686,10 +686,23 @@ Vue.component('log-reg-btn', {
         <vue-panel/>
         <div class="app-container">
           <div class="content">
+          <div class="section-header">Sign In</div>
             <div class="login box">
-              <facebook-button/>
-              <div class="center special-text">OR</div>
-              <login-form/>
+              <div class="row">
+                <div class="col-sm-6">
+                  <facebook-button/>
+                  <hr>
+                  <login-form/>
+                </div>
+                <div class="col-sm-6">
+                  <div class="invisible-box">
+                    <center>
+                      <p>Don't have an account?</p>
+                      <button class="btn btn-primary">Sign up for one now!</button>
+                    </center>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
