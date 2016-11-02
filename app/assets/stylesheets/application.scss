@@ -226,12 +226,13 @@ hr {
   @include app-background-main;
   border: 2px solid $ui-dark-border;
   z-index: 5;
-  height: 100vh;
+  height: calc(100% - 50px);
   width: 100%;
   position: fixed;
   top: 50px;
   overflow: scroll;
   padding-top: 20px;
+  padding-bottom: 20px;
 
   .close-panel {
     color: white;
