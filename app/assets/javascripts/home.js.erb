@@ -94,7 +94,7 @@ $.getScript("https://maps.googleapis.com/maps/api/js?key=<%=ENV['MAPS_KEY']%>");
       hideTools: function() {
         this.displayTools = false;
       },
-      deleteVenue: function() {
+      deleteVenue: function(event) {
         const that = this;
         $.ajax({
           url: `/venues/${this.venue_id}`,
@@ -109,7 +109,9 @@ $.getScript("https://maps.googleapis.com/maps/api/js?key=<%=ENV['MAPS_KEY']%>");
           }
         });
       },
-      viewVenue: function() {
+      viewVenue: function(event) {
+        if (event.target.nodeName === 'I') { return; }
+
         if (home.view != 'venue') {
           home.view = 'venue';
 
