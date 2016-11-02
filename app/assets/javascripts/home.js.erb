@@ -415,6 +415,70 @@ Vue.component('log-reg-btn', {
     }
   };
 
+  var hostEvent = {
+    data: function() {
+      return {
+        games: home.games_list,
+        venues: home.user_venues,
+        name: '',
+        game_id: '',
+        venue_id: ''
+      }
+    },
+    template:
+      `<div class="vue-panel">
+        <vue-panel/>
+        <div class="app-container">
+          <div class="content">
+            <div class="section-header">Host Event</div>
+            <div class="box">
+              <form v-on:submit.prevent='hostEvent'>
+                <div class="form-group">
+                  <label for="name">Event Name</label>
+                  <input v-model="name" type="text" id="name" name="name" placeholder="Name" class="form-control"/>
+                </div>
+
+                <div class="form-group">
+                  <label for="game">Game</label>
+                  <select v-model="game_id" id="game" name="game_id" class="form-control">
+                    <option v-for="game in games" v-bind:value="game.id">{{game.datetime}}: {{game.team1.name}} vs. {{game.team2.name}}</option>
+                  </select>
+                </div>
+
+                <div class="form-group">
+                  <label for="venue">Venue</label>
+                  <select v-model="venue_id" id="venue" name="venue_id" class="form-control">
+                    <option v-for="venue in venues" v-bind:value="venue.id">{{venue.name}}</option>
+                  </select>
+                </div>
+
+                <button type="submit" class="btn btn-primary pull-right">Host</button>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>`,
+    methods: {
+      hostEvent: function() {
+        var self = this;
+        $.ajax({
+          url: '/events',
+          method: 'POST',
+          data: {
+            name:       self.name,
+            game_id:    self.game_id,
+            venue_id:   self.venue_id
+          },
+          success: function(venue) {
+            home.view = 'empty';
+            // Enable the scroll for the body
+            $('body').css('overflow', 'scroll');
+          }
+        });
+      }
+    }
+  };
+
   Vue.component('event-box', {
     props: ['id', 'name', 'venue', 'attendees'],
     data: function() {
@@ -537,6 +601,8 @@ Vue.component('log-reg-btn', {
       </div>`,
     methods: {
       viewGame: function(event) {
+        if (event.target.nodeName === 'BUTTON') { return; }
+
         if (home.view != 'game-info') {
           home.view = 'game-info';
 
@@ -568,7 +634,15 @@ Vue.component('log-reg-btn', {
 
   Vue.component('hosting-button', {
     template:
-      `<button class="btn btn-primary"">I'm hosting!</button>`
+      `<button class="btn btn-primary" v-on:click="hostEvent">I'm hosting!</button>`,
+    methods: {
+      hostEvent: function() {
+        home.view = 'hostEvent'
+
+        // Hide the scroll for the body
+        $('body').css('overflow', 'hidden');
+      }
+    }
   });
 
   Vue.component('create-venue-button', {
@@ -824,7 +898,8 @@ Vue.component('log-reg-btn', {
       'game-info': gameInfo,
       'login': login,
       'register': register,
-      'createVenue': createVenue
+      'createVenue': createVenue,
+      'hostEvent': hostEvent
     },
     data: {
       view: 'empty',
