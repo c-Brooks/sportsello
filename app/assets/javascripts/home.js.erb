@@ -179,6 +179,7 @@ $.getScript("https://maps.googleapis.com/maps/api/js?key=<%=ENV['MAPS_KEY']%>");
           <div class="sidebar-section">
             <div class="sidebar-header">
               My Venues
+              <span class="clickable" v-if="user_venues.length > 0" v-on:click="createVenue">+</span>
             </div>
             <div class="sidebar-body">
               <user-venues
@@ -187,7 +188,15 @@ $.getScript("https://maps.googleapis.com/maps/api/js?key=<%=ENV['MAPS_KEY']%>");
             </div>
           </div>
         </div>
-      </div>`
+      </div>`,
+    methods: {
+      createVenue: function() {
+        home.view = 'createVenue'
+
+        // Hide the scroll for the body
+        $('body').css('overflow', 'hidden');
+      }
+    }
   });
 
   Vue.component('nav-bar', {
