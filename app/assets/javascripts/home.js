@@ -303,7 +303,35 @@ Vue.component('log-reg-btn', {
       `<div class="vue-panel">
         <vue-panel/>
         <div class="app-container">
-          CHOCOLATE RAIN
+          <div class="content">
+            <div class="section-header">Create Venue</div>
+            <div class="box">
+              <form v-on:submit.prevent='createVenue'>
+                <div class="form-group">
+                  <label for="name">Name</label>
+                  <input v-model="name" type="text" id="name" name="name" placeholder="Name" class="form-control"/>
+                </div>
+
+                <div class="form-group">
+                  <label for="website">Website</label>
+                  <input v-model="website" type="url" id="website" name="website" placeholder="http://www.sportsello.com" class="form-control"/>
+                </div>
+
+                <div class="form-group">
+                  <label for="address">Address</label>
+                  <input v-model="address" type="text" id="address" name="address" placeholder="1007 Mountain Drive, Gotham" class="form-control"/>
+                </div>
+
+
+                <div class="form-group">
+                  <label for="description">Description</label>
+                  <textarea v-model="description" id="description" name="description" placeholder="What's your venue like?" class="form-control"/>
+                </div>
+
+                <button type="submit" class="btn btn-primary pull-right">Create Venue</button>
+              </form>
+            </div>
+          </div>
         </div>
       </div>`
   };
@@ -512,7 +540,7 @@ Vue.component('log-reg-btn', {
               v-model="password"
             >
           </div>
-          <button class="btn btn-primary pull-right">Log in</button>
+          <button class="btn btn-primary">Log in</button>
         </form>
       </div>`,
       methods: {
@@ -540,7 +568,7 @@ Vue.component('log-reg-btn', {
       `<button class="btn btn-block btn-social btn-facebook"
         onclick="window.location.href='/auth/facebook'">
         <span class="fa fa-facebook"></span>
-        Log in with Facebook
+        Sign in with Facebook
       </button>`
   });
 
@@ -597,7 +625,7 @@ Vue.component('log-reg-btn', {
             >
           </div>
 
-          <button type="submit" class="btn btn-primary pull-right">Register</button>
+          <button type="submit" class="btn btn-primary">Register</button>
         </form>
 
       </div>`,
@@ -640,14 +668,32 @@ Vue.component('log-reg-btn', {
         <vue-panel/>
         <div class="app-container">
           <div class="content">
+          <div class="section-header">Sign In</div>
             <div class="login box">
-              <facebook-button/>
-              <div class="center special-text">OR</div>
-              <login-form/>
+              <div class="row">
+                <div class="col-sm-6">
+                  <facebook-button/>
+                  <hr>
+                  <login-form/>
+                </div>
+                <div class="col-sm-6">
+                  <div class="invisible-box">
+                    <center>
+                      <p>Don't have an account?</p>
+                      <button class="btn btn-primary" v-on:click="register">Sign up for one now!</button>
+                    </center>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
-      </div>`
+      </div>`,
+    methods: {
+      register: function() {
+        home.view = 'register';
+      }
+    }
   };
 
   var register = {
@@ -656,14 +702,32 @@ Vue.component('log-reg-btn', {
         <vue-panel/>
         <div class="app-container">
           <div class="content">
+            <div class="section-header">Register</div>
             <div class="login box">
-              <facebook-button/>
-              <div class="center special-text">OR</div>
-              <register-form/>
+              <div class="row">
+                <div class="col-sm-6">
+                  <facebook-button/>
+                  <hr>
+                  <register-form/>
+                </div>
+                <div class="col-sm-6">
+                  <div class="invisible-box">
+                    <center>
+                      <p>Already have an account?</p>
+                      <button class="btn btn-primary" v-on:click="signIn">Sign in!</button>
+                    </center>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
-      </div>`
+      </div>`,
+    methods: {
+      signIn: function() {
+        home.view = 'login'
+      }
+    }
   }
 
   var empty = {

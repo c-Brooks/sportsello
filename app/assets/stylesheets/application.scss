@@ -166,8 +166,22 @@ label,
   top: 30px;
 }
 
-.box {
+.box,
+.invisible-box {
   padding: 30px;
+}
+
+.invisible-box {
+  background: rgba(95, 95, 96, 0.1);
+}
+
+hr {
+  display: block;
+  height: 1px;
+  border: 0;
+  border-top: 1px solid $ui-light-border;
+  margin: 1em 0;
+  padding: 0;
 }
 
 .sidebar-box {
