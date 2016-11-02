@@ -97,7 +97,6 @@ $.getScript("https://maps.googleapis.com/maps/api/js?key=<%=ENV['MAPS_KEY']%>");
           $.ajax({
             url: `/venues/${this.venue_id}`,
             success: function(res) {
-              alert('go time!');
               home.venue_info = {
                 name: res.name,
                 website: res.website,
@@ -382,7 +381,7 @@ Vue.component('log-reg-btn', {
   };
 
   var venue = {
-    props: ['id', 'venue_info'],
+    props: ['venue_info'],
     template:
       `<div class="vue-panel">
         <vue-panel/>
@@ -391,7 +390,11 @@ Vue.component('log-reg-btn', {
             <div class="col-sm-8">
               <div class="content">
                 <div class="venue-info">
-
+                  <venue-box
+                    :name="venue_info.name"
+                    :address="venue_info.address"
+                    :description="venue_info.description">
+                  </venue-box>
                 </div>
               </div>
             </div>
@@ -675,6 +678,22 @@ Vue.component('log-reg-btn', {
         }
       }
     },
+  });
+
+  Vue.component('venue-box', {
+    props: ['name', 'description', 'address'],
+    template:
+      `<div>
+        <div class="section-header" v-text="name"></div>
+        <div class="venue box">
+          <div class="button-container col-sm-3">
+          </div>
+          <div class="info-container col-sm-9">
+            <p class="venue-address">{{address}}</p>
+            <p class="venue-description">{{description}}</p>
+          </div>
+        </div>
+      </div>`
   });
 
   Vue.component('hosting-button', {
