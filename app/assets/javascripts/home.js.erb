@@ -32,7 +32,7 @@ $.getScript("https://maps.googleapis.com/maps/api/js?key=<%=ENV['MAPS_KEY']%>");
       var map = new google.maps.Map(document.getElementById('map'), mapOptions);
       for (var i = 0; i < this.events.length; i++) {
         var e = this.events[i]
-        var infowindow = new google.maps.InfoWindow({
+        var infoWindow = new google.maps.InfoWindow({
           content: `
           <div style="color: grey">
             <h4>${e.name} @ ${e.venue.name}</h4>
@@ -47,13 +47,19 @@ $.getScript("https://maps.googleapis.com/maps/api/js?key=<%=ENV['MAPS_KEY']%>");
         marker.addListener('click', function() {
           // Highlight corresponding event
           this.highlight(e)
-          infowindow.open(map, marker);
+          infoWindow.open(map, marker);
+        }.bind(this));
+        google.maps.event.addListener(infoWindow,'closeclick',function(){
+          this.unhighlight(e);
         }.bind(this));
       }
     },
     methods: {
       highlight: function (e) {
         bus.$emit('highlit', e.id)
+      },
+      unhighlight: function (e) {
+        bus.$emit('unhighlit', e.id)
       }
     }
   });
@@ -507,7 +513,12 @@ Vue.component('log-reg-btn', {
         } else if (this.$el.hasClass('game-selected')) {
           this.unHighlightEvent();
         }
-      }.bind(this))
+      }.bind(this));
+      bus.$on('unhighlit', function (id) {
+        if (this.id == id) {
+            this.unHighlightEvent();
+        }
+      }.bind(this));
     },
     template:
       `<div class="event">
