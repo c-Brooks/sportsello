@@ -37,11 +37,12 @@ class VenuesController < ApplicationController
       j.name @venue.name
       j.description @venue.description
       j.address @venue.address
-      j.reviews Review.where(venue_id: params[:id]) do |review|
+      j.reviews Review.where(venue_id: params[:id]).order(created_at: :desc) do |review|
         j.review review.id
         j.rating review.rating
         j.description review.description
         j.user User.find(review.user_id), :name
+        j.created_at review.created_at
       end
     end.target!
 
