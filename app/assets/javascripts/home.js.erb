@@ -3,7 +3,7 @@ var bus = new Vue();
   //$.getScript("http://maps.googleapis.com/maps/api/js?v=3&sensor=false");
 $.getScript("https://maps.googleapis.com/maps/api/js?key=<%=ENV['MAPS_KEY']%>");
   Vue.component('game-sidebar', {
-    props: ['id', 'name', 'venue'],
+    props: ['events'],
     template:
       `<div class="col-sm-4">
         <div class="sidebar list-group">
@@ -30,28 +30,30 @@ $.getScript("https://maps.googleapis.com/maps/api/js?key=<%=ENV['MAPS_KEY']%>");
       };
 
       var map        = new google.maps.Map(document.getElementById('map'), mapOptions);
-      var infowindow = new google.maps.InfoWindow({
-        content: `
-        <div style="color: grey">
-          <h4>${this.name} @ ${this.venue.name}</h4>
-          <h5>${this.venue.address}<h5>
-        </div>`
-      });
-      var marker = new google.maps.Marker({
-          position: { lat: this.venue.latitude, lng: this.venue.longitude },
-          title: this.name,
-          map: map
+      for (var i = 0; i < this.events.length; i++) {
+        var e = this.events[i]
+        var infowindow = new google.maps.InfoWindow({
+          content: `
+          <div style="color: grey">
+            <h4>${e.name} @ ${e.venue.name}</h4>
+            <h5>${e.venue.address}<h5>
+          </div>`
         });
-      marker.addListener('click', function() {
-        // Highlight corresponding event
-        this.highlight(this)
-        infowindow.open(map, marker);
-      }.bind(this));
+        var marker = new google.maps.Marker({
+            position: { lat: e.venue.latitude, lng: e.venue.longitude },
+            title: e.name,
+            map: map
+          });
+        marker.addListener('click', function() {
+          // Highlight corresponding event
+          this.highlight(e)
+          infowindow.open(map, marker);
+        }.bind(this));
+      }
     },
     methods: {
-      highlight: function (event) {
-        console.log('EMIT', this.id);
-        bus.$emit('highlit', this.id)
+      highlight: function (e) {
+        bus.$emit('highlit', e.id)
       }
     }
   });
@@ -295,12 +297,7 @@ Vue.component('log-reg-btn', {
 
             <game-sidebar
             v-if="game_info.events"
-            v-for="event in game_info.events"
-            :id="event.id"
-            :name="event.name"
-            :venue="event.venue"
-            :attendees="event.attendees"
-
+            :events="game_info.events"
             >
             <game-sidebar/>
           </div>
@@ -386,7 +383,6 @@ Vue.component('log-reg-btn', {
       </div>`,
     methods: {
       highlightEvent: function () {
-        console.log('EVENT', this);
         $(this.$el).addClass('game-click');
       },
       attending: function() {
