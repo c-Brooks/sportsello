@@ -20,7 +20,7 @@ Rails.application.routes.draw do
     resources :games, only: [:index, :show]
     resources :search, only:[:index]
     resources :reviews, only:[:delete]
-    resources :events, only: [:index, :show]
+    resources :events, only: [:index, :show, :create]
 
     resources :venues, only: [:new, :create, :show, :destroy] do
       resources :reviews, only: [:create]

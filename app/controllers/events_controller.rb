@@ -29,6 +29,10 @@ class EventsController < ApplicationController
     render json: @attendee
   end
 
+  def new
+
+  end
+
   private
     def attendee_params
       params.permit(:user_id, :event_id)
