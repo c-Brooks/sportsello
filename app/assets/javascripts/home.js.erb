@@ -526,6 +526,9 @@ Vue.component('log-reg-btn', {
     methods: {
       createVenue: function() {
         home.view = 'createVenue'
+
+        // Hide the scroll for the body
+        $('body').css('overflow', 'hidden');
       }
     }
   });
