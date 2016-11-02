@@ -1,8 +1,7 @@
 $(document).ready(function() {
 
-  $.getScript("http://maps.googleapis.com/maps/api/js?v=3&sensor=false");
-  //$.getScript("http://maps.googleapis.com/maps/api/key=AIzaSyBYc0nuRjddVC75dHAc4xHMcpuw0r976Eo&callback=initMap");
-
+  //$.getScript("http://maps.googleapis.com/maps/api/js?v=3&sensor=false");
+$.getScript("https://maps.googleapis.com/maps/api/js?key=<%=ENV['MAPS_KEY']%>");
   Vue.component('game-sidebar', {
     props: ['id', 'name', 'venue'],
     template:
@@ -49,11 +48,40 @@ $(document).ready(function() {
   });
 
   Vue.component('user-venue', {
+    data: function() {
+      return {
+        displayTools: false
+      }
+    },
     props: ["venue_id", "name"],
     template:
-      `<div class="sidebar-box user-venue">
+      `<div class="sidebar-box user-venue" v-on:mouseover="showTools" v-on:mouseout="hideTools">
         {{name}}
+        <i v-show="displayTools" v-on:click="deleteVenue" class="fa fa-trash clickable"></i>
       </div>`,
+    methods: {
+      showTools: function() {
+        this.displayTools = true;
+      },
+      hideTools: function() {
+        this.displayTools = false;
+      },
+      deleteVenue: function() {
+        const that = this;
+        $.ajax({
+          url: `/venues/${this.venue_id}`,
+          method: 'DELETE',
+          success: function(user_venues) {
+            // Can this be done in a sexier way with vanilla JS?
+            for (i = 0; i < home.user_venues.length; i++) {
+              if (home.user_venues[i].id === that.venue_id) {
+                home.user_venues.splice(i);
+              }
+            }
+          }
+        });
+      }
+    }
   });
 
   Vue.component('top-event', {
@@ -342,7 +370,29 @@ Vue.component('log-reg-btn', {
             </div>
           </div>
         </div>
-      </div>`
+      </div>`,
+    methods: {
+      createVenue: function() {
+        var self = this;
+        $.ajax({
+          url: '/venues',
+          method: 'POST',
+          data: {
+            user_id:      window.sessionStorage.getItem('user_id'),
+            name:         self.name,
+            website:      self.website,
+            address:      self.address,
+            description:  self.description
+          },
+          success: function(venue) {
+            home.user_venues.push(venue);
+            home.view = 'empty';
+            // Enable the scroll for the body
+            $('body').css('overflow', 'scroll');
+          }
+        });
+      }
+    }
   };
 
   Vue.component('event-box', {
@@ -507,6 +557,9 @@ Vue.component('log-reg-btn', {
     methods: {
       createVenue: function() {
         home.view = 'createVenue'
+
+        // Hide the scroll for the body
+        $('body').css('overflow', 'hidden');
       }
     }
   });

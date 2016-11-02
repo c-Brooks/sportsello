@@ -87,6 +87,11 @@ class VenuesController < ApplicationController
     render json: @venues
   end
 
+  def destroy
+    @venues = Venue.find(params[:id]).destroy
+    render json: @venues
+  end
+
 private
   def venue_params
     params.permit(:user_id, :name, :website, :address, :description)
