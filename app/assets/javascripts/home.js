@@ -298,10 +298,9 @@ Vue.component('log-reg-btn', {
         <vue-panel/>
         <div class="app-container">
           <div class="content">
+            <div class="section-header">Create Venue</div>
             <div class="box">
               <form v-on:submit.prevent='createVenue'>
-                <h2>Create Venue</h2>
-
                 <div class="form-group">
                   <label for="name">Name</label>
                   <input v-model="name" type="text" id="name" name="name" placeholder="Name" class="form-control"/>
