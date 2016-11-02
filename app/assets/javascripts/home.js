@@ -231,14 +231,23 @@ Vue.component('log-reg-btn', {
   Vue.component('search-bar', {
     template:
       `<div class="input search-bar-container">
-        <input v-model="message" class="form-control search-bar" placeholder="What are you looking for?">
-        <span class="glyphicon glyphicon-search btn-search clickable" aria-hidden="true"></span>
+        <input v-on:keyup.enter="submit_search" v-model="query" class="form-control search-bar" placeholder="What are you looking for?">
+        <span v-on:click="submit_search" class="glyphicon glyphicon-search btn-search clickable" aria-hidden="true"></span>
       </div>`,
-      meithods: {
-        search: function() {
+      data: function() {
+        return {
+          query: ''
+        }
+      },
+      methods: {
+        submit_search: function() {
+          const that = this;
           $.ajax({
-            url: '/search.json?query=${message}',
+            url: `/search?query=${that.query}`,
             success: function(res) {
+              home.games_list = res.games;
+              console.log(JSON.stringify(res.games));
+              console.log(JSON.stringify(home.games_list));
             }
           });
         }
@@ -767,7 +776,6 @@ Vue.component('log-reg-btn', {
       this.updateUser();
       this.getTopEvents();
       this.getGames();
-      this.search();
     },
     updated: function() {
       $('.bottom-loader').hide();
