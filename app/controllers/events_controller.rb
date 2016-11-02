@@ -29,8 +29,21 @@ class EventsController < ApplicationController
     render json: @attendee
   end
 
+  def create
+    @event = Event.new(event_params)
+    if @event.save
+      render json: @event
+    else
+      render json: @event.errors
+    end
+  end
+
   private
     def attendee_params
       params.permit(:user_id, :event_id)
+    end
+
+    def event_params
+      params.permit(:name, :game_id, :venue_id)
     end
 end

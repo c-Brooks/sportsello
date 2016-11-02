@@ -59,11 +59,40 @@ $.getScript("https://maps.googleapis.com/maps/api/js?key=<%=ENV['MAPS_KEY']%>");
   });
 
   Vue.component('user-venue', {
+    data: function() {
+      return {
+        displayTools: false
+      }
+    },
     props: ["venue_id", "name"],
     template:
-      `<div class="sidebar-box user-venue">
+      `<div class="sidebar-box user-venue" v-on:mouseover="showTools" v-on:mouseout="hideTools">
         {{name}}
+        <i v-show="displayTools" v-on:click="deleteVenue" class="fa fa-trash clickable"></i>
       </div>`,
+    methods: {
+      showTools: function() {
+        this.displayTools = true;
+      },
+      hideTools: function() {
+        this.displayTools = false;
+      },
+      deleteVenue: function() {
+        const that = this;
+        $.ajax({
+          url: `/venues/${this.venue_id}`,
+          method: 'DELETE',
+          success: function(user_venues) {
+            // Can this be done in a sexier way with vanilla JS?
+            for (i = 0; i < home.user_venues.length; i++) {
+              if (home.user_venues[i].id === that.venue_id) {
+                home.user_venues.splice(i);
+              }
+            }
+          }
+        });
+      }
+    }
   });
 
   Vue.component('top-event', {
@@ -161,6 +190,7 @@ $.getScript("https://maps.googleapis.com/maps/api/js?key=<%=ENV['MAPS_KEY']%>");
           <div class="sidebar-section">
             <div class="sidebar-header">
               My Venues
+              <span class="clickable" v-if="user_venues.length > 0" v-on:click="createVenue">+</span>
             </div>
             <div class="sidebar-body">
               <user-venues
@@ -169,7 +199,15 @@ $.getScript("https://maps.googleapis.com/maps/api/js?key=<%=ENV['MAPS_KEY']%>");
             </div>
           </div>
         </div>
-      </div>`
+      </div>`,
+    methods: {
+      createVenue: function() {
+        home.view = 'createVenue'
+
+        // Hide the scroll for the body
+        $('body').css('overflow', 'hidden');
+      }
+    }
   });
 
   Vue.component('nav-bar', {
@@ -241,11 +279,31 @@ Vue.component('log-reg-btn', {
   Vue.component('search-bar', {
     template:
       `<div class="input search-bar-container">
-          <input type="text" class="form-control search-bar"
-                      placeholder="What are you looking for?">
-          <span class="glyphicon glyphicon-search btn-search clickable"
-                      aria-hidden="true"></span>
-      </div>`
+        <input v-on:keyup.enter="submit_search" v-model="query" class="form-control search-bar" placeholder="What are you looking for?">
+        <span v-on:click="submit_search" class="glyphicon glyphicon-search btn-search clickable" aria-hidden="true"></span>
+      </div>`,
+      data: function() {
+        return {
+          query: ''
+        }
+      },
+      methods: {
+        submit_search: function() {
+          const that = this;
+          if (this.query != '') {
+            $.ajax({
+              url: `/search?query=${that.query}`,
+              success: function(res) {
+                home.games_list = res.games;
+                console.log(JSON.stringify(res.games));
+                console.log(JSON.stringify(home.games_list));
+              }
+            });
+          } else {
+            home.getGames();
+          }
+        }
+      }
   });
 
   Vue.component('vue-panel', {
@@ -340,7 +398,93 @@ Vue.component('log-reg-btn', {
             </div>
           </div>
         </div>
-      </div>`
+      </div>`,
+    methods: {
+      createVenue: function() {
+        var self = this;
+        $.ajax({
+          url: '/venues',
+          method: 'POST',
+          data: {
+            user_id:      window.sessionStorage.getItem('user_id'),
+            name:         self.name,
+            website:      self.website,
+            address:      self.address,
+            description:  self.description
+          },
+          success: function(venue) {
+            home.user_venues.push(venue);
+            home.view = 'empty';
+            // Enable the scroll for the body
+            $('body').css('overflow', 'scroll');
+          }
+        });
+      }
+    }
+  };
+
+  var hostEvent = {
+    data: function() {
+      return {
+        games: home.games_list,
+        venues: home.user_venues,
+        name: '',
+        game_id: '',
+        venue_id: ''
+      }
+    },
+    template:
+      `<div class="vue-panel">
+        <vue-panel/>
+        <div class="app-container">
+          <div class="content">
+            <div class="section-header">Host Event</div>
+            <div class="box">
+              <form v-on:submit.prevent='hostEvent'>
+                <div class="form-group">
+                  <label for="name">Event Name</label>
+                  <input v-model="name" type="text" id="name" name="name" placeholder="Name" class="form-control"/>
+                </div>
+
+                <div class="form-group">
+                  <label for="game">Game</label>
+                  <select v-model="game_id" id="game" name="game_id" class="form-control">
+                    <option v-for="game in games" v-bind:value="game.id">{{game.datetime}}: {{game.team1.name}} vs. {{game.team2.name}}</option>
+                  </select>
+                </div>
+
+                <div class="form-group">
+                  <label for="venue">Venue</label>
+                  <select v-model="venue_id" id="venue" name="venue_id" class="form-control">
+                    <option v-for="venue in venues" v-bind:value="venue.id">{{venue.name}}</option>
+                  </select>
+                </div>
+
+                <button type="submit" class="btn btn-primary pull-right">Host</button>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>`,
+    methods: {
+      hostEvent: function() {
+        var self = this;
+        $.ajax({
+          url: '/events',
+          method: 'POST',
+          data: {
+            name:       self.name,
+            game_id:    self.game_id,
+            venue_id:   self.venue_id
+          },
+          success: function(venue) {
+            home.view = 'empty';
+            // Enable the scroll for the body
+            $('body').css('overflow', 'scroll');
+          }
+        });
+      }
+    }
   };
 
   Vue.component('event-box', {
@@ -473,6 +617,8 @@ Vue.component('log-reg-btn', {
       </div>`,
     methods: {
       viewGame: function(event) {
+        if (event.target.nodeName === 'BUTTON') { return; }
+
         if (home.view != 'game-info') {
           home.view = 'game-info';
 
@@ -504,7 +650,15 @@ Vue.component('log-reg-btn', {
 
   Vue.component('hosting-button', {
     template:
-      `<button class="btn btn-primary"">I'm hosting!</button>`
+      `<button class="btn btn-primary" v-on:click="hostEvent">I'm hosting!</button>`,
+    methods: {
+      hostEvent: function() {
+        home.view = 'hostEvent'
+
+        // Hide the scroll for the body
+        $('body').css('overflow', 'hidden');
+      }
+    }
   });
 
   Vue.component('create-venue-button', {
@@ -513,6 +667,9 @@ Vue.component('log-reg-btn', {
     methods: {
       createVenue: function() {
         home.view = 'createVenue'
+
+        // Hide the scroll for the body
+        $('body').css('overflow', 'hidden');
       }
     }
   });
@@ -757,7 +914,8 @@ Vue.component('log-reg-btn', {
       'game-info': gameInfo,
       'login': login,
       'register': register,
-      'createVenue': createVenue
+      'createVenue': createVenue,
+      'hostEvent': hostEvent
     },
     data: {
       view: 'empty',
