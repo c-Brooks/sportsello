@@ -242,14 +242,18 @@ Vue.component('log-reg-btn', {
       methods: {
         submit_search: function() {
           const that = this;
-          $.ajax({
-            url: `/search?query=${that.query}`,
-            success: function(res) {
-              home.games_list = res.games;
-              console.log(JSON.stringify(res.games));
-              console.log(JSON.stringify(home.games_list));
-            }
-          });
+          if (this.query != '') {
+            $.ajax({
+              url: `/search?query=${that.query}`,
+              success: function(res) {
+                home.games_list = res.games;
+                console.log(JSON.stringify(res.games));
+                console.log(JSON.stringify(home.games_list));
+              }
+            });
+          } else {
+            home.getGames();
+          }
         }
       }
   });
