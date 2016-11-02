@@ -1,4 +1,10 @@
-<%= console %> 
+<div id="user-id" class="hidden" style="display:none">
+  <%= current_user ? current_user.id : nil %>
+</div>
+<div id="user-name" class="hidden" style="display:none">
+  <%= current_user ? current_user.name : nil %>
+</div>
+
 <div id="home">
 
   <div class="nav navbar-nav" id="nav-bar">
@@ -17,30 +23,49 @@
     <!-- render page here -->
     <component
       :is="view"
-      :game_info="game_info">
+      :game_info="game_info"
+      :user_venues="user_venues">
     </component>
   </transition>
 
-
-  <div class="app-container">
+  <div class="app-container" id="top">
     <search-bar></search-bar>
 
-    <div class="content">
-      <div class="games">
-        <game-box
-          v-for="game in games_list"
-          :id="game.id"
-          :datetime="game.datetime"
-          :sport="game.sport.name"
-          :team1="game.team1.name"
-          :team2="game.team2.name">
-        </game-box>
+    <div class="row">
+      <div class="col-sm-8">
+        <div class="content">
+          <div class="games">
+            <game-box
+              v-for="game in games_list"
+              :id="game.id"
+              :datetime="game.datetime"
+              :sport="game.sport.name"
+              :team1="game.team1.name"
+              :team2="game.team2.name"
+              :user_venues="user_venues">
+            </game-box>
+          </div>
+        </div>
+      </div>
+
+      <main-sidebar
+        :top_events="top_events"
+        :user_venues="user_venues">
+      </main-sidebar>
     </div>
+
+    <div class="row">
+      <div class="col-sm-8">
+        <div class="bottom-loader">
+          <img src="/assets/loader.svg" alt="loading">
+        </div>
+      </div>
     </div>
+
   </div>
 
-  <div class="bottom-loader">
-    <img src="/assets/loader.svg" alt="loading">
+  <div class="scroll-to-top">
+    <a href="#"><span class="glyphicon glyphicon-chevron-up" aria-hidden="true"></span></a>
   </div>
 
 </div>

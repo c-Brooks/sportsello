@@ -22,11 +22,10 @@ class VenuesController < ApplicationController
 
   def create
     @venue = Venue.new(venue_params)
-    @venue.user_id = current_user.id
     if @venue.save
-      redirect_to root_path
+      render json: @venue
     else
-      render :new
+      render json: @venue.errors
     end
   end
 
@@ -83,9 +82,14 @@ class VenuesController < ApplicationController
     end
   end
 
+  def user_venues
+    @venues = Venue.where(user_id: params[:user_id])
+    render json: @venues
+  end
+
 private
   def venue_params
-    params.require(:venue).permit(:name, :website, :address, :description)
+    params.permit(:user_id, :name, :website, :address, :description)
   end
 
 end

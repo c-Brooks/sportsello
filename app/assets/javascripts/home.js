@@ -1,12 +1,174 @@
 $(document).ready(function() {
 
+  $.getScript("http://maps.googleapis.com/maps/api/js?v=3&sensor=false");
+  //$.getScript("http://maps.googleapis.com/maps/api/key=AIzaSyBYc0nuRjddVC75dHAc4xHMcpuw0r976Eo&callback=initMap");
+
+  Vue.component('game-sidebar', {
+    props: ['id', 'name', 'venue'],
+    template:
+      `<div class="col-sm-4">
+        <div class="sidebar list-group">
+          <div class="sidebar-header">
+            Map
+          </div>
+          <div class="sidebar-body">
+              <div id="map"></div>
+          </div>
+        </div>
+      </div>`,
+    mounted: function() {
+      var mapOptions = {
+        // How zoomed in you want the map to start at (always required)
+        zoom: 12,
+
+        // The latitude and longitude to center the map (always required)
+        center: new google.maps.LatLng(49.28, -123.1, 20), // Start in Vancouver
+
+        // How you would like to style the map.
+        // This is where you would paste any style found on Snazzy Maps.
+        styles: [{"featureType":"water","elementType":"geometry","stylers":[{"color":"#e9e9e9"},{"lightness":17}]},{"featureType":"landscape","elementType":"geometry","stylers":[{"color":"#f5f5f5"},{"lightness":20}]},{"featureType":"road.highway","elementType":"geometry.fill","stylers":[{"color":"#ffffff"},{"lightness":17}]},{"featureType":"road.highway","elementType":"geometry.stroke","stylers":[{"color":"#ffffff"},{"lightness":29},{"weight":0.2}]},{"featureType":"road.arterial","elementType":"geometry","stylers":[{"color":"#ffffff"},{"lightness":18}]},{"featureType":"road.local","elementType":"geometry","stylers":[{"color":"#ffffff"},{"lightness":16}]},{"featureType":"poi","elementType":"geometry","stylers":[{"color":"#f5f5f5"},{"lightness":21}]},{"featureType":"poi.park","elementType":"geometry","stylers":[{"color":"#dedede"},{"lightness":21}]},{"elementType":"labels.text.stroke","stylers":[{"visibility":"on"},{"color":"#ffffff"},{"lightness":16}]},{"elementType":"labels.text.fill","stylers":[{"saturation":36},{"color":"#333333"},{"lightness":40}]},{"elementType":"labels.icon","stylers":[{"visibility":"off"}]},{"featureType":"transit","elementType":"geometry","stylers":[{"color":"#f2f2f2"},{"lightness":19}]},{"featureType":"administrative","elementType":"geometry.fill","stylers":[{"color":"#fefefe"},{"lightness":20}]},{"featureType":"administrative","elementType":"geometry.stroke","stylers":[{"color":"#fefefe"},{"lightness":17},{"weight":1.2}]}]
+      };
+
+      var map    = new google.maps.Map(document.getElementById('map'), mapOptions);
+      var infowindow = new google.maps.InfoWindow({
+        content: `
+        <div style="color: grey">
+          <h4>${this.name} @ ${this.venue.name}</h4>
+          <h5>${this.venue.address}<h5>
+        </div>`
+      });
+      var marker = new google.maps.Marker({
+          position: { lat: this.venue.latitude, lng: this.venue.longitude },
+          title: this.name,
+          map: map
+        });
+      marker.addListener('click', function() {
+        infowindow.open(map, marker);
+      });
+    }
+  });
+
+  Vue.component('user-venue', {
+    props: ["venue_id", "name"],
+    template:
+      `<div class="sidebar-box user-venue">
+        {{name}}
+      </div>`,
+  });
+
+  Vue.component('top-event', {
+    props: ["game_id", "name", "attendee_count"],
+    template:
+      `<div class="sidebar-box clickable" v-on:click="viewGame">
+        {{name}}
+        <br/>
+        <span class="alt-text" v-if="attendee_count === 1">{{attendee_count}} person going</span>
+        <span class="alt-text" v-else>{{attendee_count}} people going</span>
+      </div>`,
+    methods: {
+      viewGame: function(event) {
+        if (home.view != 'game-info') {
+          home.view = 'game-info';
+
+          // Hide the scroll for the body
+          $('body').css('overflow', 'hidden');
+
+          var target = event.currentTarget;
+          $(target).addClass('game-click');
+          setTimeout(function() {
+            $(target).removeClass('game-click');
+          }, 400);
+
+          $.ajax({
+            url: `/games/${this.game_id}`,
+            success: function(res) {
+              home.game_info = {
+                datetime: res.datetime,
+                sport: res.sport.name,
+                team1: res.team1.name,
+                team2: res.team2.name,
+                events: res.events
+              };
+            }
+          });
+        }
+      }
+    }
+  });
+
+  Vue.component('top-events', {
+    props: ["top_events", "user_venues"],
+    template:
+    `<div v-if="top_events.length > 0">
+        <top-event v-for="event in top_events"
+          :game_id="event.game_id"
+          :name="event.name"
+          :attendee_count="event.attendee_count">
+        </top-event>
+      </div>
+      <div class="sidebar-box" v-else>
+        <p>It doesn't look like there are any events coming up. Help us out by hosting one!</p>
+        <center>
+          <hosting-button v-if="user_venues.length > 0"/>
+        </center>
+      </div>`
+
+  });
+
+  Vue.component('user-venues', {
+    props: ["user_venues"],
+    template:
+    `<div v-if="user_venues.length > 0">
+        <user-venue v-for="venue in user_venues"
+          :venue_id="venue.id"
+          :name="venue.name">
+        </user-venue>
+      </div>
+      <div class="sidebar-box" v-else>
+        <p>Do you host sporting events?</p>
+        <center><create-venue-button /></center>
+      </div>`
+
+  });
+
+  Vue.component('main-sidebar', {
+    props: ["top_events","user_venues"],
+    template:
+      `<div class="col-sm-4">
+        <div class="sidebar">
+          <div class="sidebar-section">
+            <div class="sidebar-header">
+              Popular Events
+            </div>
+            <div class="sidebar-body">
+              <top-events
+                :top_events="top_events"
+                :user_venues="user_venues">
+              </top-events>
+            </div>
+          </div>
+
+          <div class="sidebar-section">
+            <div class="sidebar-header">
+              My Venues
+            </div>
+            <div class="sidebar-body">
+              <user-venues
+                :user_venues="user_venues">
+              </user-venues>
+            </div>
+          </div>
+        </div>
+      </div>`
+  });
+
   Vue.component('nav-bar', {
     props: ["user_id", "user_name"],
     template:
-    `
-    <nav class="navbar navbar-default navbar-fixed-top">
+    `<nav class="navbar navbar-default navbar-fixed-top">
         <div class="navbar-header">
-          <a class="navbar-brand" href="/"><object class="svg-logo" type="image/svg+xml" data="/assets/sportsello.svg"></object></a>
+          <a class="navbar-brand" href="/"><object class="svg-logo"
+          type="image/svg+xml" data="/assets/sportsello.svg"></object></a>
         </div>
 
           <div class="navbar-collapse collapse">
@@ -21,8 +183,7 @@ $(document).ready(function() {
             </div>
           </div>
         </div> <!-- End of #navbar -->
-    </nav>
-`
+    </nav>`
   });
 
 Vue.component('log-reg-btn', {
@@ -48,7 +209,6 @@ Vue.component('log-reg-btn', {
       home.view = 'register'
     },
     signOut: function () {
-      console.log('Sign out');
       var self = this;
       $.ajax({
         url: '/signout',
@@ -58,6 +218,9 @@ Vue.component('log-reg-btn', {
           home.user_name = null;
           self.user_id = null;
           self.user_name = null;
+          window.sessionStorage.user_id = null;
+          window.sessionStorage.user_name = null;
+          home.user_venues = [];
         }
       });
       home.view = 'empty'
@@ -93,29 +256,83 @@ Vue.component('log-reg-btn', {
   });
 
   var gameInfo = {
-    props: ['game_info'],
+    props: ['game_info', 'user_venues'],
     template:
       `<div class="vue-panel">
         <vue-panel/>
         <div class="app-container">
-          <div class="game-info">
-            <game-box
-              :datetime="game_info.datetime"
-              :sport="game_info.sport"
-              :team1="game_info.team1"
-              :team2="game_info.team2">
-            </game-box>
-            <div class="section-header">EVENTS</div>
-            <event-box
-              v-if="game_info.events"
-              v-for="event in game_info.events"
-              :id="event.id"
-              :name="event.name"
-              :venue="event.venue"
-              :attendees="event.attendees">
-            </event-box>
-            <div class="box" v-if="!game_info.events.length">
-              Unfortunately there are no events for this game. Are you hosting one?
+          <div class="row">
+            <div class="col-sm-8">
+              <div class="content">
+                <div class="game-info">
+                  <game-box
+                    :datetime="game_info.datetime"
+                    :sport="game_info.sport"
+                    :team1="game_info.team1"
+                    :team2="game_info.team2"
+                    :user_venues="user_venues">
+                  </game-box>
+                  <div class="section-header">EVENTS</div>
+                  <event-box
+                    v-if="game_info.events"
+                    v-for="event in game_info.events"
+                    :id="event.id"
+                    :name="event.name"
+                    :venue="event.venue"
+                    :attendees="event.attendees">
+                  </event-box>
+                  <div class="box" v-if="!game_info.events.length">
+                    Unfortunately there are no events for this game. Are you hosting one?
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <game-sidebar
+            v-if="game_info.events"
+            v-for="event in game_info.events"
+            :id="event.id"
+            :name="event.name"
+            :venue="event.venue"
+            :attendees="event.attendees">
+            <game-sidebar/>
+          </div>
+        </div>
+      </div>`
+  };
+
+  var createVenue = {
+    template:
+      `<div class="vue-panel">
+        <vue-panel/>
+        <div class="app-container">
+          <div class="content">
+            <div class="section-header">Create Venue</div>
+            <div class="box">
+              <form v-on:submit.prevent='createVenue'>
+                <div class="form-group">
+                  <label for="name">Name</label>
+                  <input v-model="name" type="text" id="name" name="name" placeholder="Name" class="form-control"/>
+                </div>
+
+                <div class="form-group">
+                  <label for="website">Website</label>
+                  <input v-model="website" type="url" id="website" name="website" placeholder="http://www.sportsello.com" class="form-control"/>
+                </div>
+
+                <div class="form-group">
+                  <label for="address">Address</label>
+                  <input v-model="address" type="text" id="address" name="address" placeholder="1007 Mountain Drive, Gotham" class="form-control"/>
+                </div>
+
+
+                <div class="form-group">
+                  <label for="description">Description</label>
+                  <textarea v-model="description" id="description" name="description" placeholder="What's your venue like?" class="form-control"/>
+                </div>
+
+                <button type="submit" class="btn btn-primary pull-right">Create Venue</button>
+              </form>
             </div>
           </div>
         </div>
@@ -188,40 +405,49 @@ Vue.component('log-reg-btn', {
   });
 
   Vue.component('game-box', {
-    props: ['id', 'datetime', 'sport', 'team1', 'team2'],
+    props: ['id', 'datetime', 'sport', 'team1', 'team2', 'user_venues'],
     data: function() {
       return {
+        displayGame: false,
         displayDate: false,
         displayTime: true,
         displayDateTime: false,
         date: this.datetime,
-        time: this.datetime,
+        time: this.datetime
       }
     },
     beforeMount: function() {
-      var datetime = moment(this.datetime);
-      var date = datetime.format('dddd, MMMM Do YYYY');
-      var time = datetime.format('h:mm a');
+      // Datetime logic
+      const today     = moment(getDateTime());
+      const datetime  = moment(this.datetime);
 
-      this.date = date;
-      this.time = time;
+      // Filter off games unless they are today or later
+      // Easier to do on the front end because it's in the proper timezone
+      if (datetime > today) {
+        this.displayGame = true;
 
-      if (home.view === 'game-info') {
-        this.displayDateTime = true;
-        this.displayTime = false;
-      } else if (home.lastDate != date) {
-        home.lastDate = date;
-        this.displayDate = true;
+        const date  = datetime.format('dddd, MMMM Do YYYY');
+        const time  = datetime.format('h:mm a');
+        this.date   = date;
+        this.time   = time;
+
+        if (home.view === 'game-info') {
+          this.displayDateTime = true;
+          this.displayTime = false;
+        } else if (home.lastDate != date) {
+          home.lastDate = date;
+          this.displayDate = true;
+        }
       }
     },
     template:
-      `<div>
+      `<div v-if="displayGame">
         <div class="section-header" v-if="displayDate" v-text="date"></div>
         <div class="section-header" v-if="displayDateTime">{{date}} @ {{time}}</div>
         <div class="game" v-on:click="viewGame">
           <div class="time-container col-sm-3">
             <p class="time alt-text" v-text="time" v-if="displayTime"></p>
-            <button class="btn btn-primary">I'm hosting!</button>
+            <hosting-button v-if="user_venues.length > 0"/>
           </div>
           <div class="info-container col-sm-9">
             <p class="sport alt-text" v-text="sport"></p>
@@ -264,6 +490,21 @@ Vue.component('log-reg-btn', {
     },
   });
 
+  Vue.component('hosting-button', {
+    template:
+      `<button class="btn btn-primary"">I'm hosting!</button>`
+  });
+
+  Vue.component('create-venue-button', {
+    template:
+      `<button class="btn btn-primary" v-on:click="createVenue">Create a Venue</button>`,
+    methods: {
+      createVenue: function() {
+        home.view = 'createVenue'
+      }
+    }
+  });
+
   $('.log-in').click(function() {
     home.view = 'login';
     // Hide the scroll for the body
@@ -302,12 +543,11 @@ Vue.component('log-reg-btn', {
               v-model="password"
             >
           </div>
-          <button class="btn btn-primary pull-right">Log in</button>
+          <button class="btn btn-primary">Log in</button>
         </form>
       </div>`,
       methods: {
       loginFn: function () {
-        console.log('Logging in!', this);
         var self = this;
         $.ajax({
           url: '/login',
@@ -331,7 +571,7 @@ Vue.component('log-reg-btn', {
       `<button class="btn btn-block btn-social btn-facebook"
         onclick="window.location.href='/auth/facebook'">
         <span class="fa fa-facebook"></span>
-        Log in with Facebook
+        Sign in with Facebook
       </button>`
   });
 
@@ -388,7 +628,7 @@ Vue.component('log-reg-btn', {
             >
           </div>
 
-          <button type="submit" class="btn btn-primary pull-right">Register</button>
+          <button type="submit" class="btn btn-primary">Register</button>
         </form>
 
       </div>`,
@@ -405,12 +645,20 @@ Vue.component('log-reg-btn', {
               password_confirmation: self.password_confirmation
             },
             success: function (data) {
-              console.log('Success', data);
-              home.user_id = data.id;
-              home.user_name = data.name;
-              window.sessionStorage.setItem( 'user_id', data.id );
-              window.sessionStorage.setItem( 'user_name', data.name );
-              home.view = 'empty'
+              // If any errors, the type of that field will be Object
+              if (typeof(data.name) !== 'string'
+              && typeof(data.email) !== 'string'
+              && typeof(data.password) !== 'string'
+              && typeof(data.password_confirmation) !== 'string'
+            ) {
+              // Error logic goes here
+              } else {
+                home.user_id = data.id;
+                home.user_name = data.name;
+                window.sessionStorage.setItem( 'user_id', data.id );
+                window.sessionStorage.setItem( 'user_name', data.name );
+                home.view = 'empty'
+              }
             }
           });
           }
@@ -422,15 +670,33 @@ Vue.component('log-reg-btn', {
       `<div class="vue-panel">
         <vue-panel/>
         <div class="app-container">
-
-          <div class="login box">
-            <facebook-button/>
-            <div class="center special-text">OR</div>
-            <login-form/>
+          <div class="content">
+          <div class="section-header">Sign In</div>
+            <div class="login box">
+              <div class="row">
+                <div class="col-sm-6">
+                  <facebook-button/>
+                  <hr>
+                  <login-form/>
+                </div>
+                <div class="col-sm-6">
+                  <div class="invisible-box">
+                    <center>
+                      <p>Don't have an account?</p>
+                      <button class="btn btn-primary" v-on:click="register">Sign up for one now!</button>
+                    </center>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
-
         </div>
-      </div>`
+      </div>`,
+    methods: {
+      register: function() {
+        home.view = 'register';
+      }
+    }
   };
 
   var register = {
@@ -438,13 +704,33 @@ Vue.component('log-reg-btn', {
       `<div class="vue-panel">
         <vue-panel/>
         <div class="app-container">
-          <div class="login box">
-            <facebook-button/>
-            <div class="center special-text">OR</div>
-            <register-form/>
+          <div class="content">
+            <div class="section-header">Register</div>
+            <div class="login box">
+              <div class="row">
+                <div class="col-sm-6">
+                  <facebook-button/>
+                  <hr>
+                  <register-form/>
+                </div>
+                <div class="col-sm-6">
+                  <div class="invisible-box">
+                    <center>
+                      <p>Already have an account?</p>
+                      <button class="btn btn-primary" v-on:click="signIn">Sign in!</button>
+                    </center>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
-      </div>`
+      </div>`,
+    methods: {
+      signIn: function() {
+        home.view = 'login'
+      }
+    }
   }
 
   var empty = {
@@ -458,21 +744,25 @@ Vue.component('log-reg-btn', {
       'empty': empty,
       'game-info': gameInfo,
       'login': login,
-      'register': register
+      'register': register,
+      'createVenue': createVenue
     },
     data: {
       view: 'empty',
       games_list: [],
       game_info: {},
+      top_events: [],
       last_date: '',
       session: {},
       user_id: null,
-      user_name: null
+      user_name: null,
+      user_venues: []
     },
     created: function() {
       this.scroll();
-      this.getGames();
       this.updateUser();
+      this.getTopEvents();
+      this.getGames();
     },
     updated: function() {
       $('.bottom-loader').hide();
@@ -484,15 +774,23 @@ Vue.component('log-reg-btn', {
       scroll: function() {
         var that = this;
         window.addEventListener('scroll', function () {
-          if($(window).scrollTop() + $(window).height() == $(document).height()) {
+          // Show scroll to top icon
+          if ($(window).scrollTop() > $(window).height()) {
+            $('.scroll-to-top').css('opacity', '100');
+          } else {
+            $('.scroll-to-top').css('opacity', '0');
+          }
+
+          // Load more games
+          if ($(window).scrollTop() + $(window).height() == $(document).height()) {
             that.getGames();
           }
         })
       },
       getGames: function() {
         $('.bottom-loader').show();
-        var that = this;
-        var lastDateTimeString = getLastDateTime(this.games_list)
+        const that = this;
+        const lastDateTimeString = getLastDateTime(this.games_list)
 
         $.ajax({
           url: `/games.json?game_datetime=${lastDateTimeString}`,
@@ -505,8 +803,38 @@ Vue.component('log-reg-btn', {
         });
       },
       updateUser: function () {
+        var self = this
+        if ($('#user-id')) {
+          self.user_id = $('#user-id').text().replace(/^\s+|\s+$/g, '');
+          self.user_name = $('#user-name').text().replace(/^\s+|\s+$/g, '');
+          window.sessionStorage.setItem( 'user_id', self.user_id );
+          window.sessionStorage.setItem( 'user_name', self.user_name );
+          if (self.user_id != '') {
+            this.getUserVenues();
+          }
+        }
         this.user_id = window.sessionStorage.user_id;
         this.user_name = window.sessionStorage.user_name;
+      },
+      getTopEvents: function() {
+        const that = this;
+        const today = getDateTime();
+        $.ajax({
+          url: `/events/top?game_datetime=${today}`,
+          success: function(res) {
+            that.top_events = res;
+          }
+        });
+      },
+      getUserVenues: function() {
+        const that = this;
+
+        $.ajax({
+          url: `/users/${that.user_id}/venues`,
+          success: function(res) {
+            that.user_venues = res;
+          }
+        });
       }
     }
   });
@@ -516,6 +844,7 @@ Vue.component('log-reg-btn', {
     var yr = today.getFullYear();
     var month = today.getMonth() + 1;
     var day = today.getDate();
+
     return yr + '-' + month + '-' + day + ' 00:00:00';
   }
 
@@ -526,6 +855,5 @@ Vue.component('log-reg-btn', {
       return games_array[games_array.length - 1].datetime;
     }
   }
-
 
 });
