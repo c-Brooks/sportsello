@@ -2,7 +2,7 @@
 lock '3.6.1'
 
 set :application, 'sportsello'
-set :repo_url, 'git@github.com:c-Brooks/sportsello.git'
+set :repo_url, 'git@github.com:amorriscode/sportsello.git'
 
 # Default branch is :master
 # ask :branch, `git rev-parse --abbrev-ref HEAD`.chomp
@@ -11,10 +11,14 @@ set :repo_url, 'git@github.com:c-Brooks/sportsello.git'
 set :deploy_to, '/home/deploy/sportsello'
 
 set :linked_files, %w{config/database.yml .env}
-set :linked_dirs, %w{bin log tmp/pids tmp/cached tmp/sockets}
+set :linked_dirs, %w{log tmp/pids tmp/cache tmp/sockets vendor/bundle public/system}
+set :bundle_binstubs, nil
 
 set :rvm_type, :user
 set :rvm_ruby_version, '2.3.0'
+
+# Set whenever for cron jobs
+set :whenever_command, "bundle exec whenever"
 
 # Default value for :scm is :git
 # set :scm, :git

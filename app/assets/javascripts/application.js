@@ -16,10 +16,6 @@
 //= require_tree .
 //= require bootstrap-sprockets
 
-// Dependencies for Google maps
-//= require underscore
-//= require gmaps/google
-
 // Dependencies for VueJS
 //= require vue
 //= require vue-router

@@ -54,21 +54,26 @@ body {
   padding-top: 70px;
   color: white;
   text-shadow: 0px 1px 2px rgba(0, 0, 0, 0.5);
+}
 
-  a {
-    color: $brand-dark-red;
+a {
+  color: $brand-dark-red;
+
+  &:hover {
+   color: $brand-light-red;
   }
 
-  a:hover {
+  &:visited {
     color: $brand-light-red;
   }
 }
 
+
 .app-container {
-  width: 50%;
+  width: 75%;
   margin: 0 auto;
 
-  .content {
+  .content, .sidebar {
     border: 1.5px solid $ui-dark-border;
   }
 
@@ -158,8 +163,27 @@ label,
   top: 30px;
 }
 
-.box {
+.box,
+.invisible-box {
   padding: 30px;
+}
+
+.invisible-box {
+  background: rgba(95, 95, 96, 0.1);
+}
+
+hr {
+  display: block;
+  height: 1px;
+  border: 0;
+  border-top: 1px solid $ui-light-border;
+  margin: 1em 0;
+  padding: 0;
+}
+
+.sidebar-box {
+  @extend .box;
+  padding: 15px;
 }
 
 .clickable:hover,
@@ -243,7 +267,8 @@ label,
   height: 10%;
 }
 
-.section-header {
+.section-header,
+.sidebar-header {
   @include app-background-header;
 
   font-size: 20px;
@@ -264,6 +289,10 @@ label,
     border: 2px solid $brand-light-red;
     box-shadow: 0px 0px 10px $brand-light-red;
   }
+
+  &:active {
+    @include app-background-main;
+  }
 }
 
 .btn-social:hover {
@@ -281,4 +310,15 @@ label,
   top: -210px;
   left: 0;
   width: 350px;
+}
+
+.scroll-to-top {
+  opacity: 0;
+  position: fixed;
+  bottom: 0;
+  right: 0;
+  font-size: 25px;
+  color: $brand-light-red;
+  padding: 0 15px;
+  transition: opacity 1s ease-out;
 }
