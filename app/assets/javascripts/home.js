@@ -275,13 +275,69 @@ Vue.component('log-reg-btn', {
   };
 
   var createVenue = {
+    data: function() {
+      return {
+        name: '',
+        website: '',
+        address: '',
+        description: ''
+      }
+    },
     template:
       `<div class="vue-panel">
         <vue-panel/>
         <div class="app-container">
-          CHOCOLATE RAIN
+          <div class="content">
+            <div class="box">
+              <form v-on:submit.prevent='createVenue'>
+                <h2>Create Venue</h2>
+
+                <div class="form-group">
+                  <label for="name">Name</label>
+                  <input v-model="name" type="text" id="name" name="name" placeholder="Name" class="form-control"/>
+                </div>
+
+                <div class="form-group">
+                  <label for="website">Website</label>
+                  <input v-model="website" type="url" id="website" name="website" placeholder="http://www.sportsello.com" class="form-control"/>
+                </div>
+
+                <div class="form-group">
+                  <label for="address">Address</label>
+                  <input v-model="address" type="text" id="address" name="address" placeholder="1007 Mountain Drive, Gotham" class="form-control"/>
+                </div>
+
+
+                <div class="form-group">
+                  <label for="description">Description</label>
+                  <textarea v-model="description" id="description" name="description" placeholder="What's your venue like?" class="form-control"/>
+                </div>
+
+                <button type="submit" class="btn btn-primary pull-right">Create Venue</button>
+              </form>
+            </div>
+          </div>
         </div>
-      </div>`
+      </div>`,
+    methods: {
+      createVenue: function() {
+        var self = this;
+        $.ajax({
+          url: '/users',
+          method: 'POST',
+          data: {
+            user_id:      window.sessionStorage.getItem('user_id'),
+            name:         self.name,
+            website:      self.website,
+            address:      self.address,
+            description:  self.description
+          },
+          success: function (data) {
+            console.log('Maybe there is a new venue?');
+          }
+        });
+      }
+    }
   };
 
   Vue.component('event-box', {
@@ -445,7 +501,10 @@ Vue.component('log-reg-btn', {
       `<button class="btn btn-primary" v-on:click="createVenue">Create a Venue</button>`,
     methods: {
       createVenue: function() {
-        home.view = 'createVenue'
+        home.view = 'createVenue';
+
+        // Hide the scroll for the body
+        $('body').css('overflow', 'hidden');
       }
     }
   });
