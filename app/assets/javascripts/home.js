@@ -585,7 +585,7 @@ Vue.component('log-reg-btn', {
       `<button class="btn btn-block btn-social btn-facebook"
         onclick="window.location.href='/auth/facebook'">
         <span class="fa fa-facebook"></span>
-        Log in with Facebook
+        Sign in with Facebook
       </button>`
   });
 
