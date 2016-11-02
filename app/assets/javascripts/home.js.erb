@@ -419,7 +419,10 @@ Vue.component('log-reg-btn', {
     data: function() {
       return {
         games: home.games_list,
-        venues: home.user_venues
+        venues: home.user_venues,
+        name: '',
+        game_id: '',
+        venue_id: ''
       }
     },
     template:
@@ -431,15 +434,20 @@ Vue.component('log-reg-btn', {
             <div class="box">
               <form v-on:submit.prevent='hostEvent'>
                 <div class="form-group">
+                  <label for="name">Event Name</label>
+                  <input v-model="name" type="text" id="name" name="name" placeholder="Name" class="form-control"/>
+                </div>
+
+                <div class="form-group">
                   <label for="game">Game</label>
-                  <select id="game" class="form-control">
+                  <select v-model="game_id" id="game" name="game_id" class="form-control">
                     <option v-for="game in games" v-bind:value="game.id">{{game.datetime}}: {{game.team1.name}} vs. {{game.team2.name}}</option>
                   </select>
                 </div>
 
                 <div class="form-group">
                   <label for="venue">Venue</label>
-                  <select id="venue" class="form-control">
+                  <select v-model="venue_id" id="venue" name="venue_id" class="form-control">
                     <option v-for="venue in venues" v-bind:value="venue.id">{{venue.name}}</option>
                   </select>
                 </div>
@@ -457,7 +465,6 @@ Vue.component('log-reg-btn', {
           url: '/events',
           method: 'POST',
           data: {
-            user_id:    window.sessionStorage.getItem('user_id'),
             name:       self.name,
             game_id:    self.game_id,
             venue_id:   self.venue_id
