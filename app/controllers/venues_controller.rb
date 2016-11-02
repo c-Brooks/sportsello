@@ -22,7 +22,6 @@ class VenuesController < ApplicationController
 
   def create
     @venue = Venue.new(venue_params)
-    @venue.user_id = current_user.id
     if @venue.save
       render json: @venue
     else
@@ -90,7 +89,7 @@ class VenuesController < ApplicationController
 
 private
   def venue_params
-    params.require(:venue).permit(:name, :website, :address, :description)
+    params.permit(:user_id, :name, :website, :address, :description)
   end
 
 end

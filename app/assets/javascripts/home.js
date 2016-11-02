@@ -136,6 +136,7 @@ $(document).ready(function() {
           <div class="sidebar-section">
             <div class="sidebar-header">
               My Venues
+              <span class="clickable" v-on:click="createVenue" v-if="user_venues.length > 0">+</span>
             </div>
             <div class="sidebar-body">
               <user-venues
@@ -144,7 +145,16 @@ $(document).ready(function() {
             </div>
           </div>
         </div>
-      </div>`
+      </div>`,
+    methods: {
+      // This is a duplicate... sorry dudes
+      createVenue: function() {
+        home.view = 'createVenue';
+
+        // Hide the scroll for the body
+        $('body').css('overflow', 'hidden');
+      }
+    }
   });
 
   Vue.component('nav-bar', {
@@ -323,7 +333,7 @@ Vue.component('log-reg-btn', {
       createVenue: function() {
         var self = this;
         $.ajax({
-          url: '/users',
+          url: '/venues',
           method: 'POST',
           data: {
             user_id:      window.sessionStorage.getItem('user_id'),
