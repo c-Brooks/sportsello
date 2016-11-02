@@ -33,6 +33,8 @@ class VenuesController < ApplicationController
     @venue = Venue.find(params[:id])
     @review = Review.new
     @reviews = Review.where(venue_id: params[:id]).order(created_at: :desc)
+
+    render json: @venue
   end
 
   def filter

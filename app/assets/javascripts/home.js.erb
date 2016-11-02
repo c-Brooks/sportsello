@@ -72,7 +72,7 @@ $.getScript("https://maps.googleapis.com/maps/api/js?key=<%=ENV['MAPS_KEY']%>");
     },
     props: ["venue_id", "name"],
     template:
-      `<div class="sidebar-box user-venue" v-on:mouseover="showTools" v-on:mouseout="hideTools">
+      `<div class="sidebar-box user-venue clickable" v-on:mouseover="showTools" v-on:mouseout="hideTools" v-on:click="viewVenue">
         {{name}}
         <i v-show="displayTools" v-on:click="deleteVenue" class="fa fa-trash clickable"></i>
       </div>`,
@@ -97,6 +97,32 @@ $.getScript("https://maps.googleapis.com/maps/api/js?key=<%=ENV['MAPS_KEY']%>");
             }
           }
         });
+      },
+      viewVenue: function() {
+        if (home.view != 'venue') {
+          home.view = 'venue';
+
+          // Hide the scroll for the body
+          $('body').css('overflow', 'hidden');
+
+          var target = event.currentTarget;
+          $(target).addClass('game-click');
+          setTimeout(function() {
+            $(target).removeClass('game-click');
+          }, 400);
+
+          $.ajax({
+            url: `/venues/${this.venue_id}`,
+            success: function(res) {
+              home.venue_info = {
+                name: res.name,
+                website: res.website,
+                description: res.description,
+                address: res.address
+              };
+            }
+          });
+        }
       }
     }
   });
@@ -173,7 +199,6 @@ $.getScript("https://maps.googleapis.com/maps/api/js?key=<%=ENV['MAPS_KEY']%>");
         <p>Do you host sporting events?</p>
         <center><create-venue-button /></center>
       </div>`
-
   });
 
   Vue.component('main-sidebar', {
@@ -364,6 +389,29 @@ Vue.component('log-reg-btn', {
             :events="game_info.events"
             >
             <game-sidebar/>
+          </div>
+        </div>
+      </div>`
+  };
+
+  var venue = {
+    props: ['venue_info'],
+    template:
+      `<div class="vue-panel">
+        <vue-panel/>
+        <div class="app-container">
+          <div class="row">
+            <div class="col-sm-8">
+              <div class="content">
+                <div class="venue-info">
+                  <venue-box
+                    :name="venue_info.name"
+                    :address="venue_info.address"
+                    :description="venue_info.description">
+                  </venue-box>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>`
@@ -664,6 +712,22 @@ Vue.component('log-reg-btn', {
     },
   });
 
+  Vue.component('venue-box', {
+    props: ['name', 'description', 'address'],
+    template:
+      `<div>
+        <div class="section-header" v-text="name"></div>
+        <div class="venue box">
+          <div class="button-container col-sm-3">
+          </div>
+          <div class="info-container col-sm-9">
+            <p class="venue-address">{{address}}</p>
+            <p class="venue-description">{{description}}</p>
+          </div>
+        </div>
+      </div>`
+  });
+
   Vue.component('hosting-button', {
     template:
       `<button class="btn btn-primary" v-on:click="hostEvent">I'm hosting!</button>`,
@@ -930,6 +994,7 @@ Vue.component('log-reg-btn', {
       'game-info': gameInfo,
       'login': login,
       'register': register,
+      'venue': venue,
       'createVenue': createVenue,
       'hostEvent': hostEvent
     },
@@ -937,6 +1002,7 @@ Vue.component('log-reg-btn', {
       view: 'empty',
       games_list: [],
       game_info: {},
+      venue_info: {},
       top_events: [],
       last_date: '',
       session: {},
