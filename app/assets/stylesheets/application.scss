@@ -68,7 +68,10 @@ a {
   }
 }
 
-
+#map {
+  width: inherit;
+  height: 308px;
+}
 .app-container {
   width: 75%;
   margin: 0 auto;

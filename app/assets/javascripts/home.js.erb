@@ -1,8 +1,9 @@
 $(document).ready(function() {
 
-  $.getScript("http://maps.googleapis.com/maps/api/js?v=3&sensor=false");
-
+  //$.getScript("http://maps.googleapis.com/maps/api/js?v=3&sensor=false");
+$.getScript("https://maps.googleapis.com/maps/api/js?key=<%=ENV['MAPS_KEY']%>");
   Vue.component('game-sidebar', {
+    props: ['id', 'name', 'venue'],
     template:
       `<div class="col-sm-4">
         <div class="sidebar list-group">
@@ -10,26 +11,39 @@ $(document).ready(function() {
             Map
           </div>
           <div class="sidebar-body">
-            <div class="sidebar-box">
               <div id="map"></div>
-            </div>
           </div>
         </div>
       </div>`,
     mounted: function() {
       var mapOptions = {
         // How zoomed in you want the map to start at (always required)
-        zoom: 10,
+        zoom: 12,
 
         // The latitude and longitude to center the map (always required)
-        center: new google.maps.LatLng(49.317623,-123.0879393,14), // Start in Vancouver
+        center: new google.maps.LatLng(49.28, -123.1, 20), // Start in Vancouver
 
         // How you would like to style the map.
         // This is where you would paste any style found on Snazzy Maps.
         styles: [{"featureType":"water","elementType":"geometry","stylers":[{"color":"#e9e9e9"},{"lightness":17}]},{"featureType":"landscape","elementType":"geometry","stylers":[{"color":"#f5f5f5"},{"lightness":20}]},{"featureType":"road.highway","elementType":"geometry.fill","stylers":[{"color":"#ffffff"},{"lightness":17}]},{"featureType":"road.highway","elementType":"geometry.stroke","stylers":[{"color":"#ffffff"},{"lightness":29},{"weight":0.2}]},{"featureType":"road.arterial","elementType":"geometry","stylers":[{"color":"#ffffff"},{"lightness":18}]},{"featureType":"road.local","elementType":"geometry","stylers":[{"color":"#ffffff"},{"lightness":16}]},{"featureType":"poi","elementType":"geometry","stylers":[{"color":"#f5f5f5"},{"lightness":21}]},{"featureType":"poi.park","elementType":"geometry","stylers":[{"color":"#dedede"},{"lightness":21}]},{"elementType":"labels.text.stroke","stylers":[{"visibility":"on"},{"color":"#ffffff"},{"lightness":16}]},{"elementType":"labels.text.fill","stylers":[{"saturation":36},{"color":"#333333"},{"lightness":40}]},{"elementType":"labels.icon","stylers":[{"visibility":"off"}]},{"featureType":"transit","elementType":"geometry","stylers":[{"color":"#f2f2f2"},{"lightness":19}]},{"featureType":"administrative","elementType":"geometry.fill","stylers":[{"color":"#fefefe"},{"lightness":20}]},{"featureType":"administrative","elementType":"geometry.stroke","stylers":[{"color":"#fefefe"},{"lightness":17},{"weight":1.2}]}]
       };
 
-      map = new google.maps.Map(document.getElementById('map'), mapOptions);
+      var map    = new google.maps.Map(document.getElementById('map'), mapOptions);
+      var infowindow = new google.maps.InfoWindow({
+        content: `
+        <div style="color: grey">
+          <h4>${this.name} @ ${this.venue.name}</h4>
+          <h5>${this.venue.address}<h5>
+        </div>`
+      });
+      var marker = new google.maps.Marker({
+          position: { lat: this.venue.latitude, lng: this.venue.longitude },
+          title: this.name,
+          map: map
+        });
+      marker.addListener('click', function() {
+        infowindow.open(map, marker);
+      });
     }
   });
 
@@ -165,7 +179,6 @@ $(document).ready(function() {
           <div class="sidebar-section">
             <div class="sidebar-header">
               My Venues
-              <span class="clickable" v-on:click="createVenue" v-if="user_venues.length > 0">+</span>
             </div>
             <div class="sidebar-body">
               <user-venues
@@ -174,16 +187,7 @@ $(document).ready(function() {
             </div>
           </div>
         </div>
-      </div>`,
-    methods: {
-      // This is a duplicate... sorry dudes
-      createVenue: function() {
-        home.view = 'createVenue';
-
-        // Hide the scroll for the body
-        $('body').css('overflow', 'hidden');
-      }
-    }
+      </div>`
   });
 
   Vue.component('nav-bar', {
@@ -191,7 +195,8 @@ $(document).ready(function() {
     template:
     `<nav class="navbar navbar-default navbar-fixed-top">
         <div class="navbar-header">
-          <a class="navbar-brand" href="/"><object class="svg-logo" type="image/svg+xml" data="/assets/sportsello.svg"></object></a>
+          <a class="navbar-brand" href="/"><object class="svg-logo"
+          type="image/svg+xml" data="/assets/sportsello.svg"></object></a>
         </div>
 
           <div class="navbar-collapse collapse">
@@ -254,8 +259,10 @@ Vue.component('log-reg-btn', {
   Vue.component('search-bar', {
     template:
       `<div class="input search-bar-container">
-        <input type="text" class="form-control search-bar" placeholder="What are you looking for?">
-        <span class="glyphicon glyphicon-search btn-search clickable" aria-hidden="true"></span>
+          <input type="text" class="form-control search-bar"
+                      placeholder="What are you looking for?">
+          <span class="glyphicon glyphicon-search btn-search clickable"
+                      aria-hidden="true"></span>
       </div>`
   });
 
@@ -306,7 +313,13 @@ Vue.component('log-reg-btn', {
               </div>
             </div>
 
-            <game-sidebar>
+            <game-sidebar
+            v-if="game_info.events"
+            v-for="event in game_info.events"
+            :id="event.id"
+            :name="event.name"
+            :venue="event.venue"
+            :attendees="event.attendees">
             <game-sidebar/>
           </div>
         </div>
@@ -314,14 +327,6 @@ Vue.component('log-reg-btn', {
   };
 
   var createVenue = {
-    data: function() {
-      return {
-        name: '',
-        website: '',
-        address: '',
-        description: ''
-      }
-    },
     template:
       `<div class="vue-panel">
         <vue-panel/>
@@ -356,27 +361,7 @@ Vue.component('log-reg-btn', {
             </div>
           </div>
         </div>
-      </div>`,
-    methods: {
-      createVenue: function() {
-        var self = this;
-        $.ajax({
-          url: '/venues',
-          method: 'POST',
-          data: {
-            user_id:      window.sessionStorage.getItem('user_id'),
-            name:         self.name,
-            website:      self.website,
-            address:      self.address,
-            description:  self.description
-          },
-          success: function(venue) {
-            home.user_venues.push(venue);
-            home.view = 'empty';
-          }
-        });
-      }
-    }
+      </div>`
   };
 
   Vue.component('event-box', {
@@ -540,10 +525,7 @@ Vue.component('log-reg-btn', {
       `<button class="btn btn-primary" v-on:click="createVenue">Create a Venue</button>`,
     methods: {
       createVenue: function() {
-        home.view = 'createVenue';
-
-        // Hide the scroll for the body
-        $('body').css('overflow', 'hidden');
+        home.view = 'createVenue'
       }
     }
   });
