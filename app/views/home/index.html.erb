@@ -35,6 +35,15 @@
     <div class="row">
       <div class="col-sm-8">
         <div class="content">
+          <div class="venues">
+            <search-venue-box
+              v-for="venue in venues_list"
+              :name="venue.name"
+              :address="venue.address"
+              :description="venue.description"
+              :website="venue.website">
+            </search-venue-box>
+          </div>
           <div class="games">
             <game-box
               v-for="game in games_list"

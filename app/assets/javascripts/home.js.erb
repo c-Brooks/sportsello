@@ -223,6 +223,37 @@ $.getScript("https://maps.googleapis.com/maps/api/js?key=<%=ENV['MAPS_KEY']%>");
     </nav>`
   });
 
+  Vue.component('search-bar', {
+    template:
+      `<div class="input search-bar-container">
+        <input v-on:keyup.enter="submit_search" v-model="query" class="form-control search-bar" placeholder="What are you looking for?">
+        <span v-on:click="submit_search" class="glyphicon glyphicon-search btn-search clickable" aria-hidden="true"></span>
+      </div>`,
+      data: function() {
+        return {
+          query: ''
+        }
+      },
+      methods: {
+        submit_search: function() {
+          const that = this;
+          if (this.query != '') {
+            $.ajax({
+              url: `/search?query=${that.query}`,
+              success: function(res) {
+                home.games_list = res.games;
+                home.venues_list = res.venues;
+              }
+            });
+          } else {
+            home.games_list = [];
+            home.venues_list = [];
+            home.getGames();
+          }
+        }
+      }
+  });
+
 Vue.component('log-reg-btn', {
   props: ['user_id', 'user_name'],
   template:
@@ -264,36 +295,6 @@ Vue.component('log-reg-btn', {
     }
   }
 })
-
-  Vue.component('search-bar', {
-    template:
-      `<div class="input search-bar-container">
-        <input v-on:keyup.enter="submit_search" v-model="query" class="form-control search-bar" placeholder="What are you looking for?">
-        <span v-on:click="submit_search" class="glyphicon glyphicon-search btn-search clickable" aria-hidden="true"></span>
-      </div>`,
-      data: function() {
-        return {
-          query: ''
-        }
-      },
-      methods: {
-        submit_search: function() {
-          const that = this;
-          if (this.query != '') {
-            $.ajax({
-              url: `/search?query=${that.query}`,
-              success: function(res) {
-                home.games_list = res.games;
-                console.log(JSON.stringify(res.games));
-                console.log(JSON.stringify(home.games_list));
-              }
-            });
-          } else {
-            home.getGames();
-          }
-        }
-      }
-  });
 
   Vue.component('vue-panel', {
     template:
@@ -478,6 +479,35 @@ Vue.component('log-reg-btn', {
         });
       }
     }
+  });
+
+  Vue.component('search-venue-box', {
+    props: ['venue', 'name', 'website', 'address', 'description'],
+    data: function() {
+      return {
+        displayVenue: false
+      }
+    },
+    beforeMount: function() {
+      if(home.venues_list.length != 0){
+        this.displayVenue = true;
+      }
+    },
+    template:
+      `<div v-if="displayVenue">
+        <div class="section-header" v-text="name"></div>
+          <div class="venue">
+            <div class="time-container col-sm-3">
+              <p class="time alt-text" v-text="address"></p>
+            </div>
+            <div class="info-container col-sm-9">
+              <div class="center">
+                <div class="team1 col-sm-9" v-text="description"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>`
   });
 
   Vue.component('game-box', {
@@ -829,6 +859,7 @@ Vue.component('log-reg-btn', {
     data: {
       view: 'empty',
       games_list: [],
+      venues_list: [],
       game_info: {},
       top_events: [],
       last_date: '',
@@ -875,7 +906,12 @@ Vue.component('log-reg-btn', {
           url: `/games.json?game_datetime=${lastDateTimeString}`,
           success: function(res) {
             res.games.forEach(function(game) {
-              that.games_list.push(game);
+              var isDuplicate = that.games_list.findIndex(function(current_game){
+                return current_game.id === game.id
+              });
+              if (isDuplicate === -1) {
+                that.games_list.push(game);
+              }
             });
             $('.bottom-loader').hide();
           }
