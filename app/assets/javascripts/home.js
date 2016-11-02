@@ -17,7 +17,6 @@ $(document).ready(function() {
         </div>
       </div>`,
     mounted: function() {
-      console.log(this.venue);
       var mapOptions = {
         // How zoomed in you want the map to start at (always required)
         zoom: 12,
@@ -31,10 +30,21 @@ $(document).ready(function() {
       };
 
       var map    = new google.maps.Map(document.getElementById('map'), mapOptions);
+      var infowindow = new google.maps.InfoWindow({
+        content: `
+        <div style="color: grey">
+          <h4>${this.name} @ ${this.venue.name}</h4>
+          <h5>${this.venue.address}<h5>
+        </div>`
+      });
       var marker = new google.maps.Marker({
           position: { lat: this.venue.latitude, lng: this.venue.longitude },
+          title: this.name,
           map: map
         });
+      marker.addListener('click', function() {
+        infowindow.open(map, marker);
+      });
     }
   });
 
