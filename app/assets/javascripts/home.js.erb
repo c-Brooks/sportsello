@@ -361,7 +361,29 @@ Vue.component('log-reg-btn', {
             </div>
           </div>
         </div>
-      </div>`
+      </div>`,
+    methods: {
+      createVenue: function() {
+        var self = this;
+        $.ajax({
+          url: '/venues',
+          method: 'POST',
+          data: {
+            user_id:      window.sessionStorage.getItem('user_id'),
+            name:         self.name,
+            website:      self.website,
+            address:      self.address,
+            description:  self.description
+          },
+          success: function(venue) {
+            home.user_venues.push(venue);
+            home.view = 'empty';
+            // Enable the scroll for the body
+            $('body').css('overflow', 'scroll');
+          }
+        });
+      }
+    }
   };
 
   Vue.component('event-box', {
