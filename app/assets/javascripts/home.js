@@ -643,7 +643,7 @@ Vue.component('log-reg-btn', {
             >
           </div>
 
-          <button type="submit" class="btn btn-primary pull-right">Register</button>
+          <button type="submit" class="btn btn-primary">Register</button>
         </form>
 
       </div>`,
@@ -715,10 +715,23 @@ Vue.component('log-reg-btn', {
         <vue-panel/>
         <div class="app-container">
           <div class="content">
+            <div class="section-header">Register</div>
             <div class="login box">
-              <facebook-button/>
-              <div class="center special-text">OR</div>
-              <register-form/>
+              <div class="row">
+                <div class="col-sm-6">
+                  <facebook-button/>
+                  <hr>
+                  <register-form/>
+                </div>
+                <div class="col-sm-6">
+                  <div class="invisible-box">
+                    <center>
+                      <p>Already have an account?</p>
+                      <button class="btn btn-primary">Sign in!</button>
+                    </center>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
