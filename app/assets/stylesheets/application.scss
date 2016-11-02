@@ -303,6 +303,11 @@ hr {
   }
 }
 
+.fa-trash:hover {
+  color: $brand-light-red;
+  box-shadow: 0px 0px 20px $brand-light-red;
+}
+
 .btn-social:hover {
   color: white;
 }
