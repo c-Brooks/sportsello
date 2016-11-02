@@ -235,7 +235,16 @@ Vue.component('log-reg-btn', {
                       placeholder="What are you looking for?">
           <span class="glyphicon glyphicon-search btn-search clickable"
                       aria-hidden="true"></span>
-      </div>`
+      </div>`,
+      methods: {
+        search: function() {
+          $.ajax({
+            url: '/search.json?message=${today}',
+            success: function(res) {
+            }
+          });
+        }
+      }
   });
 
   Vue.component('vue-panel', {

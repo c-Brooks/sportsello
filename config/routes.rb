@@ -18,6 +18,7 @@ Rails.application.routes.draw do
     resources :users, only: [:new, :create]
     resources :sessions, only: [:new, :create, :destroy]
     resources :games, only: [:index, :show]
+    resources :search, only:[:index]
     resources :reviews, only:[:delete]
     resources :events, only: [:index, :show]
 
