@@ -1,8 +1,6 @@
 class SearchController < ApplicationController
 
    def index
-    # @games = Game.all.order('game_datetime ASC').where("game_datetime >= ?", params['game_datetime']).limit(10)
-    # @venues = Fuzzy_Search.new(params[:query]).searchVenues()
     @games = Fuzzy_Search.new(params[:query]).searchGames
     puts('PARAMSSSSSSSSSS', params[:query])
 
