@@ -29,7 +29,7 @@ $.getScript("https://maps.googleapis.com/maps/api/js?key=<%=ENV['MAPS_KEY']%>");
         // styles: [{"stylers":[{"hue":"#dd0d0d"}]},{"featureType":"road","elementType":"labels","stylers":[{"visibility":"off"}]},{"featureType":"road","elementType":"geometry","stylers":[{"lightness":100},{"visibility":"simplified"}]}]
       };
 
-      var map        = new google.maps.Map(document.getElementById('map'), mapOptions);
+      var map = new google.maps.Map(document.getElementById('map'), mapOptions);
       for (var i = 0; i < this.events.length; i++) {
         var e = this.events[i]
         var infowindow = new google.maps.InfoWindow({
@@ -503,7 +503,9 @@ Vue.component('log-reg-btn', {
       }
       bus.$on('highlit', function (id) {
         if (this.id == id) {
-            this.highlightEvent()
+            this.highlightEvent();
+        } else if (this.$el.hasClass('game-selected')) {
+          this.unHighlightEvent();
         }
       }.bind(this))
     },
@@ -527,7 +529,10 @@ Vue.component('log-reg-btn', {
       </div>`,
     methods: {
       highlightEvent: function () {
-        $(this.$el).addClass('game-click');
+        $(this.$el).addClass('game-selected');
+      },
+      unHighlightEvent: function () {
+        $(this.$el).removeClass('game-selected');
       },
       attending: function() {
         const that = this;

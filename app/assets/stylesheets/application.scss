@@ -160,6 +160,11 @@ label,
   }
 }
 
+.game-selected {
+  box-shadow: 0px 0px 30px $brand-light-red;
+  background: $ui-dark-gray;
+}
+
 .game .btn-primary,
 .event .btn-primary {
   position: absolute;
@@ -290,7 +295,7 @@ hr {
   &:focus,
   &:active {
     border: 2px solid $brand-light-red;
-    box-shadow: 0px 0px 10px $brand-light-red;
+    box-shadow: 20px 20px 20px $brand-light-red;
   }
 
   &:active {
