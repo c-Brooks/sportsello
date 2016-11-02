@@ -30,11 +30,21 @@ class VenuesController < ApplicationController
   end
 
   def show
-    @venue = Venue.find(params[:id])
-    @review = Review.new
-    @reviews = Review.where(venue_id: params[:id]).order(created_at: :desc)
+    @venue = Venue.find params[:id]
 
-    render json: @venue
+    @venue_json = Jbuilder.new do |j|
+      j.name @venue.name
+      j.description @venue.description
+      j.address @venue.address
+      j.reviews Review.where(venue_id: params[:id]).oder(created_at: :desc) do |review|
+        j.review review.id
+        j.rating review.rating
+        j.description review.description
+        j.user User.find(review.user_id)
+      end
+    end.target!
+
+    render :json => @venue_json
   end
 
   def filter
