@@ -2,9 +2,8 @@ class ReviewsController < ApplicationController
     def create
       @venue = Venue.find(params["venue_id"])
       @review = Review.new(review_params)
-      @review.user_id = session[:user_id]
     if @review.save
-      redirect_to :back
+      render json: @review
     else
       puts @review.errors.to_a
     end
@@ -18,6 +17,6 @@ class ReviewsController < ApplicationController
 
   private
     def review_params
-      params.require(:review).permit(:rating, :description, :venue_id)
+      params.permit(:user_id, :rating, :description, :venue_id)
     end
 end

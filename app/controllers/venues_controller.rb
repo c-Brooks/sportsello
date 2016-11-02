@@ -33,14 +33,15 @@ class VenuesController < ApplicationController
     @venue = Venue.find params[:id]
 
     @venue_json = Jbuilder.new do |j|
+      j.id @venue.id
       j.name @venue.name
       j.description @venue.description
       j.address @venue.address
-      j.reviews Review.where(venue_id: params[:id]).oder(created_at: :desc) do |review|
+      j.reviews Review.where(venue_id: params[:id]) do |review|
         j.review review.id
         j.rating review.rating
         j.description review.description
-        j.user User.find(review.user_id)
+        j.user User.find(review.user_id), :name
       end
     end.target!
 

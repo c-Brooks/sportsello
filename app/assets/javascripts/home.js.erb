@@ -115,10 +115,12 @@ $.getScript("https://maps.googleapis.com/maps/api/js?key=<%=ENV['MAPS_KEY']%>");
             url: `/venues/${this.venue_id}`,
             success: function(res) {
               home.venue_info = {
+                id: res.id,
                 name: res.name,
                 website: res.website,
                 description: res.description,
-                address: res.address
+                address: res.address,
+                reviews: res.reviews
               };
             }
           });
@@ -410,6 +412,17 @@ Vue.component('log-reg-btn', {
                     :description="venue_info.description">
                   </venue-box>
                 </div>
+                <div class="section-header">Reviews</div>
+                <review-box
+                  :venue_id="venue_info.id">
+                </review-box>
+                <user-review-box
+                  v-for="review in venue_info.reviews"
+                  :id="review.id"
+                  :rating="review.rating"
+                  :description="review.description"
+                  :user="review.user">
+                </user-review-box>
               </div>
             </div>
           </div>
@@ -726,6 +739,91 @@ Vue.component('log-reg-btn', {
           </div>
         </div>
       </div>`
+  });
+
+  Vue.component('user-review-box', {
+    props: ['id', 'description', 'rating', 'user'],
+    template:
+      `<div>
+        <div class="review box">
+          <div class="button-container col-sm-3">
+            <i class="fa fa-star" v-for="n in rating"></i>
+            <i class="fa fa-star-o" v-for="n in 5 - rating"></i>
+          </div>
+          <div class="info-container col-sm-9">
+            <p class="review-name alt-text">{{user.name}}</p>
+            <p class="review-description">{{description}}</p>
+          </div>
+        </div>
+      </div>`
+  });
+
+  Vue.component('review-box', {
+    props: ['venue_id'],
+    data: function() {
+      return {
+        rating: '',
+        description: ''
+      }
+    },
+    template:
+      `<div>
+        <div class="review box">
+          <div class="info-container col-sm-12">
+            <form v-on:submit.prevent="submitReview">
+              <div class="form-group">
+                <input type="hidden" id="review_rating" name="rating">
+                <i class="fa fa-star-o fa-lg star" id="star1" v-on:mouseover="setRating"></i>
+                <i class="fa fa-star-o fa-lg star" id="star2" v-on:mouseover="setRating"></i>
+                <i class="fa fa-star-o fa-lg star" id="star3" v-on:mouseover="setRating"></i>
+                <i class="fa fa-star-o fa-lg star" id="star4" v-on:mouseover="setRating"></i>
+                <i class="fa fa-star-o fa-lg star" id="star5" v-on:mouseover="setRating"></i>
+              </div>
+
+              <div class="form-group">
+                <label for="description">Review</label>
+                <textarea v-model="description" id="description" name="description" placeholder="What do you think of this venue?" class="form-control"/>
+              </div>
+
+              <button type="submit" class="btn btn-primary pull-right">Submit Review</button>
+            </form>
+          </div>
+        </div>
+      </div>`,
+    methods: {
+      setRating: function(event) {
+        var target = event.currentTarget;
+        var starNum =  target.id.match(/\d+/);
+        this.rating = +starNum;
+        for (i = 0; i <= starNum; i++) {
+          var currStar = 'star' + i;
+          $('#' + currStar).removeClass('fa-star-o');
+          $('#' + currStar).addClass('fa-star');
+        }
+        // Deselect stars > user review
+        for (i = parseInt(starNum) + 1; i < 6; i++) {
+          $('#star' + i).removeClass('fa-star');
+          $('#star' + i).addClass('fa-star-o');
+        }
+      },
+      submitReview: function() {
+        var self = this;
+        $.ajax({
+          url: `/venues/${this.venue_id}/reviews`,
+          method: 'POST',
+          data: {
+            user_id:      window.sessionStorage.getItem('user_id'),
+            rating:       self.rating,
+            description:  self.description
+          },
+          success: function(venue) {
+            home.view = 'empty';
+            // Enable the scroll for the body
+            $('body').css('overflow', 'scroll');
+          }
+        });
+      }
+    }
   });
 
   Vue.component('hosting-button', {
