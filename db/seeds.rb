@@ -128,15 +128,6 @@ game4 = Game.create!({
   game_datetime: DateTime.now + 3
 })
 
- 50.times do
-  Game.create!({
-  sport_id: sport1.id,
-  team1_id: 1,
-  team2_id: 4,
-  game_datetime: DateTime.now + 3
-})
-end
-
 # Setup events...
 Event.destroy_all
 
