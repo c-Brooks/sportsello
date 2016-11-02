@@ -19,6 +19,7 @@ set :rvm_ruby_version, '2.3.0'
 
 # Set whenever for cron jobs
 set :whenever_command, "bundle exec whenever"
+set :whenever_identifier, ->{ "#{fetch(:application)}_#{fetch(:stage)}" }
 
 # Default value for :scm is :git
 # set :scm, :git

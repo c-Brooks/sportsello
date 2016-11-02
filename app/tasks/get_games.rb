@@ -22,7 +22,7 @@ class GetGames
       nhl_games['games'].each do |game|
         sport = Sport.find_by_name 'NHL'
           game['date'] = date.to_s + ' ' + game['date']
-          Format date
+          # Format date
         add_game(game, sport, date)
       end
 
