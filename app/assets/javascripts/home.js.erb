@@ -571,7 +571,7 @@ Vue.component('log-reg-btn', {
       bus.$on('highlit', function (id) {
         if (this.id == id) {
             this.highlightEvent();
-        } else if (this.$el.hasClass('game-selected')) {
+        } else if ($(this.$el).hasClass('game-selected')) {
           this.unHighlightEvent();
         }
       }.bind(this));
