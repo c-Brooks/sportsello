@@ -342,8 +342,9 @@ Vue.component('log-reg-btn', {
             address:      self.address,
             description:  self.description
           },
-          success: function (data) {
-            console.log('Maybe there is a new venue?');
+          success: function(venue) {
+            home.user_venues.push(venue);
+            home.view = 'empty';
           }
         });
       }
