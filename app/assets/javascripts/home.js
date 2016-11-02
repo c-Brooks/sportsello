@@ -814,7 +814,12 @@ Vue.component('log-reg-btn', {
           url: `/games.json?game_datetime=${lastDateTimeString}`,
           success: function(res) {
             res.games.forEach(function(game) {
-              that.games_list.push(game);
+              var isDuplicate = that.games_list.findIndex(function(current_game){
+                return current_game.id === game.id
+              })
+              if (isDuplicate === -1) {
+                that.games_list.push(game);
+              }
             });
             $('.bottom-loader').hide();
           }
