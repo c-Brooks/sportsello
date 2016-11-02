@@ -1,8 +1,10 @@
 $(document).ready(function() {
 
   $.getScript("http://maps.googleapis.com/maps/api/js?v=3&sensor=false");
+  //$.getScript("http://maps.googleapis.com/maps/api/key=AIzaSyBYc0nuRjddVC75dHAc4xHMcpuw0r976Eo&callback=initMap");
 
   Vue.component('game-sidebar', {
+    props: ['id', 'name', 'venue'],
     template:
       `<div class="col-sm-4">
         <div class="sidebar list-group">
@@ -15,9 +17,10 @@ $(document).ready(function() {
         </div>
       </div>`,
     mounted: function() {
+      console.log(this.venue);
       var mapOptions = {
         // How zoomed in you want the map to start at (always required)
-        zoom: 10,
+        zoom: 12,
 
         // The latitude and longitude to center the map (always required)
         center: new google.maps.LatLng(49.28, -123.1, 20), // Start in Vancouver
@@ -29,7 +32,7 @@ $(document).ready(function() {
 
       var map    = new google.maps.Map(document.getElementById('map'), mapOptions);
       var marker = new google.maps.Marker({
-          position: { lat: 49.28, lng: -123.1 },
+          position: { lat: this.venue.latitude, lng: this.venue.longitude },
           map: map
         });
     }
@@ -154,7 +157,8 @@ $(document).ready(function() {
     template:
     `<nav class="navbar navbar-default navbar-fixed-top">
         <div class="navbar-header">
-          <a class="navbar-brand" href="/"><object class="svg-logo" type="image/svg+xml" data="/assets/sportsello.svg"></object></a>
+          <a class="navbar-brand" href="/"><object class="svg-logo"
+          type="image/svg+xml" data="/assets/sportsello.svg"></object></a>
         </div>
 
           <div class="navbar-collapse collapse">
@@ -217,8 +221,10 @@ Vue.component('log-reg-btn', {
   Vue.component('search-bar', {
     template:
       `<div class="input search-bar-container">
-        <input type="text" class="form-control search-bar" placeholder="What are you looking for?">
-        <span class="glyphicon glyphicon-search btn-search clickable" aria-hidden="true"></span>
+          <input type="text" class="form-control search-bar"
+                      placeholder="What are you looking for?">
+          <span class="glyphicon glyphicon-search btn-search clickable"
+                      aria-hidden="true"></span>
       </div>`
   });
 
@@ -269,7 +275,13 @@ Vue.component('log-reg-btn', {
               </div>
             </div>
 
-            <game-sidebar>
+            <game-sidebar
+            v-if="game_info.events"
+            v-for="event in game_info.events"
+            :id="event.id"
+            :name="event.name"
+            :venue="event.venue"
+            :attendees="event.attendees">
             <game-sidebar/>
           </div>
         </div>
