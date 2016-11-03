@@ -20,8 +20,7 @@ class GetGames
 
       # Go through each group of games
       nhl_games['games'].each do |game|
-        @sport = Sport.find_or_create_by name: 'NHL'
-        puts @sport
+        sport = Sport.find_or_create_by name: 'NHL'
         # Format date
         @date = date.to_s + ' ' + game['date']
 

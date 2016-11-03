@@ -648,7 +648,8 @@ Vue.component('log-reg-btn', {
       return {
         attendeesList: this.attendees,
         attendeesCount: this.attendees.length,
-        isAttending: false
+        isAttending: false,
+        venue: this.venue
       }
     },
     created: function() {
@@ -685,20 +686,43 @@ Vue.component('log-reg-btn', {
           <div class="center">
             <div class="event-name col-sm-3" v-text="name"></div>
             <div class="at col-sm-3">@</div>
-            <div class="venue-name col-sm-3" v-text="venue.name"></div>
+            <span class="venue-name col-sm-3 clickable" v-text="venue.name" v-on:click="viewVenue"></span>
           </div>
         </div>
       </div>`,
     methods: {
-      openMarker: function () {
-        this.highlightEvent();
-        bus.$emit('openMarker', this.id)
+      openMarker: function (event) {
+        if (event.target.nodeName === 'SPAN') {
+          home.view = 'venue';
+
+          // Hide the scroll for the body
+          $('body').css('overflow', 'hidden');
+
+          $.ajax({
+            url: `/venues/${this.venue.id}`,
+            success: function(res) {
+              home.venue_info = {
+                id: res.id,
+                name: res.name,
+                website: res.website,
+                description: res.description,
+                address: res.address,
+                reviews: res.reviews
+              };
+            }
+          });
+        } else {
+          this.highlightEvent();
+          bus.$emit('openMarker', this.id)
+        }
       },
       highlightEvent: function () {
-        $(this.$el).addClass('game-selected');
+        $(".event").removeClass("event-selected");
+
+        $(this.$el).addClass('event-selected');
       },
       unHighlightEvent: function () {
-        $(this.$el).removeClass('game-selected');
+        $(this.$el).removeClass('event-selected');
       },
       attending: function() {
         const that = this;
@@ -728,7 +752,7 @@ Vue.component('log-reg-btn', {
           }
         });
       }
-    }
+    },
   });
 
   Vue.component('search-venue-box', {
@@ -1074,9 +1098,19 @@ Vue.component('log-reg-btn', {
             description:  self.description
           },
           success: function(venue) {
-            home.view = 'empty';
-            // Enable the scroll for the body
-            $('body').css('overflow', 'scroll');
+            const user = { name: '' };
+            if (window.sessionStorage.getItem('user_name')) {
+              user.name = window.sessionStorage.getItem('user_name');
+            } else {
+              user.name = 'Anonymous';
+            }
+
+            // Push review for display
+            home.venue_info.reviews.unshift({
+              user: user,
+              rating: self.rating,
+              description: self.description
+            });
           }
         });
       }
