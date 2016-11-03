@@ -53,6 +53,10 @@ $brand-light-gray: #cccccc;
   width: 350px;
 }
 
+.navbar-right {
+  padding-right: 60px;
+}
+
 body {
   @include app-background-main;
 

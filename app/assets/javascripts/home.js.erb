@@ -316,13 +316,13 @@ Vue.component('log-reg-btn', {
   template:
   `
   <span class="nav navbar-nav navbar-right">
-    <div v-if="user_name" class="row" style="margin-right:60px">
+    <div v-if="user_name" class="row">
       <strong v-text="user_name"></strong>
-      | <a class="clickable" id='sign_out' v-on:click="signOut"> SIGN OUT </a>
+      | <a class="clickable" id='sign_out' v-on:click="signOut">Sign Out</a>
     </div>
     <div v-else>
-      <a class="log-in clickable" v-on:click="showLogin">SIGN IN</a> |
-      <a class="register clickable" v-on:click="showReg">REGISTER</a>
+      <a class="log-in clickable" v-on:click="showLogin">Sign In</a> |
+      <a class="register clickable" v-on:click="showReg">Register</a>
     </div>
   </span>
   `,
