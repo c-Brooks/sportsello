@@ -74,7 +74,6 @@ $.getScript("https://maps.googleapis.com/maps/api/js?key=<%=ENV['MAPS_KEY']%>");
 
          google.maps.event.addListener(infowindow,'openMarker', (function(marker, infowindow, e) {
            return function () {
-             console.log('triggered', e.id);
              //infowindow.open(map, marker)
            }
          })(marker,infowindow, e));
@@ -89,7 +88,6 @@ $.getScript("https://maps.googleapis.com/maps/api/js?key=<%=ENV['MAPS_KEY']%>");
 
     // This isn't working yet
     bus.$on('openMarker', function (id) {
-      console.log('Event', id);
       google.maps.event.trigger(infowindow, 'openMarker', id);
     });
   },
@@ -422,7 +420,9 @@ Vue.component('log-reg-btn', {
                     :id="event.id"
                     :name="event.name"
                     :venue="event.venue"
-                    :attendees="event.attendees">
+                    :attendees="event.attendees"
+                    :users="event.users"
+                    >
                   </event-box>
                   <div class="box" v-if="!game_info.events.length">
                     Unfortunately there are no events for this game. Are you hosting one?
@@ -683,13 +683,14 @@ Vue.component('log-reg-btn', {
                 // </div>
 
   Vue.component('event-box', {
-    props: ['id', 'name', 'venue', 'attendees'],
+    // NOTE: I didn't want to break everything from attendees so
+    //       I just created users
+    props: ['id', 'name', 'venue', 'attendees', 'users'],
     data: function() {
       return {
         attendeesList: this.attendees,
         attendeesCount: this.attendees.length,
-        isAttending: false,
-        venue: this.venue
+        isAttending: false
       }
     },
     created: function() {
@@ -731,6 +732,28 @@ Vue.component('log-reg-btn', {
         </div>
       </div>`,
     methods: {
+      viewVenue: function() {
+        home.view = 'venue';
+
+          // Hide the scroll for the body
+          $('body').css('overflow', 'hidden');
+
+          $.ajax({
+            url: `/venues/${this.venue.id}`,
+            success: function(res) {
+              home.venue_info = {
+                id: res.id,
+                name: res.name,
+                website: res.website,
+                description: res.description,
+                address: res.address,
+                reviews: res.reviews,
+                latitude: res.latitude,
+                longitude: res.longitude
+              };
+            }
+          });
+      },
       openMarker: function (event) {
         if (event.target.nodeName === 'SPAN') {
           home.view = 'venue';
@@ -753,7 +776,7 @@ Vue.component('log-reg-btn', {
               };
             }
           });
-        } else {
+        } else if (event.target.nodeName === 'DIV') {
           this.highlightEvent();
           bus.$emit('openMarker', this.id)
         }
@@ -1516,7 +1539,7 @@ Vue.component('log-reg-btn', {
           url: `/games.json?game_datetime=${lastDateTimeString}`,
           success: function(res) {
             res.games.forEach(function(game) {
-              var isDuplicate = that.games_list.findIndex(function(current_game){
+              var isDuplicate = that.games_list.findIndex(function(current_game) {
                 return current_game.id === game.id
               });
               if (isDuplicate === -1) {
