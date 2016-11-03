@@ -137,7 +137,7 @@ $.getScript("https://maps.googleapis.com/maps/api/js?key=<%=ENV['MAPS_KEY']%>");
            }
          })(marker,infowindow, e));
 
-        if (e.name === "this-is-a-venue") {
+        if (e.name === "this-is-a-venue" || this.events.length === 1) {
           map.setCenter({ lat: e.venue.latitude, lng: e.venue.longitude });
           map.setZoom(15);
         } else {
