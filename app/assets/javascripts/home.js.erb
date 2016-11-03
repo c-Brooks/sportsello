@@ -135,7 +135,7 @@ $.getScript("https://maps.googleapis.com/maps/api/js?key=<%=ENV['MAPS_KEY']%>");
            }
          })(marker,infowindow, e));
 
-        if (e.name === "this-is-a-venue") {
+        if (e.name === "this-is-a-venue" || this.events.length === 1) {
           map.setCenter({ lat: e.venue.latitude, lng: e.venue.longitude });
           map.setZoom(15);
         } else {
@@ -379,9 +379,15 @@ $.getScript("https://maps.googleapis.com/maps/api/js?key=<%=ENV['MAPS_KEY']%>");
         submit_search: function() {
           const that = this;
           if (this.query != '') {
+            $('.loader').show();
+            $('.loader').fadeTo("slow", 100);
             $.ajax({
               url: `/search?query=${that.query}`,
               success: function(res) {
+                $('.loader').fadeTo("slow", 0, function() {
+                  $('.loader').hide();
+                });
+
                 home.game_results = res.games;
                 home.venue_results = res.venues;
                 // home.event_results = res.events;
