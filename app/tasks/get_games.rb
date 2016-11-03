@@ -21,8 +21,9 @@ class GetGames
       # Go through each group of games
       nhl_games['games'].each do |game|
         sport = Sport.find_by_name 'NHL'
-          game['date'] = date.to_s + ' ' + game['date']
-          # Format date
+        # Format date
+        game['date'] = date.to_s + ' ' + game['date']
+
         add_game(game, sport, date)
       end
 

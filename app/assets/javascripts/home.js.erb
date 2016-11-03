@@ -108,7 +108,7 @@ $.getScript("https://maps.googleapis.com/maps/api/js?key=<%=ENV['MAPS_KEY']%>");
       hideTools: function() {
         this.displayTools = false;
       },
-      deleteVenue: function() {
+      deleteVenue: function(event) {
         const that = this;
         $.ajax({
           url: `/venues/${this.venue_id}`,
@@ -123,7 +123,9 @@ $.getScript("https://maps.googleapis.com/maps/api/js?key=<%=ENV['MAPS_KEY']%>");
           }
         });
       },
-      viewVenue: function() {
+      viewVenue: function(event) {
+        if (event.target.nodeName === 'I') { return; }
+
         if (home.view != 'venue') {
           home.view = 'venue';
 
@@ -140,10 +142,12 @@ $.getScript("https://maps.googleapis.com/maps/api/js?key=<%=ENV['MAPS_KEY']%>");
             url: `/venues/${this.venue_id}`,
             success: function(res) {
               home.venue_info = {
+                id: res.id,
                 name: res.name,
                 website: res.website,
                 description: res.description,
-                address: res.address
+                address: res.address,
+                reviews: res.reviews
               };
             }
           });
@@ -271,14 +275,13 @@ $.getScript("https://maps.googleapis.com/maps/api/js?key=<%=ENV['MAPS_KEY']%>");
     template:
     `<nav class="navbar navbar-default navbar-fixed-top">
         <div class="navbar-header">
-          <a class="navbar-brand" href="/"><object class="svg-logo"
-          type="image/svg+xml" data="/assets/sportsello.svg"></object></a>
+          <a class="navbar-brand" href="/"><img class="header-logo" src="/assets/header-logo.png"/></a>
         </div>
 
           <div class="navbar-collapse collapse">
             <ul class="nav navbar-nav">
             </ul>
-            <div class="row" style="margin-right:60px">
+            <div class="row">
               <log-reg-btn
                 :user_id="user_id"
                 :user_name="user_name"
@@ -290,18 +293,50 @@ $.getScript("https://maps.googleapis.com/maps/api/js?key=<%=ENV['MAPS_KEY']%>");
     </nav>`
   });
 
+  Vue.component('search-bar', {
+    template:
+      `<div class="input search-bar-container">
+        <input v-on:keyup.enter="submit_search" v-model="query" class="form-control search-bar" placeholder="What are you looking for?">
+        <span v-on:click="submit_search" class="glyphicon glyphicon-search btn-search clickable" aria-hidden="true"></span>
+      </div>`,
+      data: function() {
+        return {
+          query: ''
+        }
+      },
+      methods: {
+        submit_search: function() {
+          const that = this;
+          if (this.query != '') {
+            $.ajax({
+              url: `/search?query=${that.query}`,
+              success: function(res) {
+                home.game_results = res.games;
+                home.venue_results = res.venues;
+                home.view = 'searchResults';
+                $('body').css('overflow', 'hidden');
+                $('.search-bar').val('');
+              }
+            });
+          } else {
+            home.getGames();
+          }
+        }
+      }
+  });
+
 Vue.component('log-reg-btn', {
   props: ['user_id', 'user_name'],
   template:
   `
   <span class="nav navbar-nav navbar-right">
-    <div v-if="user_name" class="row" style="margin-right:60px">
+    <div v-if="user_name" class="row">
       <strong v-text="user_name"></strong>
-      | <a class="clickable" id='sign_out' v-on:click="signOut"> SIGN OUT </a>
+      | <a class="clickable" id='sign_out' v-on:click="signOut">Sign Out</a>
     </div>
     <div v-else>
-      <a class="log-in clickable" v-on:click="showLogin">SIGN IN</a> |
-      <a class="register clickable" v-on:click="showReg">REGISTER</a>
+      <a class="log-in clickable" v-on:click="showLogin">Sign In</a> |
+      <a class="register clickable" v-on:click="showReg">Register</a>
     </div>
   </span>
   `,
@@ -331,36 +366,6 @@ Vue.component('log-reg-btn', {
     }
   }
 })
-
-  Vue.component('search-bar', {
-    template:
-      `<div class="input search-bar-container">
-        <input v-on:keyup.enter="submit_search" v-model="query" class="form-control search-bar" placeholder="What are you looking for?">
-        <span v-on:click="submit_search" class="glyphicon glyphicon-search btn-search clickable" aria-hidden="true"></span>
-      </div>`,
-      data: function() {
-        return {
-          query: ''
-        }
-      },
-      methods: {
-        submit_search: function() {
-          const that = this;
-          if (this.query != '') {
-            $.ajax({
-              url: `/search?query=${that.query}`,
-              success: function(res) {
-                home.games_list = res.games;
-                console.log(JSON.stringify(res.games));
-                console.log(JSON.stringify(home.games_list));
-              }
-            });
-          } else {
-            home.getGames();
-          }
-        }
-      }
-  });
 
   Vue.component('vue-panel', {
     template:
@@ -435,6 +440,17 @@ Vue.component('log-reg-btn', {
                     :description="venue_info.description">
                   </venue-box>
                 </div>
+                <div class="section-header">Reviews</div>
+                <review-box
+                  :venue_id="venue_info.id">
+                </review-box>
+                <user-review-box
+                  v-for="review in venue_info.reviews"
+                  :id="review.id"
+                  :rating="review.rating"
+                  :description="review.description"
+                  :user="review.user">
+                </user-review-box>
               </div>
             </div>
           </div>
@@ -566,6 +582,48 @@ Vue.component('log-reg-btn', {
     }
   };
 
+  var searchResults = {
+    props: ['venue_results', 'game_results', 'user_venues'],
+    template:
+          `<div class="row">
+            <div class="col-sm-12">
+              <div class="content">
+                <div class="venues">
+                  <div class="section-header" v-if="venue_results.length > 0">
+                    Venues
+                  </div>
+                  <search-venue-box
+                    v-for="venue in venue_results"
+                    :name="venue.name"
+                    :address="venue.address"
+                    :description="venue.description"
+                    :website="venue.website">
+                  </search-venue-box>
+                </div>
+                <div class="games">
+                  <div class="section-header" v-if="game_results.length > 0">
+                    Games
+                  </div>
+                  <search-game-box
+                    v-for="game in game_results"
+                    :id="game.id"
+                    :datetime="game.datetime"
+                    :sport="game.sport.name"
+                    :team1="game.team1.name"
+                    :team2="game.team2.name"
+                    :user_venues="user_venues">
+                  </search-game-box>
+                  <div class="box" v-if="game_results.length === 0 && venue_results.length === 0">
+                    Unfortunately there are no results for this search!
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>`
+  }
+
   Vue.component('event-box', {
     props: ['id', 'name', 'venue', 'attendees'],
     data: function() {
@@ -653,6 +711,110 @@ Vue.component('log-reg-btn', {
         });
       }
     }
+  });
+
+  Vue.component('search-venue-box', {
+    props: ['venue', 'name', 'website', 'address', 'description'],
+    data: function() {
+      return {
+        displayVenue: false
+      }
+    },
+    beforeMount: function() {
+      if(home.venue_results.length != 0){
+        this.displayVenue = true;
+      }
+    },
+    template:
+      `<div v-if="displayVenue">
+          <div class="venue">
+            <div class="time-container col-sm-3">
+              <p class="time alt-text" v-text="address"></p>
+            </div>
+            <div class="info-container col-sm-9">
+                <div class="team1 col-sm-9">
+                <p>{{name}}</p>
+                <p>{{description}}</p>
+                </div>
+            </div>
+          </div>
+        </div>
+      </div>`
+  });
+
+    Vue.component('search-game-box', {
+    props: ['id', 'datetime', 'sport', 'team1', 'team2', 'user_venues'],
+    data: function() {
+      return {
+        displayGame: false,
+        date: this.datetime,
+        time: this.datetime
+      }
+    },
+    beforeMount: function() {
+      // Datetime logic
+      const today     = moment(getDateTime());
+      const datetime  = moment(this.datetime);
+
+      // Filter off games unless they are today or later
+      // Easier to do on the front end because it's in the proper timezone
+      if (datetime > today) {
+        this.displayGame = true;
+
+        const date  = datetime.format('dddd, MMMM Do YYYY');
+        const time  = datetime.format('h:mm a');
+        this.date   = date;
+        this.time   = time;
+
+      }
+    },
+    template:
+      `<div v-if="displayGame">
+        <div class="game" v-on:click="viewGame">
+          <div class="time-container col-sm-3">
+            <p class="time alt-text" v-text="date" ></p>
+            <p class="time alt-text" v-text="time" ></p>
+            <hosting-button v-if="user_venues.length > 0"/>
+          </div>
+          <div class="info-container col-sm-9">
+            <p class="sport alt-text" v-text="sport"></p>
+            <div class="center">
+              <div class="team1 col-sm-3" v-text="team1"></div>
+              <div class="vs col-sm-3">VS</div>
+              <div class="team2 col-sm-3" v-text="team2"></div>
+           </div>
+          </div>
+        </div>
+      </div>`,
+    methods: {
+      viewGame: function(event) {
+        if (home.view != 'game-info') {
+          home.view = 'game-info';
+
+          // Hide the scroll for the body
+          $('body').css('overflow', 'hidden');
+
+          var target = event.currentTarget;
+          $(target).addClass('game-click');
+          setTimeout(function() {
+            $(target).removeClass('game-click');
+          }, 400);
+
+          $.ajax({
+            url: `/games/${this.id}`,
+            success: function(res) {
+              home.game_info = {
+                datetime: res.datetime,
+                sport: res.sport.name,
+                team1: res.team1.name,
+                team2: res.team2.name,
+                events: res.events
+              };
+            }
+          });
+        }
+      }
+    },
   });
 
   Vue.component('game-box', {
@@ -757,6 +919,91 @@ Vue.component('log-reg-btn', {
           </div>
         </div>
       </div>`
+  });
+
+  Vue.component('user-review-box', {
+    props: ['id', 'description', 'rating', 'user'],
+    template:
+      `<div>
+        <div class="review box">
+          <div class="button-container col-sm-3">
+            <i class="fa fa-star" v-for="n in rating"></i>
+            <i class="fa fa-star-o" v-for="n in 5 - rating"></i>
+          </div>
+          <div class="info-container col-sm-9">
+            <p class="review-name alt-text">{{user.name}}</p>
+            <p class="review-description">{{description}}</p>
+          </div>
+        </div>
+      </div>`
+  });
+
+  Vue.component('review-box', {
+    props: ['venue_id'],
+    data: function() {
+      return {
+        rating: '',
+        description: ''
+      }
+    },
+    template:
+      `<div>
+        <div class="review box">
+          <div class="info-container col-sm-12">
+            <form v-on:submit.prevent="submitReview">
+              <div class="form-group">
+                <input type="hidden" id="review_rating" name="rating">
+                <i class="fa fa-star-o fa-lg star" id="star1" v-on:mouseover="setRating"></i>
+                <i class="fa fa-star-o fa-lg star" id="star2" v-on:mouseover="setRating"></i>
+                <i class="fa fa-star-o fa-lg star" id="star3" v-on:mouseover="setRating"></i>
+                <i class="fa fa-star-o fa-lg star" id="star4" v-on:mouseover="setRating"></i>
+                <i class="fa fa-star-o fa-lg star" id="star5" v-on:mouseover="setRating"></i>
+              </div>
+
+              <div class="form-group">
+                <label for="description">Review</label>
+                <textarea v-model="description" id="description" name="description" placeholder="What do you think of this venue?" class="form-control"/>
+              </div>
+
+              <button type="submit" class="btn btn-primary pull-right">Submit Review</button>
+            </form>
+          </div>
+        </div>
+      </div>`,
+    methods: {
+      setRating: function(event) {
+        var target = event.currentTarget;
+        var starNum =  target.id.match(/\d+/);
+        this.rating = +starNum;
+        for (i = 0; i <= starNum; i++) {
+          var currStar = 'star' + i;
+          $('#' + currStar).removeClass('fa-star-o');
+          $('#' + currStar).addClass('fa-star');
+        }
+        // Deselect stars > user review
+        for (i = parseInt(starNum) + 1; i < 6; i++) {
+          $('#star' + i).removeClass('fa-star');
+          $('#star' + i).addClass('fa-star-o');
+        }
+      },
+      submitReview: function() {
+        var self = this;
+        $.ajax({
+          url: `/venues/${this.venue_id}/reviews`,
+          method: 'POST',
+          data: {
+            user_id:      window.sessionStorage.getItem('user_id'),
+            rating:       self.rating,
+            description:  self.description
+          },
+          success: function(venue) {
+            home.view = 'empty';
+            // Enable the scroll for the body
+            $('body').css('overflow', 'scroll');
+          }
+        });
+      }
+    }
   });
 
   Vue.component('hosting-button', {
@@ -1027,7 +1274,8 @@ Vue.component('log-reg-btn', {
       'register': register,
       'venue': venue,
       'createVenue': createVenue,
-      'hostEvent': hostEvent
+      'hostEvent': hostEvent,
+      'searchResults': searchResults
     },
     data: {
       view: 'empty',
@@ -1039,7 +1287,9 @@ Vue.component('log-reg-btn', {
       session: {},
       user_id: null,
       user_name: null,
-      user_venues: []
+      user_venues: [],
+      game_results: [],
+      venue_results: []
     },
     created: function() {
       this.scroll();
@@ -1079,7 +1329,12 @@ Vue.component('log-reg-btn', {
           url: `/games.json?game_datetime=${lastDateTimeString}`,
           success: function(res) {
             res.games.forEach(function(game) {
-              that.games_list.push(game);
+              var isDuplicate = that.games_list.findIndex(function(current_game){
+                return current_game.id === game.id
+              });
+              if (isDuplicate === -1) {
+                that.games_list.push(game);
+              }
             });
             $('.bottom-loader').hide();
           }
