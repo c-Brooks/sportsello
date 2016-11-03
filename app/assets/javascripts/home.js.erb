@@ -313,6 +313,7 @@ $.getScript("https://maps.googleapis.com/maps/api/js?key=<%=ENV['MAPS_KEY']%>");
               success: function(res) {
                 home.game_results = res.games;
                 home.venue_results = res.venues;
+                home.event_results = res.events;
                 home.view = 'searchResults';
                 $('body').css('overflow', 'hidden');
                 $('.search-bar').val('');
@@ -583,9 +584,12 @@ Vue.component('log-reg-btn', {
   };
 
   var searchResults = {
-    props: ['venue_results', 'game_results', 'user_venues'],
+    props: ['venue_results', 'event_results', 'game_results', 'user_venues'],
     template:
-          `<div class="row">
+      `<div class="vue-panel">
+        <vue-panel/>
+          <div class="app-container">
+          <div class="row">
             <div class="col-sm-12">
               <div class="content">
                 <div class="venues">
@@ -599,6 +603,20 @@ Vue.component('log-reg-btn', {
                     :description="venue.description"
                     :website="venue.website">
                   </search-venue-box>
+                </div>
+                <div class="events">
+                  <div class="section-header" v-if="event_results.length > 0">
+                    Events
+                  </div>
+                  <search-event-box
+                    v-for="event in event_results"
+                    :name="event.name"
+                    :venue="event.venue.name"
+                    :sport="event.sport.name"
+                    :team1="event.team1.name"
+                    :team2="event.team2.name"
+                    :game_id="event.game.id">
+                  </search-event-box>
                 </div>
                 <div class="games">
                   <div class="section-header" v-if="game_results.length > 0">
@@ -740,6 +758,65 @@ Vue.component('log-reg-btn', {
           </div>
         </div>
       </div>`
+  });
+
+  Vue.component('search-event-box', {
+    props: ['venue', 'name', 'sport', 'team1', 'team2', 'game_id'],
+    data: function() {
+      return {
+        displayEvent: false
+      }
+    },
+    beforeMount: function() {
+      if(home.event_results.length != 0){
+        this.displayEvent = true;
+      }
+    },
+    template:
+      `<div v-if="displayEvent">
+          <div class="event clickable" v-on:click="viewGame">
+            <div class="time-container col-sm-3">
+              <p class="time alt-text" v-text="sport"></p>
+            </div>
+            <div class="info-container col-sm-9">
+            <div class="center">
+              <div class="event-name col-sm-3" v-text="name"></div>
+              <div class="at col-sm-3">@</div>
+              <div class="venue-name col-sm-3" v-text="venue"></div>
+            </div>
+            </div>
+          </div>
+        </div>
+      </div>`,
+     methods: {
+      viewGame: function(event) {
+        if (home.view != 'game-info') {
+          home.view = 'game-info';
+
+          // Hide the scroll for the body
+          $('body').css('overflow', 'hidden');
+
+          var target = event.currentTarget;
+          $(target).addClass('game-click');
+          setTimeout(function() {
+            $(target).removeClass('game-click');
+          }, 400);
+
+          $.ajax({
+            url: `/games/${this.game_id}`,
+            success: function(res) {
+              home.game_info = {
+                datetime: res.datetime,
+                sport: res.sport.name,
+                team1: res.team1.name,
+                team2: res.team2.name,
+                events: res.events
+              };
+            }
+          });
+        }
+      }
+    }
   });
 
     Vue.component('search-game-box', {
@@ -1289,7 +1366,8 @@ Vue.component('log-reg-btn', {
       user_name: null,
       user_venues: [],
       game_results: [],
-      venue_results: []
+      venue_results: [],
+      event_results: []
     },
     created: function() {
       this.scroll();
