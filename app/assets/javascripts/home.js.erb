@@ -689,8 +689,7 @@ Vue.component('log-reg-btn', {
       return {
         attendeesList: this.attendees,
         attendeesCount: this.attendees.length,
-        isAttending: false,
-        venue: this.venue
+        isAttending: false
       }
     },
     created: function() {
@@ -732,6 +731,28 @@ Vue.component('log-reg-btn', {
         </div>
       </div>`,
     methods: {
+      viewVenue: function() {
+        home.view = 'venue';
+
+          // Hide the scroll for the body
+          $('body').css('overflow', 'hidden');
+
+          $.ajax({
+            url: `/venues/${this.venue.id}`,
+            success: function(res) {
+              home.venue_info = {
+                id: res.id,
+                name: res.name,
+                website: res.website,
+                description: res.description,
+                address: res.address,
+                reviews: res.reviews,
+                latitude: res.latitude,
+                longitude: res.longitude
+              };
+            }
+          });
+      },
       openMarker: function (event) {
         if (event.target.nodeName === 'SPAN') {
           home.view = 'venue';
@@ -754,7 +775,7 @@ Vue.component('log-reg-btn', {
               };
             }
           });
-        } else {
+        } else if (event.target.nodeName === 'DIV') {
           this.highlightEvent();
           bus.$emit('openMarker', this.id)
         }
