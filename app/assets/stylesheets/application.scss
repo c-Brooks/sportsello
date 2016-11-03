@@ -121,10 +121,6 @@ a {
 .navbar {
   @include app-background-header;
 
-  -webkit-box-shadow: 0px 0px 20px 0px rgba(0,0,0,0.75);
-  -moz-box-shadow: 0px 0px 20px 0px rgba(0,0,0,0.75);
-  box-shadow: 0px 0px 20px 0px rgba(0,0,0,0.75);
-
   border: 2px solid $brand-light-red;
 
   font-weight: 600;
@@ -143,6 +139,16 @@ a {
     color: $brand-light-gray;
     text-decoration: none;
   }
+}
+
+.nav-shadow {
+  box-shadow: 0px 0px 20px 0px rgba(0,0,0,1);
+  position: fixed;
+  left: 0;
+  top: 0;
+  height: 50px;
+  width: 100%;
+  z-index: 4;
 }
 
 label,
@@ -258,6 +264,10 @@ hr {
       color: $brand-light-gray;
     }
   }
+}
+
+.loader {
+  border: none;
 }
 
 .component-slide-enter, .component-slide-leave-active {
