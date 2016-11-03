@@ -90,6 +90,8 @@ $.getScript("https://maps.googleapis.com/maps/api/js?key=<%=ENV['MAPS_KEY']%>");
 
       var bounds = new google.maps.LatLngBounds();
       var map = new google.maps.Map(document.getElementById('map'), mapOptions);
+      var allMarkers = [];
+      var allInfoz = [];
       for (var i = 0; i < this.events.length; i++) {
         var e = this.events[i];
 
@@ -101,6 +103,7 @@ $.getScript("https://maps.googleapis.com/maps/api/js?key=<%=ENV['MAPS_KEY']%>");
             <h5>${e.venue.address}<h5>
           </div>`
         });
+        allInfoz[e.id] = infowindow;
 
 
         var self = this;
@@ -108,7 +111,8 @@ $.getScript("https://maps.googleapis.com/maps/api/js?key=<%=ENV['MAPS_KEY']%>");
             position: { lat: e.venue.latitude, lng: e.venue.longitude },
             title: e.name,
             map: map
-          })
+          });
+        allMarkers[e.id] = marker;
 
         bounds.extend(marker.position);
 
@@ -147,7 +151,9 @@ $.getScript("https://maps.googleapis.com/maps/api/js?key=<%=ENV['MAPS_KEY']%>");
 
     // This isn't working yet
     bus.$on('openMarker', function (id) {
-      google.maps.event.trigger(infowindow, 'openMarker', id);
+      // CLOSE THE FUCKING BOXES
+
+      allInfoz[id].open(map, allMarkers[id]);
     });
   },
     methods: {
