@@ -4,7 +4,9 @@ class Fuzzy_Search
     @query = query
     @games = Game.all
     @venues = Venue.all
+    @events = Event.all
     @venue_results = []
+    @event_results = []
     @game_results = []
   end
 
@@ -15,6 +17,32 @@ class Fuzzy_Search
       end
     end
     @venue_results
+  end
+
+  def searchEvents()
+    @events.each do |event|
+      event_game = Game.find(event.game_id)
+      flag = false
+      search_table(@query, event_game.sport_id, 'sports').each do |row|
+        @event_results.push(event)
+        flag = true
+      end
+      next unless !flag
+      search_table(@query, event_game.team1_id, 'teams').each do |row|
+        @event_results.push(event)
+        flag = true
+      end
+      next unless !flag
+      search_table(@query, event_game.team2_id, 'teams').each do |row|
+        @event_results.push(event)
+        flag = true
+      end
+       next unless !flag
+      search_table(@query, event.venue_id, 'venues').each do |row|
+        @event_results.push(event)
+      end
+    end
+    @event_results
   end
 
   def searchGames()
