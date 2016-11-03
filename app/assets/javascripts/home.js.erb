@@ -406,7 +406,9 @@ Vue.component('log-reg-btn', {
                     :id="event.id"
                     :name="event.name"
                     :venue="event.venue"
-                    :attendees="event.attendees">
+                    :attendees="event.attendees"
+                    :users="event.users"
+                    >
                   </event-box>
                   <div class="box" v-if="!game_info.events.length">
                     Unfortunately there are no events for this game. Are you hosting one?
@@ -643,7 +645,9 @@ Vue.component('log-reg-btn', {
   }
 
   Vue.component('event-box', {
-    props: ['id', 'name', 'venue', 'attendees'],
+    // NOTE: I didn't want to break everything from attendees so
+    //       I just created users
+    props: ['id', 'name', 'venue', 'attendees', 'users'],
     data: function() {
       return {
         attendeesList: this.attendees,
@@ -1407,7 +1411,7 @@ Vue.component('log-reg-btn', {
           url: `/games.json?game_datetime=${lastDateTimeString}`,
           success: function(res) {
             res.games.forEach(function(game) {
-              var isDuplicate = that.games_list.findIndex(function(current_game){
+              var isDuplicate = that.games_list.findIndex(function(current_game) {
                 return current_game.id === game.id
               });
               if (isDuplicate === -1) {

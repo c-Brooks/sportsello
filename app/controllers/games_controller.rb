@@ -31,6 +31,8 @@ class GamesController < ApplicationController
         j.name event.name
         j.venue Venue.find(event.venue_id)
         j.attendees Attendee.where(event_id: event.id).pluck(:user_id)
+        j.users Attendee.find_by(event_id: event.id) ?
+        Attendee.find_by(event_id: event.id).user : []
       end
     end.target!
 
