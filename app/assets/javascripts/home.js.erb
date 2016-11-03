@@ -762,10 +762,11 @@ Vue.component('log-reg-btn', {
         for (var i = 0; i < this.users.length; i++) {
           var user = this.users[i];
           if (user && user.uid){
-            console.log(`${user.uid} friends with ${sessionStorage.user_uid}?`);
+            console.log(`${sessionStorage.user_uid} friends with? ${user.uid}`);
             FB.api(`/${sessionStorage.user_uid}/friends/${user.uid}`, function(res) {
-              console.log(res);
+              console.log(`Are me and ${user.uid} friends? `, res);
               if(res.data[0]) {
+                console.log(`Pushing ${res.data[0].name}`);
                 friends.push(res.data[0].name)
               }
             })
