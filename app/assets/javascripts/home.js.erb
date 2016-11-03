@@ -267,7 +267,7 @@ $.getScript("https://maps.googleapis.com/maps/api/js?key=<%=ENV['MAPS_KEY']%>");
           <div class="navbar-collapse collapse">
             <ul class="nav navbar-nav">
             </ul>
-            <div class="row" style="margin-right:60px">
+            <div class="row">
               <log-reg-btn
                 :user_id="user_id"
                 :user_name="user_name"
@@ -1260,7 +1260,7 @@ Vue.component('log-reg-btn', {
       'register': register,
       'venue': venue,
       'createVenue': createVenue,
-      'hostEvent': hostEvent
+      'hostEvent': hostEvent,
       'searchResults': searchResults
     },
     data: {
