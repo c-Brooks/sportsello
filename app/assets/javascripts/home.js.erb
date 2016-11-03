@@ -1076,9 +1076,19 @@ Vue.component('log-reg-btn', {
             description:  self.description
           },
           success: function(venue) {
-            home.view = 'empty';
-            // Enable the scroll for the body
-            $('body').css('overflow', 'scroll');
+            const user = { name: '' };
+            if (window.sessionStorage.getItem('user_name')) {
+              user.name = window.sessionStorage.getItem('user_name');
+            } else {
+              user.name = 'Anonymous';
+            }
+
+            // Push review for display
+            home.venue_info.reviews.unshift({
+              user: user,
+              rating: self.rating,
+              description: self.description
+            });
           }
         });
       }
