@@ -684,7 +684,10 @@ Vue.component('log-reg-btn', {
   var searchResults = {
     props: ['venue_results', 'game_results', 'user_venues'],
     template:
-          `<div class="row">
+      `<div class="vue-panel">
+        <vue-panel/>
+          <div class="app-container">
+          <div class="row">
             <div class="col-sm-12">
               <div class="content">
                 <div class="venues">
