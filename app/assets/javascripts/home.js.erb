@@ -850,8 +850,18 @@ Vue.component('log-reg-btn', {
                   <button class="btn btn-temp" v-on:click="cancel" v-if="isAttending">Cancel RSVP</button>
                   <button class="btn btn-temp" v-on:click="attending" v-else>I'm attending!</button>
 
-                  <p class="alt-text" v-if="attendeesCount === 1">{{attendeesCount}} person attending</p>
-                  <p class="alt-text" v-else>{{attendeesCount}} people attending</p>
+                <p class="alt-text" v-if="!friends.length && attendeesCount===1">
+                  {{attendeesCount}} person attending
+                </p>
+                <p class="alt-text" v-if="!friends.length && attendeesCount>1">
+                  {{attendeesCount}} people attending
+                </p>
+                <p class="alt-text" v-if="friends.length==1">
+                  {{friends[0]}} <br /> and {{attendeesCount-1}} others
+                </p>
+                <p class="alt-text" v-if="friends.length>1">
+                  {{friends.join(', ')}} <br /> and {{attendeesCount-friends.length}} others
+                </p>
                 </center>
               </div>
             </div>
