@@ -256,10 +256,13 @@ $.getScript("https://maps.googleapis.com/maps/api/js?key=<%=ENV['MAPS_KEY']%>");
             $(target).removeClass('game-click');
           }, 400);
 
+          const that = this;
           $.ajax({
             url: `/games/${this.game_id}`,
             success: function(res) {
+              console.log(res);
               home.game_info = {
+                id: that.game_id,
                 datetime: res.datetime,
                 sport: res.sport.name,
                 team1: res.team1.name,
@@ -476,6 +479,7 @@ Vue.component('log-reg-btn', {
               <div class="content">
                 <div class="game-info">
                   <game-box
+                    :id="game_info.id"
                     :datetime="game_info.datetime"
                     :sport="game_info.sport"
                     :team1="game_info.team1"
@@ -632,6 +636,7 @@ Vue.component('log-reg-btn', {
       return {
         games: home.games_list,
         venues: home.user_venues,
+        selected: home.selected,
         name: '',
         game_id: '',
         venue_id: ''
@@ -652,7 +657,7 @@ Vue.component('log-reg-btn', {
 
                 <div class="form-group">
                   <label for="game">Game</label>
-                  <select v-model="game_id" id="game" name="game_id" class="form-control">
+                  <select v-model="selected" id="game" name="game_id" class="form-control">
                     <option v-for="game in games" v-bind:value="game.id">{{game.datetime}}: {{game.team1.name}} vs. {{game.team2.name}}</option>
                   </select>
                 </div>
@@ -829,6 +834,27 @@ Vue.component('log-reg-btn', {
               <span class="venue-name col-sm-3 clickable" v-text="venue.name" v-on:click="viewVenue"></span>
             </div>
           </div>
+        </div>
+        <div class="row visible-xs">
+
+            <div class="info-container col-xs-12">
+              <p class="alt-text" v-text="venue.description"></p>
+              <div class="center">
+                <div class="event-name col-sm-3" v-text="name"></div>
+                <div class="at col-sm-3">@</div>
+                <span class="venue-name col-sm-3 clickable" v-text="venue.name" v-on:click="viewVenue"></span>
+              </div>
+              <div class="col-sm-12">
+                <center>
+                  <button class="btn btn-temp" v-on:click="cancel" v-if="isAttending">Cancel RSVP</button>
+                  <button class="btn btn-temp" v-on:click="attending" v-else>I'm attending!</button>
+
+                  <p class="alt-text" v-if="attendeesCount === 1">{{attendeesCount}} person attending</p>
+                  <p class="alt-text" v-else>{{attendeesCount}} people attending</p>
+                </center>
+              </div>
+            </div>
+
         </div>
         <div class="row visible-xs">
 
@@ -1046,10 +1072,12 @@ Vue.component('log-reg-btn', {
             $(target).removeClass('game-click');
           }, 400);
 
+          const that = this;
           $.ajax({
             url: `/games/${this.id}`,
             success: function(res) {
               home.game_info = {
+                id: that.id,
                 datetime: res.datetime,
                 sport: res.sport.name,
                 team1: res.team1.name,
@@ -1106,7 +1134,7 @@ Vue.component('log-reg-btn', {
         <div class="game" v-on:click="viewGame">
           <div class="time-container col-sm-3">
             <p class="time alt-text" v-text="time" v-if="displayTime"></p>
-            <hosting-button v-if="user_venues.length > 0" class="hidden-xs"/>
+            <hosting-button v-if="user_venues.length > 0" class="hidden-xs" :game_id="id" />
           </div>
           <div class="info-container col-sm-9">
             <p class="sport alt-text" v-text="sport"></p>
@@ -1114,7 +1142,7 @@ Vue.component('log-reg-btn', {
               <div class="team1 col-sm-3" v-text="team1"></div>
               <div class="vs col-sm-3">VS</div>
               <div class="team2 col-sm-3" v-text="team2"></div>
-              <center><hosting-button v-if="user_venues.length > 0" class="visible-xs"/></center>
+              <center><hosting-button v-if="user_venues.length > 0" class="visible-xs" :game_id="id" /></center>
            </div>
           </div>
         </div>
@@ -1135,10 +1163,12 @@ Vue.component('log-reg-btn', {
             $(target).removeClass('game-click');
           }, 400);
 
+          const that = this;
           $.ajax({
             url: `/games/${this.id}`,
             success: function(res) {
               home.game_info = {
+                id: that.id,
                 datetime: res.datetime,
                 sport: res.sport.name,
                 team1: res.team1.name,
@@ -1264,6 +1294,7 @@ Vue.component('log-reg-btn', {
   });
 
   Vue.component('hosting-button', {
+    props: ['game_id'],
     template:
       `<div>
         <button class="btn btn-primary hidden-xs" v-on:click="hostEvent">I'm hosting!</button>
@@ -1271,6 +1302,8 @@ Vue.component('log-reg-btn', {
       </div>`,
     methods: {
       hostEvent: function() {
+        console.log(this.game_id);
+        home.selected = this.game_id;
         home.view = 'hostEvent'
 
         // Hide the scroll for the body
@@ -1552,7 +1585,8 @@ Vue.component('log-reg-btn', {
       user_name: null,
       user_venues: [],
       game_results: [],
-      venue_results: []
+      venue_results: [],
+      selected: null
     },
     created: function() {
       this.scroll();
