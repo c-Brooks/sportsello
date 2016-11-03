@@ -20,7 +20,7 @@ class GetGames
 
       # Go through each group of games
       nhl_games['games'].each do |game|
-        sport = Sport.find_by_name 'NHL'
+        sport = Sport.find_or_create_by name: 'NHL'
         # Format date
         game['date'] = date.to_s + ' ' + game['date']
 
@@ -28,7 +28,7 @@ class GetGames
       end
 
       nba_games['games'].each do |game|
-        sport = Sport.find_by_name 'NBA'
+        sport = Sport.find_or_create_by name: 'NBA'
         #Format date
         game['date'] = date.to_s + ' ' + game['date']
 
@@ -36,7 +36,7 @@ class GetGames
       end
 
       mlb_games['games'].each do |game|
-        sport = Sport.find_by_name 'MLB'
+        sport = Sport.find_or_create_by name: 'MLB'
         #Takes team data and splits into proper format
         game['team1'] = game['team1'].split(') ')[1].split("\n")[0]
         game['team2'] = game['team2'].split(') ')[1]
