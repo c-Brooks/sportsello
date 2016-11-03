@@ -1084,7 +1084,7 @@ Vue.component('log-reg-btn', {
         <div class="game" v-on:click="viewGame">
           <div class="time-container col-sm-3">
             <p class="time alt-text" v-text="time" v-if="displayTime"></p>
-            <hosting-button v-if="user_venues.length > 0"/>
+            <hosting-button v-if="user_venues.length > 0" class="hidden-xs"/>
           </div>
           <div class="info-container col-sm-9">
             <p class="sport alt-text" v-text="sport"></p>
@@ -1092,6 +1092,7 @@ Vue.component('log-reg-btn', {
               <div class="team1 col-sm-3" v-text="team1"></div>
               <div class="vs col-sm-3">VS</div>
               <div class="team2 col-sm-3" v-text="team2"></div>
+              <center><hosting-button v-if="user_venues.length > 0" class="visible-xs"/></center>
            </div>
           </div>
         </div>
@@ -1242,7 +1243,10 @@ Vue.component('log-reg-btn', {
 
   Vue.component('hosting-button', {
     template:
-      `<button class="btn btn-primary" v-on:click="hostEvent">I'm hosting!</button>`,
+      `<div>
+        <button class="btn btn-primary hidden-xs" v-on:click="hostEvent">I'm hosting!</button>
+        <button class="btn btn-temp visible-xs" v-on:click="hostEvent">I'm hosting!</button>
+      </div>`,
     methods: {
       hostEvent: function() {
         home.view = 'hostEvent'
