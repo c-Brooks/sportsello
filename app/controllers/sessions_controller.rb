@@ -11,6 +11,10 @@ class SessionsController < ApplicationController
       @user = User.from_omniauth(env["omniauth.auth"])
       session[:user_id] = @user.id
       redirect_to root_path
+    elsif params[:uid]
+      @user = User.find_by_uid(params[:uid])
+      session[:user_id] = @user.id
+      render :json => @user
   else # email/password login
     @user = User.find_by_email(params[:email])
       # If the user exists AND the password entered is correct.

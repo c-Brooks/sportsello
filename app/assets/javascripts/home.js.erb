@@ -684,10 +684,7 @@ Vue.component('log-reg-btn', {
   var searchResults = {
     props: ['venue_results', 'game_results', 'user_venues'],
     template:
-      `<div class="vue-panel">
-        <vue-panel/>
-          <div class="app-container">
-          <div class="row">
+          `<div class="row">
             <div class="col-sm-12">
               <div class="content">
                 <div class="venues">
@@ -813,6 +810,27 @@ Vue.component('log-reg-btn', {
               <span class="venue-name col-sm-3 clickable" v-text="venue.name" v-on:click="viewVenue"></span>
             </div>
           </div>
+        </div>
+        <div class="row visible-xs">
+
+            <div class="info-container col-xs-12">
+              <p class="alt-text" v-text="venue.description"></p>
+              <div class="center">
+                <div class="event-name col-sm-3" v-text="name"></div>
+                <div class="at col-sm-3">@</div>
+                <span class="venue-name col-sm-3 clickable" v-text="venue.name" v-on:click="viewVenue"></span>
+              </div>
+              <div class="col-sm-12">
+                <center>
+                  <button class="btn btn-temp" v-on:click="cancel" v-if="isAttending">Cancel RSVP</button>
+                  <button class="btn btn-temp" v-on:click="attending" v-else>I'm attending!</button>
+
+                  <p class="alt-text" v-if="attendeesCount === 1">{{attendeesCount}} person attending</p>
+                  <p class="alt-text" v-else>{{attendeesCount}} people attending</p>
+                </center>
+              </div>
+            </div>
+
         </div>
         <div class="row visible-xs">
 
