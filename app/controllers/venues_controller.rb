@@ -37,6 +37,8 @@ class VenuesController < ApplicationController
       j.name @venue.name
       j.description @venue.description
       j.address @venue.address
+      j.latitude @venue.latitude
+      j.longitude @venue.longitude
       j.reviews Review.where(venue_id: params[:id]).order(created_at: :desc) do |review|
         j.review review.id
         j.rating review.rating

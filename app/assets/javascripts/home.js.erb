@@ -29,23 +29,29 @@ $.getScript("https://maps.googleapis.com/maps/api/js?key=<%=ENV['MAPS_KEY']%>");
         // styles: [{"stylers":[{"hue":"#dd0d0d"}]},{"featureType":"road","elementType":"labels","stylers":[{"visibility":"off"}]},{"featureType":"road","elementType":"geometry","stylers":[{"lightness":100},{"visibility":"simplified"}]}]
       };
 
+      var bounds = new google.maps.LatLngBounds();
       var map = new google.maps.Map(document.getElementById('map'), mapOptions);
       for (var i = 0; i < this.events.length; i++) {
-        var e = this.events[i]
+        var e = this.events[i];
+
         var infowindow = new google.maps.InfoWindow({
           id: e.id,
           content: `
-          <div style="color: grey">
+          <div style="color: #b11623">
             <h4>${e.name} @ ${e.venue.name}</h4>
             <h5>${e.venue.address}<h5>
           </div>`
         });
+
+
         var self = this;
         var marker = new google.maps.Marker({
             position: { lat: e.venue.latitude, lng: e.venue.longitude },
             title: e.name,
             map: map
           })
+
+        bounds.extend(marker.position);
 
         var self = this;
          google.maps.event.addListener(marker,'click', (function(marker, infowindow, e){
@@ -72,7 +78,15 @@ $.getScript("https://maps.googleapis.com/maps/api/js?key=<%=ENV['MAPS_KEY']%>");
              //infowindow.open(map, marker)
            }
          })(marker,infowindow, e));
+
+        if (e.name === "this-is-a-venue") {
+          map.setCenter({ lat: e.venue.latitude, lng: e.venue.longitude });
+          map.setZoom(15);
+        } else {
+          map.fitBounds(bounds);
+        }
     }
+
     // This isn't working yet
     bus.$on('openMarker', function (id) {
       console.log('Event', id);
@@ -147,7 +161,9 @@ $.getScript("https://maps.googleapis.com/maps/api/js?key=<%=ENV['MAPS_KEY']%>");
                 website: res.website,
                 description: res.description,
                 address: res.address,
-                reviews: res.reviews
+                reviews: res.reviews,
+                latitude: res.latitude,
+                longitude: res.longitude
               };
             }
           });
@@ -427,6 +443,24 @@ Vue.component('log-reg-btn', {
 
   var venue = {
     props: ['venue_info'],
+    data: function() {
+      return {
+        events: []
+      }
+    },
+    created: function() {
+      // Clean this shit up
+      this.events.push({
+        name: 'this-is-a-venue',
+        venue: {
+          name: this.venue_info.name,
+          address: this.venue_info.address,
+          description: this.venue_info.description,
+          latitude: this.venue_info.latitude,
+          longitude: this.venue_info.longitude
+        }
+      });
+    },
     template:
       `<div class="vue-panel">
         <vue-panel/>
@@ -454,6 +488,11 @@ Vue.component('log-reg-btn', {
                 </user-review-box>
               </div>
             </div>
+
+            <game-sidebar
+              :events="events"
+              >
+            <game-sidebar/>
           </div>
         </div>
       </div>`
@@ -707,7 +746,9 @@ Vue.component('log-reg-btn', {
                 website: res.website,
                 description: res.description,
                 address: res.address,
-                reviews: res.reviews
+                reviews: res.reviews,
+                latitude: res.latitude,
+                longitude: res.longitude
               };
             }
           });
