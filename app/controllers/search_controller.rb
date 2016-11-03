@@ -15,7 +15,7 @@ class SearchController < ApplicationController
         j.sport Sport.find(game.sport_id), :name
       end
       j.venues @venues do |venue|
-        j.venue venue.id
+        j.id venue.id
         j.name venue.name
         j.description venue.description
         j.address venue.address
