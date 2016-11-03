@@ -791,18 +791,19 @@ Vue.component('log-reg-btn', {
       }.bind(this));
     },
     // TODO: Add more logic to attendees/friends going
-    //          <p class="alt-text" v-if="friends.length==1">{{friends[0]}} is going</p>
-    //          <p class="alt-text" v-if="friends.length>1">{{friends.join(', ')}} are going</p>
     template:
       `<div class="event" v-on:click="openMarker">
         <div class="row hidden-xs">
           <div class="attendee-col col-sm-3">
             <button class="btn btn-primary" v-on:click="cancel" v-if="isAttending">Cancel RSVP</button>
-            <button class="btn btn-primary" v-on:click="attending" v-else>I'm attending!</button>
+            <button class="btn btn-primary" v-on:click="attending" v-else>Click to RSVP</button>
 
-            <p class="alt-text" v-if="attendeesCount === 1">{{attendeesCount}} person attending</p>
-            <p class="alt-text" v-else>{{attendeesCount}} people attending</p>
+            <p class="alt-text" v-if="!friends.length && attendeesCount === 1">{{attendeesCount}} person attending</p>
+            <p class="alt-text" v-if="!friends.length && attendeesCount > 1">{{attendeesCount}} people attending</p>
+            <p class="alt-text" v-if="friends.length==1">{{friends[0]}} + {{attendeesCount-1}}</p>
+            <p class="alt-text" v-if="friends.length>1">{{friends.join(', ')}} + {{attendeesCount-friends.length}}</p>
           </div>
+
           <div class="info-container col-sm-9">
             <p class="alt-text" v-text="venue.description"></p>
             <div class="center">
