@@ -32,39 +32,53 @@ $.getScript("https://maps.googleapis.com/maps/api/js?key=<%=ENV['MAPS_KEY']%>");
       var map = new google.maps.Map(document.getElementById('map'), mapOptions);
       for (var i = 0; i < this.events.length; i++) {
         var e = this.events[i]
-        var infoWindow = new google.maps.InfoWindow({
+        var infowindow = new google.maps.InfoWindow({
+          id: e.id,
           content: `
           <div style="color: grey">
             <h4>${e.name} @ ${e.venue.name}</h4>
             <h5>${e.venue.address}<h5>
           </div>`
         });
+        var self = this;
         var marker = new google.maps.Marker({
             position: { lat: e.venue.latitude, lng: e.venue.longitude },
             title: e.name,
             map: map
-          });
-        marker.addListener('click', function() {
-          // Highlight corresponding event
-          this.highlight(e)
-          infoWindow.open(map, marker);
-        }.bind(this));
-        google.maps.event.addListener(infoWindow,'closeclick',function(){
-          this.unhighlight(e);
-        }.bind(this));
-        google.maps.event.addListener(infoWindow,'closeclick',function(){
-          this.unhighlight(e);
-        }.bind(this));
-        // Open marker if corresponding venue is focused
-        bus.$on('openMarker', function (id) {
-          if (e.id === id) {
-            infoWindow.open(map, marker);
-          } else {
-            infoWindow.close(map, marker);
-          }
-        });
-      }
-    },
+          })
+
+        var self = this;
+         google.maps.event.addListener(marker,'click', (function(marker, infowindow, e){
+           return function() {
+             infowindow.setContent(infowindow.content);
+             infowindow.open(map, marker);
+             self.highlight(e);
+
+             google.maps.event.addListener(map,'click', function() {
+               infowindow.close();
+             });
+           }
+         })(marker,infowindow, e));
+
+         google.maps.event.addListener(infowindow,'closeclick', (function(marker, infowindow, e) {
+           return function () {
+             self.unhighlight(e);
+           }
+         })(marker,infowindow, e));
+
+         google.maps.event.addListener(infowindow,'openMarker', (function(marker, infowindow, e) {
+           return function () {
+             console.log('triggered', e.id);
+             //infowindow.open(map, marker)
+           }
+         })(marker,infowindow, e));
+    }
+    // This isn't working yet
+    bus.$on('openMarker', function (id) {
+      console.log('Event', id);
+      google.maps.event.trigger(infowindow, 'openMarker', id);
+    });
+  },
     methods: {
       highlight: function (e) {
         bus.$emit('highlit', e.id)
@@ -261,14 +275,13 @@ $.getScript("https://maps.googleapis.com/maps/api/js?key=<%=ENV['MAPS_KEY']%>");
     template:
     `<nav class="navbar navbar-default navbar-fixed-top">
         <div class="navbar-header">
-          <a class="navbar-brand" href="/"><object class="svg-logo"
-          type="image/svg+xml" data="/assets/sportsello.svg"></object></a>
+          <a class="navbar-brand" href="/"><img class="header-logo" src="/assets/header-logo.png"/></a>
         </div>
 
           <div class="navbar-collapse collapse">
             <ul class="nav navbar-nav">
             </ul>
-            <div class="row" style="margin-right:60px">
+            <div class="row">
               <log-reg-btn
                 :user_id="user_id"
                 :user_name="user_name"
@@ -318,13 +331,13 @@ Vue.component('log-reg-btn', {
   template:
   `
   <span class="nav navbar-nav navbar-right">
-    <div v-if="user_name" class="row" style="margin-right:60px">
+    <div v-if="user_name" class="row">
       <strong v-text="user_name"></strong>
-      | <a class="clickable" id='sign_out' v-on:click="signOut"> SIGN OUT </a>
+      | <a class="clickable" id='sign_out' v-on:click="signOut">Sign Out</a>
     </div>
     <div v-else>
-      <a class="log-in clickable" v-on:click="showLogin">SIGN IN</a> |
-      <a class="register clickable" v-on:click="showReg">REGISTER</a>
+      <a class="log-in clickable" v-on:click="showLogin">Sign In</a> |
+      <a class="register clickable" v-on:click="showReg">Register</a>
     </div>
   </span>
   `,
