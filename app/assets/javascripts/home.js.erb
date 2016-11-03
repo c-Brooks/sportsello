@@ -9,7 +9,6 @@ $(document).ready(function() {
       FB.getLoginStatus(function(response) {
         if (response.status === 'connected') {
           FB.api('/me/', function (res) {
-            console.log(res);
             home.user_name = res.name;
             window.sessionStorage.setItem( 'user_name', res.name );
             $.ajax({
@@ -20,7 +19,6 @@ $(document).ready(function() {
                 uid: res.id
               },
               success: function(resp) {
-                console.log('logged in as', resp);
               },
               error: function(err) {
                 $.ajax({
@@ -762,7 +760,6 @@ Vue.component('log-reg-btn', {
         attendeesList: this.attendees,
         attendeesCount: this.attendees.length,
         isAttending: false,
-        venue: this.venue,
         friends: friends
       }
     },
@@ -777,11 +774,8 @@ Vue.component('log-reg-btn', {
         for (var i = 0; i < this.users.length; i++) {
           var user = this.users[i];
           if (user && user.uid){
-            console.log(`${sessionStorage.user_uid} friends with? ${user.uid}`);
             FB.api(`/${sessionStorage.user_uid}/friends/${user.uid}`, function(res) {
-              console.log(`Are me and ${user.uid} friends? `, res);
-              if(res.data[0]) {
-                console.log(`Pushing ${res.data[0].name}`);
+              if(res.data && res.data[0]) {
                 friends.push(res.data[0].name)
               }
             })
@@ -813,10 +807,18 @@ Vue.component('log-reg-btn', {
             <button class="btn btn-primary" v-on:click="cancel" v-if="isAttending">Cancel RSVP</button>
             <button class="btn btn-primary" v-on:click="attending" v-else>Click to RSVP</button>
 
-            <p class="alt-text" v-if="!friends.length && attendeesCount === 1">{{attendeesCount}} person attending</p>
-            <p class="alt-text" v-if="!friends.length && attendeesCount > 1">{{attendeesCount}} people attending</p>
-            <p class="alt-text" v-if="friends.length==1">{{friends[0]}} + {{attendeesCount-1}}</p>
-            <p class="alt-text" v-if="friends.length>1">{{friends.join(', ')}} + {{attendeesCount-friends.length}}</p>
+            <p class="alt-text" v-if="!friends.length && attendeesCount === 1">
+              {{attendeesCount}} person attending
+            </p>
+            <p class="alt-text" v-if="!friends.length && attendeesCount > 1">
+              {{attendeesCount}} people attending
+            </p>
+            <p class="alt-text" v-if="friends.length==1">
+              {{friends[0]}} <br /> and {{attendeesCount-1}} others
+            </p>
+            <p class="alt-text" v-if="friends.length>1">
+              {{friends.join(', ')}} <br /> and {{attendeesCount-friends.length}} others
+            </p>
           </div>
 
           <div class="info-container col-sm-9">
@@ -1557,9 +1559,6 @@ Vue.component('log-reg-btn', {
       this.updateUser();
       this.getTopEvents();
       this.getGames();
-      // FB.api('/me/', function (res) {
-      //   console.log('inside created', res);
-      // })
     },
     updated: function() {
       $('.bottom-loader').hide();
