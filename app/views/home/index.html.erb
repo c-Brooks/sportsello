@@ -7,13 +7,12 @@
 
 <div id="home">
 
-  <div class="nav navbar-nav" id="nav-bar">
-    <nav-bar
-      :user_id="user_id"
-      :user_name="user_name"
-      >
-    </nav-bar>
-  </div>
+  <nav-bar
+    :user_id="user_id"
+    :user_name="user_name"
+    >
+  </nav-bar>
+  <div class="nav-shadow"></div>
 
   <div class="vue-panel loader">
     <img src="/assets/loader.svg" alt="loading">
@@ -27,7 +26,8 @@
       :venue_info="venue_info"
       :user_venues="user_venues"
       :game_results="game_results"
-      :venue_results="venue_results">
+      :venue_results="venue_results"
+      :event_results="event_results">
     </component>
   </transition>
 

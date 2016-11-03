@@ -431,7 +431,9 @@ Vue.component('log-reg-btn', {
                     :id="event.id"
                     :name="event.name"
                     :venue="event.venue"
-                    :attendees="event.attendees">
+                    :attendees="event.attendees"
+                    :users="event.users"
+                    >
                   </event-box>
                   <div class="box" v-if="!game_info.events.length">
                     Unfortunately there are no events for this game. Are you hosting one?
@@ -651,7 +653,7 @@ Vue.component('log-reg-btn', {
   }
 
   Vue.component('event-box', {
-    props: ['id', 'name', 'venue', 'attendees'],
+    props: ['id', 'name', 'venue', 'attendees', 'users'],
     data: function() {
       return {
         attendeesList: this.attendees,
@@ -664,6 +666,14 @@ Vue.component('log-reg-btn', {
       if (this.attendeesList.indexOf(+window.sessionStorage.getItem('user_id')) !== -1) {
         this.isAttending = true;
       }
+      // Search attending users for Facebook friends
+      for (var i = 0; i < this.users.length; i++) {
+        FB.api(`/me/friends/${this.users[i].uid}`, function(res) {
+          console.log('Friends?', res);
+        })
+
+    }
+
       // If marker is clicked on map,
       // highlight the corresponding event
       bus.$on('highlit', function (id) {
