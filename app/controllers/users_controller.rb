@@ -17,7 +17,7 @@ class UsersController < ApplicationController
 
   def user_params
     params[:email].downcase! if params[:email]
-    params.permit(:name, :email, :password, :password_confirmation)
+    params.permit(:name, :email, :password, :password_confirmation, :uid)
   end
 
 end

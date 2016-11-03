@@ -6,16 +6,48 @@ $(document).ready(function() {
         version    : 'v2.8'
       });
       FB.AppEvents.logPageView();
-      // FB.getLoginStatus(function(response) {
-      //   if (response.status === 'connected') {
-      //     window.sessionStorage.setItem( 'user_uid', response.authResponse.userID );
-      //   }
-      //   else {
+      FB.getLoginStatus(function(response) {
+        if (response.status === 'connected') {
+          FB.api('/me/', function (res) {
+            console.log(res);
+            home.user_name = res.name;
+            window.sessionStorage.setItem( 'user_name', res.name );
+            $.ajax({
+              url: '/sessions',
+              method:'POST',
+              data: {
+                name: res.name,
+                uid: res.id
+              },
+              success: function(resp) {
+                console.log('logged in as', resp);
+              },
+              error: function(err) {
+                $.ajax({
+                  url: '/users',
+                  method:'POST',
+                  data: {
+                    name: res.name,
+                    uid: res.id
+                  },
+                  success: function (resp) {
+                    console.log("New user created:", resp);
+                  }
+                })
+              }
+            })
+          })
+          window.sessionStorage.setItem( 'user_uid', response.authResponse.userID );
+        }
+        else {
           FB.login(function(response) {
-             console.log(response);
+            FB.api('/me/', function (res) {
+              window.sessionStorage.setItem( 'user_name', res.name );
+              console.log(res);
+            })
           }, {scope: 'email, user_friends'});
-    //     }
-    //   })
+        }
+      })
     };
 
     (function(d, s, id){
@@ -719,19 +751,23 @@ Vue.component('log-reg-btn', {
     },
     created: function() {
       // If user is attending, set attending to true
+      var self = this;
       if (this.attendeesList.indexOf(+window.sessionStorage.getItem('user_id')) !== -1) {
         this.isAttending = true;
       }
       var friends = [];
-      console.log("USERS", this.users);
-      for (var i = 0; i < this.users.length; i++) {
-        var user = this.users[i]
-        console.log(`${user.uid} friends with ${sessionStorage.user_uid}?`);
+      if (this.users.length && sessionStorage.user_uid) {
+        for (var i = 0; i < this.users.length; i++) {
+          var user = this.users[i];
+          if (user && user.uid){
+            console.log(`${user.uid} friends with ${sessionStorage.user_uid}?`);
+            FB.api(`/${sessionStorage.user_uid}/friends/${user.uid}`, function(res) {
+              friends.push(res.data[0].name)
+            })
+          }
+        }
+        self.friends = friends;
       }
-        FB.api(`/${sessionStorage.user_uid}/friends/${user.uid}`, function(res) {
-          friends.push(res.data[0].name)
-        })
-        this.friends = friends;
 
       // If marker is clicked on map,
       // highlight the corresponding event
@@ -749,6 +785,8 @@ Vue.component('log-reg-btn', {
       }.bind(this));
     },
     // TODO: Add more logic to attendees/friends going
+    //          <p class="alt-text" v-if="friends.length==1">{{friends[0]}} is going</p>
+    //          <p class="alt-text" v-if="friends.length>1">{{friends.join(', ')}} are going</p>
     template:
       `<div class="event" v-on:click="openMarker">
         <div class="attendee-col col-sm-3">
@@ -756,8 +794,6 @@ Vue.component('log-reg-btn', {
           <button class="btn btn-primary" v-on:click="attending" v-else>I'm attending!</button>
 
           <p class="alt-text" v-if="attendeesCount === 1">{{attendeesCount}} person attending</p>
-          <p class="alt-text" v-if="friends.length==1">{{friends[0]}} is going</p>
-          <p class="alt-text" v-if="friends.length>1">{{friends.join(', ')}} are going</p>
           <p class="alt-text" v-else>{{attendeesCount}} people attending</p>
         </div>
         <div class="info-container col-sm-9">
@@ -1454,6 +1490,9 @@ Vue.component('log-reg-btn', {
       this.updateUser();
       this.getTopEvents();
       this.getGames();
+      // FB.api('/me/', function (res) {
+      //   console.log('inside created', res);
+      // })
     },
     updated: function() {
       $('.bottom-loader').hide();

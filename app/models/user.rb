@@ -8,7 +8,7 @@ class User < ActiveRecord::Base
   has_many :attendees
   before_save :downcase_email, if: 'email.present?'
   EMAIL_REGEX = /\b[A-Z0-9._%a-z\-]+@(?:[A-Z0-9a-z\-]+\.)+[A-Za-z]{2,4}\z/
-  validates :name, :presence => true, :length => { :in => 3..20 }
+  validates :name, :presence => true
   validates :email, :uniqueness => true, :format => EMAIL_REGEX, if: 'email.present?'
   validates :password, :confirmation => true, if: 'password.present?'
   validates_length_of :password, :in => 6..20, :on => :create, if: 'password.present?'
