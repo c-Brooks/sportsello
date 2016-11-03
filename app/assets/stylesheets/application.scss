@@ -183,6 +183,11 @@ label,
   background: $ui-dark-gray;
 }
 
+.event-selected {
+  box-shadow: inset 0px 0px 30px $brand-light-red;
+  background: $ui-dark-gray;
+}
+
 .game .btn-primary,
 .event .btn-primary {
   position: absolute;

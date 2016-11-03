@@ -695,10 +695,12 @@ Vue.component('log-reg-btn', {
         bus.$emit('openMarker', this.id)
       },
       highlightEvent: function () {
-        $(this.$el).addClass('game-selected');
+        $(".event").removeClass("event-selected");
+
+        $(this.$el).addClass('event-selected');
       },
       unHighlightEvent: function () {
-        $(this.$el).removeClass('game-selected');
+        $(this.$el).removeClass('event-selected');
       },
       attending: function() {
         const that = this;
