@@ -183,6 +183,15 @@ label,
   background: $ui-dark-gray;
 }
 
+.event-selected {
+  box-shadow: inset 0px 0px 30px $brand-light-red;
+}
+
+.venue-name:hover {
+  color: $brand-light-red;
+  text-shadow: 0px 0px 20px $brand-light-red;
+}
+
 .game .btn-primary,
 .event .btn-primary {
   position: absolute;
@@ -328,7 +337,7 @@ hr {
 
 .fa-trash:hover {
   color: $brand-light-red;
-  box-shadow: 0px 0px 20px $brand-light-red;
+  text-shadow: 0px 0px 20px $brand-light-red;
 }
 
 .btn-social:hover {
