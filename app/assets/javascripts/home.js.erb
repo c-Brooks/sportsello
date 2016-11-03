@@ -764,7 +764,10 @@ Vue.component('log-reg-btn', {
           if (user && user.uid){
             console.log(`${user.uid} friends with ${sessionStorage.user_uid}?`);
             FB.api(`/${sessionStorage.user_uid}/friends/${user.uid}`, function(res) {
-              friends.push(res.data[0].name)
+              console.log(res);
+              if(res.data[0]) {
+                friends.push(res.data[0].name)
+              }
             })
           }
         }
