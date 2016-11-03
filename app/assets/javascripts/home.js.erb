@@ -64,7 +64,7 @@ $.getScript("https://maps.googleapis.com/maps/api/js?key=<%=ENV['MAPS_KEY']%>");
   Vue.component('game-sidebar', {
     props: ['events'],
     template:
-      `<div class="col-sm-4">
+      `<div class="col-md-4 hidden-xs">
         <div class="sidebar list-group">
           <div class="sidebar-header">
             Map
@@ -306,7 +306,7 @@ $.getScript("https://maps.googleapis.com/maps/api/js?key=<%=ENV['MAPS_KEY']%>");
   Vue.component('main-sidebar', {
     props: ["top_events","user_venues"],
     template:
-      `<div class="col-sm-4">
+      `<div class="col-md-4 hidden-xs">
         <div class="sidebar">
           <div class="sidebar-section">
             <div class="sidebar-header">
@@ -462,7 +462,7 @@ Vue.component('log-reg-btn', {
         <vue-panel/>
         <div class="app-container">
           <div class="row">
-            <div class="col-sm-8">
+            <div class="col-sm-8 col-xs-12">
               <div class="content">
                 <div class="game-info">
                   <game-box
@@ -791,20 +791,43 @@ Vue.component('log-reg-btn', {
     //          <p class="alt-text" v-if="friends.length>1">{{friends.join(', ')}} are going</p>
     template:
       `<div class="event" v-on:click="openMarker">
-        <div class="attendee-col col-sm-3">
-          <button class="btn btn-primary" v-on:click="cancel" v-if="isAttending">Cancel RSVP</button>
-          <button class="btn btn-primary" v-on:click="attending" v-else>I'm attending!</button>
+        <div class="row hidden-xs">
+          <div class="attendee-col col-sm-3">
+            <button class="btn btn-primary" v-on:click="cancel" v-if="isAttending">Cancel RSVP</button>
+            <button class="btn btn-primary" v-on:click="attending" v-else>I'm attending!</button>
 
-          <p class="alt-text" v-if="attendeesCount === 1">{{attendeesCount}} person attending</p>
-          <p class="alt-text" v-else>{{attendeesCount}} people attending</p>
-        </div>
-        <div class="info-container col-sm-9">
-          <p class="alt-text" v-text="venue.description"></p>
-          <div class="center">
-            <div class="event-name col-sm-3" v-text="name"></div>
-            <div class="at col-sm-3">@</div>
-            <span class="venue-name col-sm-3 clickable" v-text="venue.name" v-on:click="viewVenue"></span>
+            <p class="alt-text" v-if="attendeesCount === 1">{{attendeesCount}} person attending</p>
+            <p class="alt-text" v-else>{{attendeesCount}} people attending</p>
           </div>
+          <div class="info-container col-sm-9">
+            <p class="alt-text" v-text="venue.description"></p>
+            <div class="center">
+              <div class="event-name col-sm-3" v-text="name"></div>
+              <div class="at col-sm-3">@</div>
+              <span class="venue-name col-sm-3 clickable" v-text="venue.name" v-on:click="viewVenue"></span>
+            </div>
+          </div>
+        </div>
+        <div class="row visible-xs">
+
+            <div class="info-container col-xs-12">
+              <p class="alt-text" v-text="venue.description"></p>
+              <div class="center">
+                <div class="event-name col-sm-3" v-text="name"></div>
+                <div class="at col-sm-3">@</div>
+                <span class="venue-name col-sm-3 clickable" v-text="venue.name" v-on:click="viewVenue"></span>
+              </div>
+              <div class="col-sm-12">
+                <center>
+                  <button class="btn btn-temp" v-on:click="cancel" v-if="isAttending">Cancel RSVP</button>
+                  <button class="btn btn-temp" v-on:click="attending" v-else>I'm attending!</button>
+
+                  <p class="alt-text" v-if="attendeesCount === 1">{{attendeesCount}} person attending</p>
+                  <p class="alt-text" v-else>{{attendeesCount}} people attending</p>
+                </center>
+              </div>
+            </div>
+
         </div>
       </div>`,
     methods: {
@@ -831,28 +854,7 @@ Vue.component('log-reg-btn', {
           });
       },
       openMarker: function (event) {
-        if (event.target.nodeName === 'SPAN') {
-          home.view = 'venue';
-
-          // Hide the scroll for the body
-          $('body').css('overflow', 'hidden');
-
-          $.ajax({
-            url: `/venues/${this.venue.id}`,
-            success: function(res) {
-              home.venue_info = {
-                id: res.id,
-                name: res.name,
-                website: res.website,
-                description: res.description,
-                address: res.address,
-                reviews: res.reviews,
-                latitude: res.latitude,
-                longitude: res.longitude
-              };
-            }
-          });
-        } else if (event.target.nodeName === 'DIV') {
+        if (event.target.nodeName === 'DIV') {
           this.highlightEvent();
           bus.$emit('openMarker', this.id)
         }
@@ -868,6 +870,12 @@ Vue.component('log-reg-btn', {
       attending: function() {
         const that = this;
         const userID = window.sessionStorage.getItem('user_id');
+
+        if (userID === '') {
+          home.view = 'login';
+          return;
+        }
+
         $.ajax({
           url: `/events/${this.id}/attending/${userID}`,
           method: 'POST',
