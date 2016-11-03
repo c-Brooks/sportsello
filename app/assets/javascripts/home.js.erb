@@ -1,4 +1,30 @@
+
 $(document).ready(function() {
+  window.fbAsyncInit = function() {
+      FB.init({
+        appId      : "<%=ENV['FB_APP_ID']%>",
+        xfbml      : true,
+        version    : 'v2.8'
+      });
+      FB.AppEvents.logPageView();
+      FB.getLoginStatus(function(response) {
+        if (response.status === 'connected') {
+          console.log('Logged in.');
+        }
+        else {
+          FB.login();
+        }
+      })
+    };
+
+    (function(d, s, id){
+       var js, fjs = d.getElementsByTagName(s)[0];
+       if (d.getElementById(id)) {return;}
+       js = d.createElement(s); js.id = id;
+       js.src = "//connect.facebook.net/en_US/sdk.js";
+       fjs.parentNode.insertBefore(js, fjs);
+     }(document, 'script', 'facebook-jssdk'));
+
 var bus = new Vue();
   //$.getScript("http://maps.googleapis.com/maps/api/js?v=3&sensor=false");
 $.getScript("https://maps.googleapis.com/maps/api/js?key=<%=ENV['MAPS_KEY']%>");
@@ -1100,7 +1126,8 @@ Vue.component('log-reg-btn', {
         <span class="fa fa-facebook"></span>
         Sign in with Facebook
       </button>`
-  });
+
+    });
 
   Vue.component('register-form', {
     template:

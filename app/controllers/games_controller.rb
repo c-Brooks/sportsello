@@ -30,7 +30,7 @@ class GamesController < ApplicationController
         j.id event.id
         j.name event.name
         j.venue Venue.find(event.venue_id)
-        j.attendees Attendee.where(event_id: event.id).pluck(:user_id)
+        j.attendees Attendee.where(event_id: event.id)
       end
     end.target!
 
