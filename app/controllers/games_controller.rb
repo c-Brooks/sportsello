@@ -32,11 +32,19 @@ class GamesController < ApplicationController
         j.venue Venue.find(event.venue_id)
         j.attendees Attendee.where(event_id: event.id).pluck(:user_id)
         j.users Attendee.find_by(event_id: event.id) ?
-        Attendee.find_by(event_id: event.id).user : []
+          attendee_user(event) : []
       end
     end.target!
 
     render :json => @game_json
+  end
+
+  def attendee_user(event)
+    users = []
+    Attendee.where(event_id: event.id).each do |attendee|
+      users.push attendee.user
+    end
+    return users
   end
 
 end
