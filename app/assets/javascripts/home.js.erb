@@ -1,4 +1,31 @@
 $(document).ready(function() {
+  window.fbAsyncInit = function() {
+      FB.init({
+        appId      : "<%=ENV['FB_APP_ID']%>",
+        xfbml      : true,
+        version    : 'v2.8'
+      });
+      FB.AppEvents.logPageView();
+      // FB.getLoginStatus(function(response) {
+      //   if (response.status === 'connected') {
+      //     window.sessionStorage.setItem( 'user_uid', response.authResponse.userID );
+      //   }
+      //   else {
+          FB.login(function(response) {
+             console.log(response);
+          }, {scope: 'email, user_friends'});
+    //     }
+    //   })
+    };
+
+    (function(d, s, id){
+       var js, fjs = d.getElementsByTagName(s)[0];
+       if (d.getElementById(id)) {return;}
+       js = d.createElement(s); js.id = id;
+       js.src = "//connect.facebook.net/en_US/sdk.js";
+       fjs.parentNode.insertBefore(js, fjs);
+     }(document, 'script', 'facebook-jssdk'));
+
 var bus = new Vue();
   //$.getScript("http://maps.googleapis.com/maps/api/js?v=3&sensor=false");
 $.getScript("https://maps.googleapis.com/maps/api/js?key=<%=ENV['MAPS_KEY']%>");
@@ -327,7 +354,6 @@ $.getScript("https://maps.googleapis.com/maps/api/js?key=<%=ENV['MAPS_KEY']%>");
               success: function(res) {
                 home.game_results = res.games;
                 home.venue_results = res.venues;
-                home.event_results = res.events;
                 home.view = 'searchResults';
                 $('body').css('overflow', 'hidden');
                 $('.search-bar').val('');
@@ -623,12 +649,9 @@ Vue.component('log-reg-btn', {
   };
 
   var searchResults = {
-    props: ['venue_results', 'event_results', 'game_results', 'user_venues'],
+    props: ['venue_results', 'game_results', 'user_venues'],
     template:
-      `<div class="vue-panel">
-        <vue-panel/>
-          <div class="app-container">
-          <div class="row">
+          `<div class="row">
             <div class="col-sm-12">
               <div class="content">
                 <div class="venues">
@@ -642,20 +665,6 @@ Vue.component('log-reg-btn', {
                     :description="venue.description"
                     :website="venue.website">
                   </search-venue-box>
-                </div>
-                <div class="events">
-                  <div class="section-header" v-if="event_results.length > 0">
-                    Events
-                  </div>
-                  <search-event-box
-                    v-for="event in event_results"
-                    :name="event.name"
-                    :venue="event.venue.name"
-                    :sport="event.sport.name"
-                    :team1="event.team1.name"
-                    :team2="event.team2.name"
-                    :game_id="event.game.id">
-                  </search-event-box>
                 </div>
                 <div class="games">
                   <div class="section-header" v-if="game_results.length > 0">
@@ -682,15 +691,16 @@ Vue.component('log-reg-btn', {
   }
 
   Vue.component('event-box', {
-    // NOTE: I didn't want to break everything from attendees so
-    //       I just created users
     props: ['id', 'name', 'venue', 'attendees', 'users'],
     data: function() {
+
+      var friends = [];
       return {
         attendeesList: this.attendees,
         attendeesCount: this.attendees.length,
         isAttending: false,
         venue: this.venue
+        friends: friends
       }
     },
     created: function() {
@@ -698,6 +708,17 @@ Vue.component('log-reg-btn', {
       if (this.attendeesList.indexOf(+window.sessionStorage.getItem('user_id')) !== -1) {
         this.isAttending = true;
       }
+      var friends = [];
+      console.log("USERS", this.users);
+      for (var i = 0; i < this.users.length; i++) {
+        var user = this.users[i]
+        console.log(`${user.uid} friends with ${sessionStorage.user_uid}?`);
+      }
+        FB.api(`/${sessionStorage.user_uid}/friends/${user.uid}`, function(res) {
+          friends.push(res.data[0].name)
+        })
+        this.friends = friends;
+
       // If marker is clicked on map,
       // highlight the corresponding event
       bus.$on('highlit', function (id) {
@@ -713,6 +734,7 @@ Vue.component('log-reg-btn', {
         }
       }.bind(this));
     },
+    // TODO: Add more logic to attendees/friends going
     template:
       `<div class="event" v-on:click="openMarker">
         <div class="attendee-col col-sm-3">
@@ -720,6 +742,8 @@ Vue.component('log-reg-btn', {
           <button class="btn btn-primary" v-on:click="attending" v-else>I'm attending!</button>
 
           <p class="alt-text" v-if="attendeesCount === 1">{{attendeesCount}} person attending</p>
+          <p class="alt-text" v-if="friends.length==1">{{friends[0]}} is going</p>
+          <p class="alt-text" v-if="friends.length>1">{{friends.join(', ')}} are going</p>
           <p class="alt-text" v-else>{{attendeesCount}} people attending</p>
         </div>
         <div class="info-container col-sm-9">
@@ -825,65 +849,6 @@ Vue.component('log-reg-btn', {
           </div>
         </div>
       </div>`
-  });
-
-  Vue.component('search-event-box', {
-    props: ['venue', 'name', 'sport', 'team1', 'team2', 'game_id'],
-    data: function() {
-      return {
-        displayEvent: false
-      }
-    },
-    beforeMount: function() {
-      if(home.event_results.length != 0){
-        this.displayEvent = true;
-      }
-    },
-    template:
-      `<div v-if="displayEvent">
-          <div class="event clickable" v-on:click="viewGame">
-            <div class="time-container col-sm-3">
-              <p class="time alt-text" v-text="sport"></p>
-            </div>
-            <div class="info-container col-sm-9">
-            <div class="center">
-              <div class="event-name col-sm-3" v-text="name"></div>
-              <div class="at col-sm-3">@</div>
-              <div class="venue-name col-sm-3" v-text="venue"></div>
-            </div>
-            </div>
-          </div>
-        </div>
-      </div>`,
-     methods: {
-      viewGame: function(event) {
-        if (home.view != 'game-info') {
-          home.view = 'game-info';
-
-          // Hide the scroll for the body
-          $('body').css('overflow', 'hidden');
-
-          var target = event.currentTarget;
-          $(target).addClass('game-click');
-          setTimeout(function() {
-            $(target).removeClass('game-click');
-          }, 400);
-
-          $.ajax({
-            url: `/games/${this.game_id}`,
-            success: function(res) {
-              home.game_info = {
-                datetime: res.datetime,
-                sport: res.sport.name,
-                team1: res.team1.name,
-                team2: res.team2.name,
-                events: res.events
-              };
-            }
-          });
-        }
-      }
-    }
   });
 
     Vue.component('search-game-box', {
@@ -1239,6 +1204,7 @@ Vue.component('log-reg-btn', {
             home.user_name = data.name;
             window.sessionStorage.setItem( 'user_id', data.id );
             window.sessionStorage.setItem( 'user_name', data.name );
+            window.sessionStorage.setItem( 'user_uid', null );
             home.view = 'empty'
           }
         });
@@ -1254,7 +1220,8 @@ Vue.component('log-reg-btn', {
         <span class="fa fa-facebook"></span>
         Sign in with Facebook
       </button>`
-  });
+
+    });
 
   Vue.component('register-form', {
     template:
@@ -1338,6 +1305,7 @@ Vue.component('log-reg-btn', {
                 home.user_name = data.name;
                 window.sessionStorage.setItem( 'user_id', data.id );
                 window.sessionStorage.setItem( 'user_name', data.name );
+                window.sessionStorage.setItem( 'user_uid', null )
                 home.view = 'empty'
               }
             }
@@ -1443,8 +1411,7 @@ Vue.component('log-reg-btn', {
       user_name: null,
       user_venues: [],
       game_results: [],
-      venue_results: [],
-      event_results: []
+      venue_results: []
     },
     created: function() {
       this.scroll();
@@ -1484,7 +1451,7 @@ Vue.component('log-reg-btn', {
           url: `/games.json?game_datetime=${lastDateTimeString}`,
           success: function(res) {
             res.games.forEach(function(game) {
-              var isDuplicate = that.games_list.findIndex(function(current_game) {
+              var isDuplicate = that.games_list.findIndex(function(current_game){
                 return current_game.id === game.id
               });
               if (isDuplicate === -1) {
