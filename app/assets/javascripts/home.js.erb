@@ -32,39 +32,53 @@ $.getScript("https://maps.googleapis.com/maps/api/js?key=<%=ENV['MAPS_KEY']%>");
       var map = new google.maps.Map(document.getElementById('map'), mapOptions);
       for (var i = 0; i < this.events.length; i++) {
         var e = this.events[i]
-        var infoWindow = new google.maps.InfoWindow({
+        var infowindow = new google.maps.InfoWindow({
+          id: e.id,
           content: `
           <div style="color: grey">
             <h4>${e.name} @ ${e.venue.name}</h4>
             <h5>${e.venue.address}<h5>
           </div>`
         });
+        var self = this;
         var marker = new google.maps.Marker({
             position: { lat: e.venue.latitude, lng: e.venue.longitude },
             title: e.name,
             map: map
-          });
-        marker.addListener('click', function() {
-          // Highlight corresponding event
-          this.highlight(e)
-          infoWindow.open(map, marker);
-        }.bind(this));
-        google.maps.event.addListener(infoWindow,'closeclick',function(){
-          this.unhighlight(e);
-        }.bind(this));
-        google.maps.event.addListener(infoWindow,'closeclick',function(){
-          this.unhighlight(e);
-        }.bind(this));
-        // Open marker if corresponding venue is focused
-        bus.$on('openMarker', function (id) {
-          if (e.id === id) {
-            infoWindow.open(map, marker);
-          } else {
-            infoWindow.close(map, marker);
-          }
-        });
-      }
-    },
+          })
+
+        var self = this;
+         google.maps.event.addListener(marker,'click', (function(marker, infowindow, e){
+           return function() {
+             infowindow.setContent(infowindow.content);
+             infowindow.open(map, marker);
+             self.highlight(e);
+
+             google.maps.event.addListener(map,'click', function() {
+               infowindow.close();
+             });
+           }
+         })(marker,infowindow, e));
+
+         google.maps.event.addListener(infowindow,'closeclick', (function(marker, infowindow, e) {
+           return function () {
+             self.unhighlight(e);
+           }
+         })(marker,infowindow, e));
+
+         google.maps.event.addListener(infowindow,'openMarker', (function(marker, infowindow, e) {
+           return function () {
+             console.log('triggered', e.id);
+             //infowindow.open(map, marker)
+           }
+         })(marker,infowindow, e));
+    }
+    // This isn't working yet
+    bus.$on('openMarker', function (id) {
+      console.log('Event', id);
+      google.maps.event.trigger(infowindow, 'openMarker', id);
+    });
+  },
     methods: {
       highlight: function (e) {
         bus.$emit('highlit', e.id)
