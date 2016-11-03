@@ -25,6 +25,7 @@ class SearchController < ApplicationController
         j.event event.id
         j.name event.name
         j.venue Venue.find(event.venue_id), :name
+        j.game Game.find(event.game_id), :id
         j.sport Sport.find(Game.find(event.game_id).sport_id), :name
         j.team1 Sport.find(Game.find(event.game_id).team1_id), :name
         j.team2 Sport.find(Game.find(event.game_id).team2_id), :name
