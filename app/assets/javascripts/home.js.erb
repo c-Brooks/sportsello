@@ -689,6 +689,20 @@ Vue.component('log-reg-btn', {
         </div>
       </div>`
   }
+                  // <div class="events">
+                //   <div class="section-header" v-if="event_results.length > 0">
+                //     Events
+                //   </div>
+                //   <search-event-box
+                //     v-for="event in event_results"
+                //     :name="event.name"
+                //     :venue="event.venue.name"
+                //     :sport="event.sport.name"
+                //     :team1="event.team1.name"
+                //     :team2="event.team2.name"
+                //     :game_id="event.game.id">
+                //   </search-event-box>
+                // </div>
 
   Vue.component('event-box', {
     props: ['id', 'name', 'venue', 'attendees', 'users'],
@@ -699,7 +713,7 @@ Vue.component('log-reg-btn', {
         attendeesList: this.attendees,
         attendeesCount: this.attendees.length,
         isAttending: false,
-        venue: this.venue
+        venue: this.venue,
         friends: friends
       }
     },
@@ -756,6 +770,28 @@ Vue.component('log-reg-btn', {
         </div>
       </div>`,
     methods: {
+      viewVenue: function() {
+        home.view = 'venue';
+
+          // Hide the scroll for the body
+          $('body').css('overflow', 'hidden');
+
+          $.ajax({
+            url: `/venues/${this.venue.id}`,
+            success: function(res) {
+              home.venue_info = {
+                id: res.id,
+                name: res.name,
+                website: res.website,
+                description: res.description,
+                address: res.address,
+                reviews: res.reviews,
+                latitude: res.latitude,
+                longitude: res.longitude
+              };
+            }
+          });
+      },
       openMarker: function (event) {
         if (event.target.nodeName === 'SPAN') {
           home.view = 'venue';
@@ -778,7 +814,7 @@ Vue.component('log-reg-btn', {
               };
             }
           });
-        } else {
+        } else if (event.target.nodeName === 'DIV') {
           this.highlightEvent();
           bus.$emit('openMarker', this.id)
         }
