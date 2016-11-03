@@ -623,7 +623,7 @@ Vue.component('log-reg-btn', {
   };
 
   var searchResults = {
-    props: ['venue_results', 'event_results', 'game_results', 'user_venues'],
+    props: ['venue_results', 'game_results', 'user_venues'],
     template:
       `<div class="vue-panel">
         <vue-panel/>
@@ -642,20 +642,6 @@ Vue.component('log-reg-btn', {
                     :description="venue.description"
                     :website="venue.website">
                   </search-venue-box>
-                </div>
-                <div class="events">
-                  <div class="section-header" v-if="event_results.length > 0">
-                    Events
-                  </div>
-                  <search-event-box
-                    v-for="event in event_results"
-                    :name="event.name"
-                    :venue="event.venue.name"
-                    :sport="event.sport.name"
-                    :team1="event.team1.name"
-                    :team2="event.team2.name"
-                    :game_id="event.game.id">
-                  </search-event-box>
                 </div>
                 <div class="games">
                   <div class="section-header" v-if="game_results.length > 0">
@@ -680,6 +666,20 @@ Vue.component('log-reg-btn', {
         </div>
       </div>`
   }
+                  // <div class="events">
+                //   <div class="section-header" v-if="event_results.length > 0">
+                //     Events
+                //   </div>
+                //   <search-event-box
+                //     v-for="event in event_results"
+                //     :name="event.name"
+                //     :venue="event.venue.name"
+                //     :sport="event.sport.name"
+                //     :team1="event.team1.name"
+                //     :team2="event.team2.name"
+                //     :game_id="event.game.id">
+                //   </search-event-box>
+                // </div>
 
   Vue.component('event-box', {
     // NOTE: I didn't want to break everything from attendees so
