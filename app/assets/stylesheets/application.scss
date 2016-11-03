@@ -32,6 +32,7 @@ $brand-light-red: #b11623;
 $brand-dark-blue: #292c37;
 $brand-light-gray: #cccccc;
 
+
 @mixin app-background-main {
   background: $ui-light-border;
   background-image: url("./bg-noise-main.png");
@@ -44,6 +45,12 @@ $brand-light-gray: #cccccc;
 
 @mixin app-background-header {
   background: $brand-dark-red url("./bg-noise-header.png");
+}
+
+.header-logo {
+  position: fixed;
+  top: 0;
+  width: 350px;
 }
 
 body {
