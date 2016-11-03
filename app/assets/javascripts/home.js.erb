@@ -1,4 +1,3 @@
-
 $(document).ready(function() {
   window.fbAsyncInit = function() {
       FB.init({
@@ -7,14 +6,16 @@ $(document).ready(function() {
         version    : 'v2.8'
       });
       FB.AppEvents.logPageView();
-      FB.getLoginStatus(function(response) {
-        if (response.status === 'connected') {
-          console.log('Logged in.');
-        }
-        else {
-          FB.login();
-        }
-      })
+      // FB.getLoginStatus(function(response) {
+      //   if (response.status === 'connected') {
+      //     window.sessionStorage.setItem( 'user_uid', response.authResponse.userID );
+      //   }
+      //   else {
+          FB.login(function(response) {
+             console.log(response);
+          }, {scope: 'email, user_friends'});
+    //     }
+    //   })
     };
 
     (function(d, s, id){
@@ -655,10 +656,13 @@ Vue.component('log-reg-btn', {
   Vue.component('event-box', {
     props: ['id', 'name', 'venue', 'attendees', 'users'],
     data: function() {
+
+      var friends = [];
       return {
         attendeesList: this.attendees,
         attendeesCount: this.attendees.length,
-        isAttending: false
+        isAttending: false,
+        friends: friends
       }
     },
     created: function() {
@@ -666,13 +670,16 @@ Vue.component('log-reg-btn', {
       if (this.attendeesList.indexOf(+window.sessionStorage.getItem('user_id')) !== -1) {
         this.isAttending = true;
       }
-      // Search attending users for Facebook friends
+      var friends = [];
+      console.log("USERS", this.users);
       for (var i = 0; i < this.users.length; i++) {
-        FB.api(`/me/friends/${this.users[i].uid}`, function(res) {
-          console.log('Friends?', res);
+        var user = this.users[i]
+        console.log(`${user.uid} friends with ${sessionStorage.user_uid}?`);
+      }
+        FB.api(`/${sessionStorage.user_uid}/friends/${user.uid}`, function(res) {
+          friends.push(res.data[0].name)
         })
-
-    }
+        this.friends = friends;
 
       // If marker is clicked on map,
       // highlight the corresponding event
@@ -689,6 +696,7 @@ Vue.component('log-reg-btn', {
         }
       }.bind(this));
     },
+    // TODO: Add more logic to attendees/friends going
     template:
       `<div class="event" v-on:click="openMarker">
         <div class="attendee-col col-sm-3">
@@ -696,6 +704,8 @@ Vue.component('log-reg-btn', {
           <button class="btn btn-primary" v-on:click="attending" v-else>I'm attending!</button>
 
           <p class="alt-text" v-if="attendeesCount === 1">{{attendeesCount}} person attending</p>
+          <p class="alt-text" v-if="friends.length==1">{{friends[0]}} is going</p>
+          <p class="alt-text" v-if="friends.length>1">{{friends.join(', ')}} are going</p>
           <p class="alt-text" v-else>{{attendeesCount}} people attending</p>
         </div>
         <div class="info-container col-sm-9">
@@ -1121,6 +1131,7 @@ Vue.component('log-reg-btn', {
             home.user_name = data.name;
             window.sessionStorage.setItem( 'user_id', data.id );
             window.sessionStorage.setItem( 'user_name', data.name );
+            window.sessionStorage.setItem( 'user_uid', null );
             home.view = 'empty'
           }
         });
@@ -1221,6 +1232,7 @@ Vue.component('log-reg-btn', {
                 home.user_name = data.name;
                 window.sessionStorage.setItem( 'user_id', data.id );
                 window.sessionStorage.setItem( 'user_name', data.name );
+                window.sessionStorage.setItem( 'user_uid', null )
                 home.view = 'empty'
               }
             }
