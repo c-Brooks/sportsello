@@ -563,6 +563,7 @@ Vue.component('log-reg-btn', {
       return {
         games: home.games_list,
         venues: home.user_venues,
+        selected: home.game_clicked[0],
         name: '',
         game_id: '',
         venue_id: ''
@@ -583,7 +584,7 @@ Vue.component('log-reg-btn', {
 
                 <div class="form-group">
                   <label for="game">Game</label>
-                  <select v-model="game_id" id="game" name="game_id" class="form-control">
+                  <select v-model="selected" id="game" name="game_id" class="form-control">
                     <option v-for="game in games" v-bind:value="game.id">{{game.datetime}}: {{game.team1.name}} vs. {{game.team2.name}}</option>
                   </select>
                 </div>
@@ -1059,7 +1060,9 @@ Vue.component('log-reg-btn', {
         <div class="game" v-on:click="viewGame">
           <div class="time-container col-sm-3">
             <p class="time alt-text" v-text="time" v-if="displayTime"></p>
-            <hosting-button v-if="user_venues.length > 0"/>
+            <hosting-button
+            v-if="user_venues.length > 0"
+            :game_id="id"/>
           </div>
           <div class="info-container col-sm-9">
             <p class="sport alt-text" v-text="sport"></p>
@@ -1216,10 +1219,13 @@ Vue.component('log-reg-btn', {
   });
 
   Vue.component('hosting-button', {
+    props: ['game_id'],
     template:
       `<button class="btn btn-primary" v-on:click="hostEvent">I'm hosting!</button>`,
     methods: {
       hostEvent: function() {
+        home.game_clicked = [];
+        home.game_clicked.push(this.game_id);
         home.view = 'hostEvent'
 
         // Hide the scroll for the body
@@ -1499,7 +1505,7 @@ Vue.component('log-reg-btn', {
       user_venues: [],
       game_results: [],
       venue_results: [],
-      event_results: []
+      game_clicked: []
     },
     created: function() {
       this.scroll();
