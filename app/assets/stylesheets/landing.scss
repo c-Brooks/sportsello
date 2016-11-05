@@ -26,6 +26,13 @@ html,body { height:100%; }
  }
 
 
+.notice {
+  width: 100%;
+  text-align: center;
+  position: fixed;
+  bottom: 200px;
+  color: black;
+}
 
 .para {
   background-color: $brand-light-red;
@@ -41,14 +48,16 @@ html,body { height:100%; }
 }
 
 .link {
-  font-size: 40px;
   color: white;
   padding: 0px 20px;
 }
 .link:hover {
-  color:$brand-dark-red;
+  color:black;
 }
 
+.fa {
+  font-size: 100px;
+}
 /* For Mobile */
 @media only screen and (max-device-width: 480px) {
 

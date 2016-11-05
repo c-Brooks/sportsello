@@ -4,14 +4,21 @@
     <meta charset="utf-8">
     <title></title>
   </head>
-  
+
   <body style="background: white">
 
     <%= image_tag("sportsello-logo.jpg", class: "img centered") %>
 
+    <div class="notice">
+      <h1>
+      Our site is still in development, but feel free to
+      <a href="/dev">take a look!</a>
+      </h1>
+    </div>
+
     <div class="title para">
       <h1>
-        Welcome to Sportsello, a platform to connect sports fans with sports bars!
+        Sportsello is a platform to connect sports fans with sports bars
       </h1>
       <h2>
         <i>
@@ -23,11 +30,8 @@
           <i class="link fa fa-medium" aria-hidden="true"></i></a>
 
         <a href="https://github.com/amorriscode/sportsello " target="_blank">
-          <i class="link fa fa-github" aria-hidden="true" onmouseover="color:red"></i></a>
+          <i class="link fa fa-github" aria-hidden="true"></i></a>
       </h1>
     </div>
-
-      <button onclick="window.location='/dev'" class="btn btn-default centered">Click here to continue</button>
-
   </body>
 </html>
