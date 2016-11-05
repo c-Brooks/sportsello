@@ -1,3 +1,40 @@
 // Place all the styles related to the landing controller here.
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
+
+.img {
+  max-width: 900px;
+  height: 80%
+}
+
+.title {
+  position: fixed;
+  font-family: sans-serif;
+  font-style: italic;
+  font-weight: bolder;
+  color: #b30000;
+  top: 70%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 40px
+ }
+
+.centered {
+ position: fixed;
+ top: 40%;
+ left: 50%;
+ transform: translate(-50%, -50%);
+}
+
+/* For Mobile */
+@media only screen and (max-device-width: 480px) {
+
+  .img {
+    width: 90%;
+    max-height: 50%;
+  }
+
+  .title {
+    font-size: 70px
+   }
+ }

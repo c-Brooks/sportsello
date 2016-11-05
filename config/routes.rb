@@ -4,7 +4,9 @@ Rails.application.routes.draw do
 
     get 'app/index'
 
-    root to: 'home#index'
+    get 'dev', to: 'home#index'
+
+    root to: 'landing#index'
 
     get 'auth/:provider/callback', to: 'sessions#create'
     get 'auth/failure', to: redirect('/')
