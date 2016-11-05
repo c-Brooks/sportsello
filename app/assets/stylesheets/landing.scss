@@ -15,8 +15,6 @@ html,body { height:100%; }
 }
 
 .title {
-  position: fixed;
-  bottom: 0;
   font-family: sans-serif;
   font-color: red;
   background-color: red;
@@ -27,14 +25,16 @@ html,body { height:100%; }
 
 
 .notice {
+  position: fixed;
+  bottom: 0;
   width: 100%;
   text-align: center;
   position: fixed;
-  bottom: 200px;
   color: black;
 }
 
 .para {
+  color: white;
   background-color: $brand-light-red;
   padding: 10px 20px;
   height: 300;
