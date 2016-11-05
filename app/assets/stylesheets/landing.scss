@@ -62,10 +62,20 @@ html,body { height:100%; }
 @media only screen and (max-device-width: 480px) {
 
   .img {
+    position: relative;
     width: 90%;
     max-height: 50%;
   }
 
+  .img-wrapper {
+    height: 100vh;
+    position: relative;
+  }
+
+  .notice {
+    position: relative;
+    top: 0;
+  }
   h1 {
     font-size: 15px
    }
