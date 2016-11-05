@@ -6,6 +6,9 @@
 $brand-dark-red: #9f111b;
 $brand-light-red: #b11623;
 
+html,body { height:100%; }
+
+
 .img {
   max-width: 900px;
   height: 80%
@@ -13,12 +16,10 @@ $brand-light-red: #b11623;
 
 .title {
   position: fixed;
+  bottom: 0;
   font-family: sans-serif;
   font-color: red;
   background-color: red;
-  top: 70%;
-  left: 50%;
-  transform: translate(-50%, -50%);
   font-size: 24px;
   width: 100%;
   text-align: center;
@@ -29,7 +30,7 @@ $brand-light-red: #b11623;
 .para {
   background-color: $brand-light-red;
   padding: 10px 20px;
-  height: calc(100vh - 600px);
+  height: 300;
 }
 
 .centered {
@@ -40,7 +41,9 @@ $brand-light-red: #b11623;
 }
 
 .link {
+  font-size: 40px;
   color: white;
+  padding: 0px 20px;
 }
 .link:hover {
   color:$brand-dark-red;
@@ -54,7 +57,10 @@ $brand-light-red: #b11623;
     max-height: 50%;
   }
 
-  .title {
-    font-size: 24px
+  h1 {
+    font-size: 15px
    }
+  h2 {
+    font-size: 12px
+  }
  }
