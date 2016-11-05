@@ -1,7 +1,32 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title></title>
+  </head>
+  <body style="background: white">
 
-  <%= image_tag("sportsello-logo.jpg", class: "img centered") %>
+    <%= image_tag("sportsello-logo.jpg", class: "img centered") %>
 
-<div class="title">
-  November
-</div>
-<a href="/dev" style="btn btn-default">Click here to continue</a>
+    <div class="title para">
+      <h1 class="horiz-centered">
+        Welcome to Sportsello, a platform to connect sports fans with sports bars!
+      </h1>
+      <h2>
+        <i>
+          To learn more, check out these links:
+        </i>
+      </h2>
+      <h1>
+        <a href="https://medium.com/sportsello"target="_blank">
+          <i class="link fa fa-medium" aria-hidden="true"></i></a>
+
+        <a href="https://github.com/amorriscode/sportsello " target="_blank">
+          <i class="link fa fa-github" aria-hidden="true" onmouseover="color:red"></i></a>
+      </h1>
+    </div>
+
+      <button onclick="window.location='/dev'" class="btn btn-default centered">Click here to continue</button>
+
+  </body>
+</html>

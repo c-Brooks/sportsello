@@ -2,6 +2,10 @@
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
 
+
+$brand-dark-red: #9f111b;
+$brand-light-red: #b11623;
+
 .img {
   max-width: 900px;
   height: 80%
@@ -10,20 +14,36 @@
 .title {
   position: fixed;
   font-family: sans-serif;
-  font-style: italic;
-  font-weight: bolder;
-  color: #b30000;
+  font-color: red;
+  background-color: red;
   top: 70%;
   left: 50%;
   transform: translate(-50%, -50%);
-  font-size: 40px
+  font-size: 24px;
+  width: 100%;
+  text-align: center;
  }
+
+
+
+.para {
+  background-color: $brand-light-red;
+  padding: 10px 20px;
+  height: calc(100vh - 600px);
+}
 
 .centered {
  position: fixed;
- top: 40%;
+ top: 35%;
  left: 50%;
  transform: translate(-50%, -50%);
+}
+
+.link {
+  color: white;
+}
+.link:hover {
+  color:$brand-dark-red;
 }
 
 /* For Mobile */
@@ -35,6 +55,6 @@
   }
 
   .title {
-    font-size: 70px
+    font-size: 24px
    }
  }
