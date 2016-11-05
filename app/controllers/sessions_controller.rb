@@ -10,7 +10,7 @@ class SessionsController < ApplicationController
     if env["omniauth.auth"]
       @user = User.from_omniauth(env["omniauth.auth"])
       session[:user_id] = @user.id
-      redirect_to root_path
+      redirect_to dev_path
     elsif params[:uid]
       @user = User.find_by_uid(params[:uid])
       session[:user_id] = @user.id
