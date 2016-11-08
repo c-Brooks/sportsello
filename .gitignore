@@ -28,3 +28,7 @@
 Gemfile.lock
 
 .DS_Store
+
+# Ignore shared Puma-related files
+/shared/*
+!/shared/sockets
