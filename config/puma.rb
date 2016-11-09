@@ -26,4 +26,9 @@ on_worker_boot do
   require "active_record"
   ActiveRecord::Base.connection.disconnect! rescue ActiveRecord::ConnectionNotEstablished
   require 'erb'
-  ActiveRecord::Base.establish_connection( YAML.load( ERB.new( File.read( "#{app_dir}/config/database.yml" )).result)[rails_env])end
+  if YAML.load( ERB.new( File.read( "#{app_dir}/config/database.yml" )).result)[rails_env]
+    ActiveRecord::Base.establish_connection( YAML.load( ERB.new( File.read( "#{app_dir}/config/database.yml" )).result)[rails_env])
+  else
+    # On the server -> do nothing for now
+  end
+end
