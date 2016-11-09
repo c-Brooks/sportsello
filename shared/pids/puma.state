@@ -1,0 +1,4 @@
+---
+pid: ENV['PUMA_PID']
+control_url: env['PUMA_CTRL_URL']
+control_auth_token: ENV['PUMA_CTRL_AUTH_TOKEN']
