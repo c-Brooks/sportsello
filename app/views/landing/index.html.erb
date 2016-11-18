@@ -7,10 +7,11 @@
 
   <body style="background: white">
     <div class="img-wrapper">
-      <%= image_tag("sportsello-logo.jpg", class: "img centered") %>
-    </div>
-
-    <div class="notice">
+      <%= link_to '/dev' do %>
+        <%= image_tag("sportsello-logo.jpg", class: "img centered") %>
+      <% end %>
+   </div>
+   <div class="notice">
       <h1>
       Our site is still in development, but feel free to
       <a href="/dev">take a look!</a>
