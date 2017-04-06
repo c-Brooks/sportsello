@@ -24,6 +24,9 @@
 .env
 .env.production
 
+# Ignore deployment details
+config/deploy/**
+
 # Ignore the Gemfile.lock
 Gemfile.lock
 
